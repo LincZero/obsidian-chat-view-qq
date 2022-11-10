@@ -60,9 +60,9 @@ export class ChatSettingTab extends PluginSettingTab {
 		
 		new Setting(containerEl)
 			.setName('自己的昵称')											 // 设置项名字
-			.setDesc('自己的对话框将从右侧弹出')					 // 设置项提示
+			.setDesc('自己的对话框将从右侧弹出，己方有多个昵称时用逗号隔开')					 // 设置项提示
 			.addText(text => text												// 输入框
-				.setPlaceholder('自己的昵称')								// 没有内容时的提示
+				.setPlaceholder('例如：我, 吾, 朕')				// 没有内容时的提示
 				.setValue(this.plugin.settings.chatSelfName)
 				.onChange(async (value) => {
 					console.log('Secret: ' + value);

@@ -234,7 +234,8 @@ html {
     height: 100%;
 }
 
-.block-language-chat-qq {
+.block-language-chat-qq,
+.block-language-chat-wechat{
    width: var(--qq-width); 
    max-height: var(--qq-max-height);
    overflow-y: scroll;

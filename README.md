@@ -12,7 +12,7 @@ version 是魔改版本
 	"id": "obsidian-chat-view-qq",
 	"name": "Chat View QQ",
 	"version-by": "1.2.1",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"minAppVersion": "0.15.0",
 	"description": "魔改于QQ Chat View，可以直接复制QQ聊天记录中的信息，实现自动渲染",
 	"author": "LincZero",
@@ -25,6 +25,9 @@ version 是魔改版本
 ==保留了原插件的功能，原插件功能详见`README 原版.md`，这里仅演示魔改后新增的功能==
 
 使用：（复制代码块里的内容，不要复制代码块）
+（强烈建议在设置里设置自己的QQ微信名，和常用的“QQ昵称-QQ”项。不要在代码框中局部设置）
+
+QQ
 
 ````
 ```chat-qq
@@ -59,13 +62,23 @@ ob  有没有 输  划线   联想
 ```
 ````
 
+微信
+
+````
+```chat-wechat
+{self=LincZero}
+
+LincZero:
+啊对
+
+LincZero:
+[动画表情]
+```
+````
+
 效果：（V0.3.3新增的样式）
 
 ![img](README.assets/665IOT2Z[GG{QFY$0M2A}G.png)
-
-旧版样式的效果
-
-<img src="./README.assets/效果展示.png" alt="效果展示"  />
 
 ## 插件特点
 
@@ -80,6 +93,10 @@ ob  有没有 输  划线   联想
 ## 更新日志
 
 ### v0.4.1
+
+新增了 支持微信聊天记录的复制
+
+新增了 可以同时指定多个self（己方对象，但只能在设置菜单里设置）
 
 修改了 项目结构，拆分出多个文件，更模块化，更利于后期维护
 

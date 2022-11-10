@@ -5,6 +5,7 @@ import * as webvtt from "node-webvtt";
 import { moment } from 'obsidian'
 import { MarkdownPostProcessorContext } from 'obsidian';
 
+
 const KEYMAP: Record<string, string> = {">": "right", "<": "left", "^": "center"};
 const CONFIGS: Record<string, string[]> = {
 	"header": ["h2", "h3", "h4", "h5", "h6"],
@@ -27,9 +28,11 @@ class ChatPatterns {
 		.join("|"));																				// 不名正则？
 	static readonly voice = /<v\s+([^>]+)>([^<]+)<\/v>/;	// chat-webvtt模式下的对话检测
 
-	static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])/; // 第一个匹配项是名字，第二个是时间（日期先不管），下一行是消息
+	static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 第一个匹配项是名字，第二个是时间（日期先不管），下一行是消息
 	static readonly qq_chehui = /(.*?)撤回了一条消息/;
-	static readonly qq_jinqyun = /(.*?)加入本群。/;
+  static readonly qq_jinqyun = /(.*?)加入本群。/;
+  
+  static readonly wechat_msg = /(.*?)(:\s*?)$/
 }
 
 interface Message {
@@ -171,11 +174,10 @@ export function chat_qq (
   const rawLines = source.split("\n")/*.filter((line) => ChatPatterns.joined.test(line.trim()))*/;
   const lines = rawLines.map((rawLine) => rawLine.trim());
   const formatConfigs = new Map<string, string>();
+  let selfConfigs = new Array<String>();  // 新增：多个己方
   const colorConfigs = new Map<string, string>();
-
-  const headerIcon = new Map<string, string>();		// 魔改新增：头像图片
+  const headerIcon = new Map<string, string>();		// 新增：头像图片
   let icons = [
-    //"https://img1.baidu.com/it/u=3799393477,744941171&fm=253",
     "https://img0.baidu.com/it/u=3452693033,2914629743&fm=253",
     "https://img2.baidu.com/it/u=2231228778,2513904551&fm=253",
     "https://img1.baidu.com/it/u=2012765083,4167954819&fm=253",
@@ -192,7 +194,10 @@ export function chat_qq (
 
   // 遍历1 (配置遍历)
   // 先设置缺省再遍历
-  if (settings.chatSelfName) formatConfigs.set("self", settings.chatSelfName);
+  if (settings.chatSelfName) {
+    const configs = settings.chatSelfName.split(",").map((l) => l.trim());
+    selfConfigs = configs
+  }
   if (settings.chatQQandName) {
     const configs = settings.chatQQandName.split(",").map((l) => l.trim());
     for (const config of configs) {
@@ -206,7 +211,8 @@ export function chat_qq (
       const configs = line.replace("{", "").replace("}", "").split(",").map((l) => l.trim());
       for (const config of configs) {
         const [k, v] = config.split("=").map((c) => c.trim());
-        /*if (Object.keys(CONFIGS).contains(k) && CONFIGS[k].contains(v))*/ formatConfigs.set(k, v);
+        if (k=="self") selfConfigs.push(v);
+        else formatConfigs.set(k, v);
       }
     }
     // 匹配正则 "colors"
@@ -303,7 +309,115 @@ export function chat_qq (
         el,
         continued,									// continued
         headerIcon,
-        formatConfigs
+        selfConfigs
+      );
+    }
+  }
+}
+
+// 【魔改】微信格式
+export function chat_wechat (
+  source: string,
+  el: HTMLElement,
+  _: MarkdownPostProcessorContext,
+  settings: ChatPluginSettings
+) {
+  // 这一步把空行全部搞没了…………
+  const rawLines = source.split("\n")/*.filter((line) => ChatPatterns.joined.test(line.trim()))*/;
+  const lines = rawLines.map((rawLine) => rawLine.trim());
+  const formatConfigs = new Map<string, string>();
+  let selfConfigs = new Array<String>();  // 新增：多个己方
+  const colorConfigs = new Map<string, string>();
+  const headerIcon = new Map<string, string>();		// 新增：头像图片
+  let icons = [
+    "https://img0.baidu.com/it/u=3452693033,2914629743&fm=253",
+    "https://img2.baidu.com/it/u=2231228778,2513904551&fm=253",
+    "https://img1.baidu.com/it/u=2012765083,4167954819&fm=253",
+    "https://t7.baidu.com/it/u=244930557,2366914938&fm=167",
+    "https://img1.baidu.com/it/u=492888272,1423520386&fm=253",
+    "https://img0.baidu.com/it/u=140901730,1320734199&fm=253",
+    "https://img0.baidu.com/it/u=277980071,3715613478&fm=253",
+    "https://img2.baidu.com/it/u=2666269671,1837195739&fm=253",
+    "https://img2.baidu.com/it/u=804455831,2693824866&fm=253",
+    "https://img0.baidu.com/it/u=2940741436,1248193933&fm=253"
+  ]
+  const numDefaultIcon = icons.length;						// 魔改新增：图库中含有图片数量
+  let countDefaultIcon = 0; 											// 魔改新增：已使用的图库数量
+
+  // 遍历1 (配置遍历)
+  // 先设置缺省再遍历
+  if (settings.chatSelfName) {
+    const configs = settings.chatSelfName.split(",").map((l) => l.trim());
+    selfConfigs = configs
+  }
+  for (const line of lines) {
+    // 匹配正则 "format"
+    if (ChatPatterns.format.test(line)) {
+      const configs = line.replace("{", "").replace("}", "").split(",").map((l) => l.trim());
+      for (const config of configs) {
+        const [k, v] = config.split("=").map((c) => c.trim());
+        if (k=="self") selfConfigs.push(v);
+        else formatConfigs.set(k, v);
+      }
+    }
+  }
+
+  // 遍历2（重设行数，重新遍历。先知道了格式后，再来渲染对话）
+  let continuedCount = 0;
+  for (let index = 0; index < lines.length; index++) {
+    let line = lines[index].trim();
+    // 省略消息
+    if (line === "...") {
+      const delimiter = el.createDiv({cls: ["delimiter"]});
+      for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+    }
+    // 对话消息【魔改】
+    else if (ChatPatterns.wechat_msg.test(line)) {
+      const header = line.match(ChatPatterns.wechat_msg)[1]
+      const continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0);
+      const subtext = "";
+      let prevHeader = "";
+      
+      // 支持多行信息
+      let message = new Array()
+      while(true){
+        if (index >= lines.length-1) break;
+        index++;
+        line = lines[index].trim().replace("&nbsp;", " ");
+        if (line.replace(/\s*/g,"")=="") break;
+        message.push(line);
+      }
+
+      // 如果没有头像，则自动分配头像
+      if (!headerIcon.get(header)) {
+        // 自动分配默认头像
+        if (countDefaultIcon < numDefaultIcon) {
+          headerIcon.set(header, icons[countDefaultIcon++])
+        }
+        // 默认QQ头像
+        else {
+          headerIcon.set(header, `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`);
+        }
+      }
+    
+      // 该渲染项的设置，会覆盖全局设置
+      let sytle_width = formatConfigs.get("width");
+      let style_max_height = formatConfigs.get("max-height");
+      let style_all = ""
+      if (sytle_width) style_all+=`;width: ${sytle_width}px`
+      if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
+      if (style_all) el.setAttr("Style", style_all)
+
+      createChatBubble_withIcon(
+        header,											// header
+        prevHeader,									// prevHeader
+        message,										// message，注意自增
+        subtext,										// subtext
+        KEYMAP[line.charAt(0)], 
+        el,
+        continued,									// continued
+        headerIcon,
+        selfConfigs
       );
     }
   }

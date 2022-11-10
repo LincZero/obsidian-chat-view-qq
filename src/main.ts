@@ -4,7 +4,8 @@ import {Plugin} from "obsidian";
 // 全局设置
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
 // 解析语法并渲染
-import {chat_webvtt, chat, chat_qq} from "./codeBlock"
+import {chat_webvtt, chat, chat_qq, chat_wechat} from "./codeBlock"
+
 
 export default class ChatViewPlugin extends Plugin {
 	settings: ChatPluginSettings; // 插件配置
@@ -30,6 +31,11 @@ export default class ChatViewPlugin extends Plugin {
 		// 【魔改】QQ 格式
 		this.registerMarkdownCodeBlockProcessor("chat-qq", (source, el, _) => {
 			chat_qq(source, el, _, this.settings)
+		});
+
+		// 【魔改】微信 格式
+		this.registerMarkdownCodeBlockProcessor("chat-wechat", (source, el, _) => {
+			chat_wechat(source, el, _, this.settings)
 		});
 	}
 

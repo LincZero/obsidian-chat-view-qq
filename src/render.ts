@@ -24,7 +24,7 @@ export function createChatBubble_withIcon(
   element: HTMLElement,
   continued: boolean,
   headerIcon: Map<string, string>,
-  formatConfigs: Map<string, string>
+  selfConfigs: Array<string>
 ) {
 
   const marginClass = continued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
@@ -33,13 +33,12 @@ export function createChatBubble_withIcon(
     `chat-view-max-width-${formatConfigs.get("mw")}`
     : (Platform.isMobile ? "chat-view-mobile-width" : "chat-view-desktop-width");*/
   const modeClass = `chat-view-bubble-mode-qq`//`chat-view-bubble-mode-default`//`chat-view-bubble-mode-${formatConfigs.has("mode") ? formatConfigs.get("mode") : "default"}`;
-  const headerEl: keyof HTMLElementTagNameMap = formatConfigs.has("header") ?
+  /*const headerEl: keyof HTMLElementTagNameMap = formatConfigs.has("header") ?
     formatConfigs.get("header") as keyof HTMLElementTagNameMap :
-    "h4";
+    "h4";*/
   
   // 【新增self】指定
-  let selfHeader = formatConfigs.get("self");
-  if (selfHeader && selfHeader==header){
+  if (selfConfigs && selfConfigs.includes(header)){
     align = "right";
   } else {
     align = "left"
