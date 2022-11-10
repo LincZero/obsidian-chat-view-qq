@@ -1,6 +1,10 @@
-import {Plugin, Platform, moment} from "obsidian";
-import {App, PluginSettingTab, Setting, Notice} from "obsidian"; // 新增
+import {Plugin, Platform, moment, PluginSettingTab} from "obsidian";
+import {Notice} from "obsidian";
 import {MarkdownRenderChild} from "obsidian"; // md后处理器
+
+import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
+import {createChatBubble, createChatBubble_withIcon} from "./render"
+
 import * as webvtt from "node-webvtt";
 
 
@@ -90,7 +94,7 @@ export default class ChatViewPlugin extends Plugin {
 				const prevHeader = index > 0 ? arr[index - 1].header : "";
 				const align = selves && selves.contains(message.header) ? "right" : "left";
 				const continued = message.header === prevHeader;
-				this.createChatBubble(
+				createChatBubble(
 					continued ? "" : message.header, prevHeader, message.body, message.subtext, align, el,
 					continued, colorConfigs, formatConfigs,
 				);
@@ -153,7 +157,7 @@ export default class ChatViewPlugin extends Plugin {
 						} else {
 							continuedCount = 0;
 						}
-						this.createChatBubble(	// 创建聊天窗口
+						createChatBubble(	// 创建聊天窗口
 							header, prevHeader, message, subtext, KEYMAP[line.charAt(0)], el, continued,
 							colorConfigs, formatConfigs,
 						);
@@ -214,17 +218,6 @@ export default class ChatViewPlugin extends Plugin {
 						if (k.length > 0 /*&& COLORS.contains(v)*/) colorConfigs.set(k, v);
 					}
 				}
-			}
-
-			// 重新整理格式变量
-			{
-				// 尝试修改css变量（会全局修改，还是不适合）
-				/*
-				let sytle_width = formatConfigs.get("width");
-				if (sytle_width) document.documentElement.style.setProperty('--qq-width', sytle_width+"px")
-				let style_max_height = formatConfigs.get("max-height");
-				if (style_max_height) document.documentElement.style.setProperty('--qq-max-height', style_max_height+"px")
-				*/
 			}
 
 			// 遍历2（重设行数，重新遍历。先知道了格式后，再来渲染对话）
@@ -302,7 +295,7 @@ export default class ChatViewPlugin extends Plugin {
 					if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
 					if (style_all) el.setAttr("Style", style_all)
 
-					this.createChatBubble_withIcon(
+					createChatBubble_withIcon(
 						header,											// header
 						prevHeader,									// prevHeader
 						message,										// message，注意自增
@@ -318,204 +311,6 @@ export default class ChatViewPlugin extends Plugin {
 		});
 	}
 
-	/**
-	 *  .chat-view-bubble.chat-view-bubble-mode-qq
-	 * 	  .chat-view-qq-icon
-	 *    	img
-	 * 		.chat-view-qq-msg
-	 * 			.chat-view-qq-header
-	 * 			.pop
-	 * 				.shape-zero
-	 * 					.shape
-	 * 				.chat-view-qq-message-all
-	 * 					.chat-view-qq-message-line
-	 * 						.chat-view-qq-message-text
-	 * 						(.chat-view-qq-message-msg)
-	 */
-	// 创建聊天窗口（有头像版）被循环调用的
-	private createChatBubble_withIcon(
-		header: string,
-		prevHeader: string,
-		message: Array<string>,	// 支持多行信息
-		subtext: string,
-		align: string,
-		element: HTMLElement,
-		continued: boolean,
-		headerIcon: Map<string, string>,
-		formatConfigs: Map<string, string>
-	) {
-
-		const marginClass = continued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
-		const colorConfigClass = `chat-view-black`; //${colorConfigs.get(continued ? prevHeader : header)}`;
-		/*const widthClass = formatConfigs.has("mw") ?
-			`chat-view-max-width-${formatConfigs.get("mw")}`
-			: (Platform.isMobile ? "chat-view-mobile-width" : "chat-view-desktop-width");*/
-		const modeClass = `chat-view-bubble-mode-qq`//`chat-view-bubble-mode-default`//`chat-view-bubble-mode-${formatConfigs.has("mode") ? formatConfigs.get("mode") : "default"}`;
-		const headerEl: keyof HTMLElementTagNameMap = formatConfigs.has("header") ?
-			formatConfigs.get("header") as keyof HTMLElementTagNameMap :
-			"h4";
-		
-		// 【新增self】指定
-		let selfHeader = formatConfigs.get("self");
-		if (selfHeader && selfHeader==header){
-			align = "right";
-		} else {
-			align = "left"
-		}
-
-		// 创建每条信息的根div
-		const bubble = element.createDiv({
-			cls: ["chat-view-bubble", `chat-view-align-${align}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
-		});
-
-		// 创建icon项
-		let iconSrc = headerIcon.get(header)
-		const div_icon = bubble.createDiv({
-			cls: ["chat-view-qq-icon"]
-		});
-		let div_img;
-		{
-			// img
-			if (header.length > 0) {
-				div_img = div_icon.createEl("img", {attr: {"src": iconSrc}});
-			}
-		}
-		// 主题色
-		/*
-		console.log("准备获取主题色")
-		let canvas = element.createEl('canvas')
-		let context = canvas.getContext && canvas.getContext('2d')
-		let img = new Image()
-		img.onload = function() {
-			context.drawImage(img, 0, 0)
-			img.style.display = 'none'
-			let imgData = (context.getImageData(0, 0, img.width, img.height)).data
-			console.log(imgData)
-			element.createEl('p', {text: String(imgData)})
-		}
-		//img.src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=182623993,1093186456&fm=27&gp=0.jpg"
-		img.src="https://img1.baidu.com/it/u=4222289549,366398108&fm=253&fmt=auto&app=120&f=JPG?w=500&h=601"
-		img.crossOrigin="anonymous"*/
-
-		// 创建消息项
-		const div_msg = bubble.createDiv({
-			cls: ["chat-view-qq-msg"]
-		});
-		{
-			// 发送者
-			if (header.length > 0) {
-				div_msg.createEl("p"/*headerEl*/, {text: header, cls: ["chat-view-qq-header"]});
-			}
-			div_msg.createDiv({attr: {"style": "clear: both;"}});
-			if (message.length > 0) {
-				let pop = div_msg.createDiv({cls: ["pop"]})
-				{
-					// 小尖角
-					pop.createDiv({cls: ["shape-zero"]})
-					.createDiv({cls: ["shape"]})
-					// 全部信息
-					let messages_all = pop.createEl("div", {cls: ["chat-view-qq-message-all", " word99"]});
-					let qq_img_re = /!\[\]\((.*?[.jpg|.gif|.png|.webp])\)/
-					for (let j=0; j<message.length; j++) {
-						// 单行信息
-						let msg_line = message[j]
-						let message_line = messages_all.createEl("div", {cls: ["chat-view-qq-message-line"]});
-						let msg_splits = msg_line.split(qq_img_re)
-						if (msg_splits.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
-						for (let i=0; i<msg_splits.length; i++) {
-							// 分隔后的信息
-							if (i%2==0) message_line.createEl('span', {
-								text: msg_splits[i], 
-								cls: ["chat-view-qq-message-text"]
-							});
-							else message_line.createEl('img', {
-								cls: ["chat-view-qq-message-msg"],
-								attr: {"src": msg_splits[i].replace("file:///", "app://local/")}
-							});
-						}
-					}
-					/*
-					if (qq_img_re.test(message)){
-						let msg_array = message.split(qq_img_re)
-						if (msg_array.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
-						for (let i=0; i<msg_array.length; i++) {
-							if (i%2==0) message_div.createEl('span', {
-								text: msg_array[i], 
-								cls: ["chat-view-qq-message", " word99"],
-								//attr:{"style": `background-color: ${rgb}`}
-							});
-							else message_div.createEl('img', {attr: {
-								"src": msg_array[i].replace("file:///", "app://local/")}});
-						}
-					}
-					// 信息 - 纯净版
-					else {					
-						message_div.createEl("span", {
-							text: message, 
-							cls: ["chat-view-qq-message", " word99"],
-							//attr:{"style": `background-color: ${rgb}`}
-						});
-					}*/
-				}
-			}
-			div_msg.createDiv({attr: {"style": "clear: both;"}});
-		}
-		bubble.createDiv({attr: {"style": "clear: both;"}});
-		/*if (subtext.length > 0) div_msg.createEl("sub", {text: subtext, cls: ["chat-view-subtext"]});*/
-	}
-
-	// 获取主题色，https://www.jianshu.com/p/3367a26c17bb，canvas中getImageData方法
-	/*private async GetColor(
-		imgStr = "/2px-blue-and-1px-red-image.png"
-	){
-		const result = await analyze(imgStr) // also supports base64 encoded image strings
-		// console.log(`The dominant color is ${result[0].color} with ${result[0].count} occurrence(s)`)
-		// => The  dominant color is rgb(0,0,255) with 2 occurrence(s)
-		// console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
-		// => The  secondary color is rgb(255,0,0) with 1 occurrence(s)
-	}*/
-
-	// 创建聊天窗口
-	private createChatBubble(
-		header: string,
-		prevHeader: string,
-		message: string,
-		subtext: string,
-		align: string,
-		element: HTMLElement,
-		continued: boolean,
-		colorConfigs: Map<string, string>,
-		formatConfigs: Map<string, string>,
-	) {
-		const marginClass = continued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
-		const colorConfigClass = `chat-view-${colorConfigs.get(continued ? prevHeader : header)}`;
-		const widthClass = formatConfigs.has("mw") ?
-			`chat-view-max-width-${formatConfigs.get("mw")}`
-			: (Platform.isMobile ? "chat-view-mobile-width" : "chat-view-desktop-width");
-		const modeClass = `chat-view-bubble-mode-${formatConfigs.has("mode") ? formatConfigs.get("mode") : "default"}`;
-		const headerEl: keyof HTMLElementTagNameMap = formatConfigs.has("header") ?
-			formatConfigs.get("header") as keyof HTMLElementTagNameMap :
-			"h4";
-		// 创建div
-		const bubble = element.createDiv({
-			cls: ["chat-view-bubble", `chat-view-align-${align}`, marginClass, colorConfigClass, widthClass, modeClass]
-		});
-		// 创建元素
-		if (header.length > 0) bubble.createEl(headerEl, {text: header, cls: ["chat-view-header"]});
-		if (message.length > 0) bubble.createEl("p", {text: message, cls: ["chat-view-message"]});
-		if (subtext.length > 0) bubble.createEl("sub", {text: subtext, cls: ["chat-view-subtext"]});
-		/* 
-		 * 说一下这个div结构
-		 * 一层：Obsidian自带的
-		 * 			cm-preview-code-block cm-embed-block markdown-rendered
-		 * 二层：这里创建的整体
-		 * 			block-language-chat-qq
-		 * 三层：单个对话框
-		 * 			chat-view-bubble chat-view-align-undefined chat-view-default-vertical-margin chat-view-undefined chat-view-desktop-width chat-view-bubble-mode-default
-		 * 四层：h4、p、sub
-		 */
-	}
-
 	// 插件设置加载后，加载配置
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -524,86 +319,5 @@ export default class ChatViewPlugin extends Plugin {
 	// 插件设置保存后，加载配置
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-/* 设置相关 */
-interface ChatPluginSettings {
-	chatSelfName: string,
-	chatQQandName: string,
-	width: Number,
-	maxHeight: Number
-}
-
-const DEFAULT_SETTINGS: ChatPluginSettings = {
-	chatSelfName: '',
-	chatQQandName: '',
-	width: 900,
-	maxHeight: 1100
-}
-/* 设置相关 */
-class ChatSettingTab extends PluginSettingTab {
-	plugin: ChatViewPlugin;
-
-	constructor(app: App, plugin: ChatViewPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const {containerEl} = this;
-
-		containerEl.empty();
-		// 一个h2标题
-		containerEl.createEl('h2', {text: 'Chat-qq 相关设置'});
-
-		// 创建一个新的设置项
-		new Setting(containerEl)
-		.setName('默认渲染宽度')
-		.setDesc('【重启插件生效】用于渲染记录')
-		.addText(text => text
-			.setPlaceholder("例如：900")
-			.setValue(String(this.plugin.settings.width))
-			.onChange(async (value) => {
-				console.log('Secret: ' + value);
-				this.plugin.settings.width = Number(value);
-				await this.plugin.saveSettings();
-			}));
-
-		new Setting(containerEl)
-		.setName('默认渲染最大高度')
-		.setDesc('【重启插件生效】用于渲染记录，超过后会变成滚动框')
-		.addText(text => text
-			.setPlaceholder("例如：1100")
-			.setValue(String(this.plugin.settings.maxHeight))
-			.onChange(async (value) => {
-				console.log('Secret: ' + value);
-				this.plugin.settings.maxHeight = Number(value);
-				await this.plugin.saveSettings();
-			}));
-		
-		new Setting(containerEl)
-			.setName('自己的昵称')											 // 设置项名字
-			.setDesc('自己的对话框将从右侧弹出')					 // 设置项提示
-			.addText(text => text												// 输入框
-				.setPlaceholder('自己的昵称')								// 没有内容时的提示
-				.setValue(this.plugin.settings.chatSelfName)
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.chatSelfName = value;
-					await this.plugin.saveSettings();
-				}));
-		
-		new Setting(containerEl)
-		.setName('昵称-QQ 表')
-		.setDesc('用于设置聊天头像')
-		.addTextArea(text => text
-			.setPlaceholder('例如：昵称1=QQ1, 昵称2=QQ2')
-			.setValue(this.plugin.settings.chatQQandName)
-			.onChange(async (value) => {
-				console.log('Secret: ' + value);
-				this.plugin.settings.chatQQandName = value;
-				await this.plugin.saveSettings();
-			}));
 	}
 }
