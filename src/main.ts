@@ -1,5 +1,4 @@
 import {Plugin, Platform, moment, PluginSettingTab} from "obsidian";
-import {Notice} from "obsidian";
 import {MarkdownRenderChild} from "obsidian"; // md后处理器
 
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
