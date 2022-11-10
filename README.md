@@ -1,6 +1,6 @@
 ## 说明
 
-==该插件只是为了方便记录聊天记录和设置对话框样式，请勿用作伪造聊天记录以及犯罪用途==
+==该插件只是为了方便记录QQ和WeChat聊天记录，请勿用作伪造聊天记录以及犯罪用途==
 
 Obsidian插件，魔改于 [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)
 保存了原插件的功能，不需要同时使用两个插件
