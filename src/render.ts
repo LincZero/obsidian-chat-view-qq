@@ -24,7 +24,7 @@ export function createChatBubble_withIcon(
   element: HTMLElement,
   continued: boolean,
   headerIcon: Map<string, string>,
-  selfConfigs: Array<string>
+  selfConfigs: Array<String>
 ) {
 
   const marginClass = continued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
