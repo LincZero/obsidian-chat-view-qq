@@ -28,8 +28,10 @@ class ChatPatterns {
 		.join("|"));																				// 不名正则？
 	static readonly voice = /<v\s+([^>]+)>([^<]+)<\/v>/;	// chat-webvtt模式下的对话检测
 
-	static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 第一个匹配项是名字，第二个是时间（日期先不管），下一行是消息
-	static readonly qq_chehui = /(.*?)撤回了一条消息/;
+	// static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/;
+  static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 分别是：名字 空格 日期空格 时间
+  static readonly qq_qunTouXian = /【.*?】(.*?$)/
+  static readonly qq_chehui = /(.*?)撤回了一条消息/;
   static readonly qq_jinqyun = /(.*?)加入本群。/;
   
   static readonly wechat_msg = /(.*?)(:\s*?)$/
@@ -250,7 +252,8 @@ export function chat_qq (
     else if (ChatPatterns.qq_msg.test(line)) {
       /*el.createEl("p", {text: "===============", cls: ["chat-view-comment", "chat-view-qq-comment"]})
       el.createEl("p", {text: line.trim(), cls: ["chat-view-comment", "chat-view-qq-comment"]})*/
-      const header = line.match(ChatPatterns.qq_msg)[1]
+      let header = line.match(ChatPatterns.qq_msg)[1]
+      if (ChatPatterns.qq_qunTouXian.test(header)) header = header.match(ChatPatterns.qq_qunTouXian)[1]; // 如果有群头衔则去除
       const continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0);
       const subtext = line.match(ChatPatterns.qq_msg)[2];
       let prevHeader = "";
