@@ -1,5 +1,6 @@
 import {createChatBubble, createChatBubble_withIcon} from "./render"
 import {ChatPluginSettings} from "./settings"
+import {registerContextMenu} from "./contextMenu"
 
 import * as webvtt from "node-webvtt";
 import { moment } from 'obsidian'
@@ -317,6 +318,8 @@ export function chat_qq (
         selfConfigs,
         main_this
       );
+
+      registerContextMenu(el, main_this)
     }
   }
 }
@@ -427,6 +430,8 @@ export function chat_wechat (
         selfConfigs,
         main_this
       );
+
+      registerContextMenu(el, main_this)
     }
   }
 }
