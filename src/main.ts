@@ -30,12 +30,12 @@ export default class ChatViewPlugin extends Plugin {
 
 		// 【魔改】QQ 格式
 		this.registerMarkdownCodeBlockProcessor("chat-qq", (source, el, _) => {
-			chat_qq(source, el, _, this.settings)
+			chat_qq(source, el, _, this)
 		});
 
 		// 【魔改】微信 格式
 		this.registerMarkdownCodeBlockProcessor("chat-wechat", (source, el, _) => {
-			chat_wechat(source, el, _, this.settings)
+			chat_wechat(source, el, _, this)
 		});
 	}
 

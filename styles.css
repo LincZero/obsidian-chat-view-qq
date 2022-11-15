@@ -222,8 +222,9 @@ div.chat-view-wood .chat-view-header {
 	--qq-bg-color: rgba(255, 255, 255, 0.8);
 }
 @font-face {
-    font-family: 'NotoColorEmoji';
-    src: url('./font/NotoColorEmoji.ttf') format('truetype');
+    /*font-family: 'NotoColorEmoji';*/
+    /*src: url('./font/NotoColorEmoji.ttf') format('truetype');*/
+    /*src: url('E:/Cloud/data/Group/public/home/Soft2/System/Windows/Environment/android-sdk-windows/platforms/android-23/data/fonts') format('truetype');*/
 }
 
 body,
@@ -239,7 +240,7 @@ html {
    width: var(--qq-width); 
    max-height: var(--qq-max-height);
    overflow-y: scroll;
-   font-family: 'Microsoft YaHei', 'MSYH', 'NotoColorEmoji', Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, å¾®è½¯é›…é»‘, Arial, sans-serif;
+   font-family: 'Microsoft YaHei', 'MSYH', /*'NotoColorEmoji',*/ Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, å¾®è½¯é›…é»‘, Arial, sans-serif;
    background-color: var(--qq-bg-color);
 }
 
@@ -370,13 +371,14 @@ div.chat-view-qq-message-all
 }
 .chat-view-qq-message-img{
 	width: auto;
-	height: auto;	margin: 0;
+	height: auto;
+	margin: 0;
 	padding: 0;
 	float: 0;
 }
 
 .word99 {
-    width: {{ info.word99 }}px;
+    /*width: {{ info.word99 }}px;*/
 }
 
 .author {

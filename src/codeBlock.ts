@@ -170,8 +170,10 @@ export function chat_qq (
   source: string,
   el: HTMLElement,
   _: MarkdownPostProcessorContext,
-  settings: ChatPluginSettings
+  main_this: any,
 ) {
+  let settings: ChatPluginSettings = main_this.settings
+
   // 这一步把空行全部搞没了…………
   const rawLines = source.split("\n")/*.filter((line) => ChatPatterns.joined.test(line.trim()))*/;
   const lines = rawLines.map((rawLine) => rawLine.trim());
@@ -312,7 +314,8 @@ export function chat_qq (
         el,
         continued,									// continued
         headerIcon,
-        selfConfigs
+        selfConfigs,
+        main_this
       );
     }
   }
@@ -323,8 +326,9 @@ export function chat_wechat (
   source: string,
   el: HTMLElement,
   _: MarkdownPostProcessorContext,
-  settings: ChatPluginSettings
+  main_this: any,
 ) {
+  let settings: ChatPluginSettings = main_this.settings
   // 这一步把空行全部搞没了…………
   const rawLines = source.split("\n")/*.filter((line) => ChatPatterns.joined.test(line.trim()))*/;
   const lines = rawLines.map((rawLine) => rawLine.trim());
@@ -420,7 +424,8 @@ export function chat_wechat (
         el,
         continued,									// continued
         headerIcon,
-        selfConfigs
+        selfConfigs,
+        main_this
       );
     }
   }

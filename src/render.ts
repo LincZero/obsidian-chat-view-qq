@@ -1,4 +1,7 @@
 import {Platform, Notice} from "obsidian";
+import {App, Menu, Editor, MarkdownView, Point} from 'obsidian';
+
+var domtoimage = require('dom-to-image');
 
 /**
  *  .chat-view-bubble.chat-view-bubble-mode-qq
@@ -24,7 +27,8 @@ export function createChatBubble_withIcon(
   element: HTMLElement,
   continued: boolean,
   headerIcon: Map<string, string>,
-  selfConfigs: Array<String>
+  selfConfigs: Array<String>,
+  main_this: any
 ) {
 
   const marginClass = continued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
@@ -115,35 +119,102 @@ export function createChatBubble_withIcon(
             });
           }
         }
-        /*
-        if (qq_img_re.test(message)){
-          let msg_array = message.split(qq_img_re)
-          if (msg_array.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
-          for (let i=0; i<msg_array.length; i++) {
-            if (i%2==0) message_div.createEl('span', {
-              text: msg_array[i], 
-              cls: ["chat-view-qq-message", " word99"],
-              //attr:{"style": `background-color: ${rgb}`}
-            });
-            else message_div.createEl('img', {attr: {
-              "src": msg_array[i].replace("file:///", "app://local/")}});
-          }
-        }
-        // 信息 - 纯净版
-        else {					
-          message_div.createEl("span", {
-            text: message, 
-            cls: ["chat-view-qq-message", " word99"],
-            //attr:{"style": `background-color: ${rgb}`}
-          });
-        }*/
       }
     }
     div_msg.createDiv({attr: {"style": "clear: both;"}});
   }
   bubble.createDiv({attr: {"style": "clear: both;"}});
-  /*if (subtext.length > 0) div_msg.createEl("sub", {text: subtext, cls: ["chat-view-subtext"]});*/
+
+  // 尝试加入右键事件 @TODO：开发测试
+  /*this.registerEvent(
+    this.app.workspace.on("editor-menu", (menu: Menu, editor: Editor, view: MarkdownView) => {
+      new Notice("正在添加菜单项")
+      console.log("正在添加菜单项")
+    })
+  );*/
+  bubble.oncontextmenu = (e)=>{
+    e.preventDefault() // 不然新的菜单不弹出
+    
+    // let menu = new Menu()，不加构造参数也可以
+    let menu = new Menu(main_this.app)
+    menu.addItem((item)=>{
+      const itemDom = (item as any).dom as HTMLElement;
+				itemDom.addClass("type-enhance-menu");
+				item
+						.setTitle("导出图片到剪切板")
+            .setIcon("clipboard-copy")
+            .onClick(() => {
+              f_domtoimage(bubble, main_this.document)
+            })
+    })
+    menu.addItem((item)=>{
+      const itemDom = (item as any).dom as HTMLElement;
+				itemDom.addClass("type-enhance-menu");
+				item
+						.setTitle("将引用图片转为本地")
+            .setIcon("folder-input")
+            .onClick(async () => {
+              
+            })
+    })
+    menu.showAtMouseEvent(e)
+  }
 }
+
+// dom转图片
+function f_domtoimage(bubble: HTMLElement, d: Document){
+  new Notice("正在生成图片")
+
+  // 获取PNG图像base64编码
+  /*domtoimage.toPng(bubble)
+  .then(function (dataUrl: any) {
+      var img = new Image();
+      img.src = dataUrl;
+      //bubble.createEl("img", {
+      //  attr: {"src": img.src}
+      //})
+      // window.atob(img.src)
+      new Notice("转化图片成功1")
+  })
+  .catch(function (error: Error) {
+      console.error('oops, something went wrong!', error);
+  });*/
+
+  // 获取PNG图像blob并下载它
+  domtoimage.toBlob(bubble)
+  .then(function (blob: any) {
+    // window.saveAs(blob, 'my-node.png');
+
+    // ClipboardItem api 火狐不兼容，能用但这里会报错，很烦
+    const clipboardItemInput = new window.ClipboardItem({ 'image/png': blob });
+    navigator.clipboard.write([clipboardItemInput])
+      .then(
+        () => {
+          console.log("Copied to clipboard successfully!");
+        },
+        () => {
+          console.error("Unable to write to clipboard.");
+        }
+      );
+    new Notice("已将图片复制到剪切板")
+  })
+  .catch(function (error: Error) {
+    new Notice("图片生成失败")
+    console.error('oops, something went wrong!', error);
+  }); 
+
+  // 保存并下载压缩的 JPEG 图像
+  /*domtoimage.toJpeg(bubble, { quality: 0.95 })
+    .then(function (dataUrl: any) {
+      var link = d.createElement('a');
+      link.download = 'my-image-name.jpeg';
+      link.href = dataUrl;
+      link.click();
+      new Notice("转化图片成功3")
+    });*/
+  
+}
+
 
 // 获取主题色，https://www.jianshu.com/p/3367a26c17bb，canvas中getImageData方法
 /*private async GetColor(
