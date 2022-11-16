@@ -1,4 +1,4 @@
-import {Platform, Notice} from "obsidian";
+import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext} from "obsidian";
 
 /**
  *  .chat-view-bubble.chat-view-bubble-mode-qq
@@ -22,6 +22,7 @@ export function createChatBubble_withIcon(
   subtext: string,
   align: string,
   element: HTMLElement,
+  _: MarkdownPostProcessorContext,
   continued: boolean,
   headerIcon: Map<string, string>,
   selfConfigs: Array<String>,
@@ -105,15 +106,35 @@ export function createChatBubble_withIcon(
           let msg_splits = msg_line.split(qq_img_re)
           if (msg_splits.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
           for (let i=0; i<msg_splits.length; i++) {
-            // 分隔后的信息
+            // 分隔后的文字信息
             if (i%2==0) message_line.createEl('span', {
               text: msg_splits[i], 
               cls: ["chat-view-qq-message-text"]
             });
-            else message_line.createEl('img', {
-              cls: ["chat-view-qq-message-msg"],
-              attr: {"src": msg_splits[i].replace("file:///", "app://local/")}
-            });
+            // 分隔后的QQ图片/绝对路径图片信息
+            else if (/^file:\/\/\//.test(msg_splits[i])) {
+              message_line.createEl('img', {
+                cls: ["chat-view-qq-message-msg"],
+                attr: {"src": msg_splits[i].replace("file:///", "app://local/")}
+              });
+            }
+            // 网址图片
+            else if(/^http/.test(msg_splits[i])) {
+              message_line.createEl('img', {
+                cls: ["chat-view-qq-message-msg"],
+                attr: {"src": msg_splits[i] }
+              });
+            }
+            // 分隔后的普通图片信息（相对路径）
+            else {
+              // this.app.vault.adapter.basePath // 可能报错，但能运行
+              // this.app.vault.getName()
+              let src = "app://local/"+this.app.vault.adapter.basePath+"/"+_.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+msg_splits[i]
+              message_line.createEl('img', {
+                cls: ["chat-view-qq-message-msg"],
+                attr: {"src": src }
+              });
+            }
           }
         }
       }

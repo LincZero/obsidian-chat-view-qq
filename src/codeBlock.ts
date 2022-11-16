@@ -3,7 +3,7 @@ import {ChatPluginSettings} from "./settings"
 import {registerContextMenu} from "./contextMenu"
 
 import * as webvtt from "node-webvtt";
-import { moment } from 'obsidian'
+import { moment, Notice } from 'obsidian'
 import { MarkdownPostProcessorContext } from 'obsidian';
 
 
@@ -30,7 +30,7 @@ class ChatPatterns {
 	static readonly voice = /<v\s+([^>]+)>([^<]+)<\/v>/;	// chat-webvtt模式下的对话检测
 
 	// static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/;
-  static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 分别是：名字 空格 日期空格 时间
+  static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 分别是：名字 空格 日期空格 时间
   static readonly qq_qunTouXian = /【.*?】(.*?$)/
   static readonly qq_chehui = /(.*?)撤回了一条消息/;
   static readonly qq_jinqyun = /(.*?)加入本群。/;
@@ -281,7 +281,18 @@ export function chat_qq (
           // 颜色头像
           // else if (COLORS.contains(qqHeader)) headerIcon.set(header, `flagColor_${qqHeader}`) // 颜色标记
           // 网址头像
-          else headerIcon.set(header, qqHeader);
+          else if(/^http/.test(qqHeader)) {
+            headerIcon.set(header, qqHeader);
+          }
+          // 库内图片
+          else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(qqHeader)) {
+            let src = "app://local/"+this.app.vault.adapter.basePath+"/"+_.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+qqHeader
+            headerIcon.set(header, src);
+          }
+          // 其他头像
+          else {
+            headerIcon.set(header, qqHeader);
+          }
         }
         // 自动分配默认头像
         else if (countDefaultIcon < numDefaultIcon) {
@@ -313,6 +324,7 @@ export function chat_qq (
         subtext,										// subtext
         KEYMAP[line.charAt(0)], 
         el,
+        _,
         continued,									// continued
         headerIcon,
         selfConfigs,
@@ -425,6 +437,7 @@ export function chat_wechat (
         subtext,										// subtext
         KEYMAP[line.charAt(0)], 
         el,
+        _,
         continued,									// continued
         headerIcon,
         selfConfigs,

@@ -1,4 +1,4 @@
-import {Plugin} from "obsidian";
+import {Plugin, Notice} from "obsidian";
 // import {MarkdownRenderChild} from "obsidian"; // md后处理器
 
 // 全局设置
@@ -37,6 +37,10 @@ export default class ChatViewPlugin extends Plugin {
 		this.registerMarkdownCodeBlockProcessor("chat-wechat", (source, el, _) => {
 			chat_wechat(source, el, _, this)
 		});
+
+		// Vault 是一个资源库，用于存储和管理文档和文件
+		/*new Notice(this.app.vault.getName()); // 这个是整个库的名字
+		console.log(this.app.vault.getFiles());*/
 	}
 
 	// 插件设置加载后，加载配置
