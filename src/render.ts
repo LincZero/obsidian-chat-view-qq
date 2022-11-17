@@ -5,7 +5,10 @@ import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext} from 
  * 	  .chat-view-qq-icon
  *    	img
  * 		.chat-view-qq-msg
- * 			.chat-view-qq-header
+ *      .chat-view-qq-title
+ *        .chat-view-qq-groupTitle
+ * 			  .chat-view-qq-sender
+ *        .chat-view-qq-dateTime
  * 			.pop
  * 				.shape-zero
  * 					.shape
@@ -16,20 +19,21 @@ import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext} from 
  */
 // 创建聊天窗口（有头像版）被循环调用的
 export function createChatBubble_withIcon(
-  header: string,
-  prevHeader: string,
-  message: Array<string>,	// 支持多行信息
-  subtext: string,
-  align: string,
+  msg_sender: string,
+  msg_groupTitle: string,
+  msg_iconSrc: string,
+  msg_content: Array<string>,	// 支持多行信息
+  msg_dateTime: string,
+  msg_isContinued: boolean,
+  msg_isSelf: boolean,
+  msg_isShowTime: boolean,
+  source: string,
   element: HTMLElement,
   _: MarkdownPostProcessorContext,
-  continued: boolean,
-  headerIcon: Map<string, string>,
-  selfConfigs: Array<String>,
   main_this: any
 ) {
 
-  const marginClass = continued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
+  const marginClass = msg_isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
   const colorConfigClass = `chat-view-black`; //${colorConfigs.get(continued ? prevHeader : header)}`;
   /*const widthClass = formatConfigs.has("mw") ?
     `chat-view-max-width-${formatConfigs.get("mw")}`
@@ -38,29 +42,21 @@ export function createChatBubble_withIcon(
   /*const headerEl: keyof HTMLElementTagNameMap = formatConfigs.has("header") ?
     formatConfigs.get("header") as keyof HTMLElementTagNameMap :
     "h4";*/
-  
-  // 【新增self】指定
-  if (selfConfigs && selfConfigs.includes(header)){
-    align = "right";
-  } else {
-    align = "left"
-  }
 
   // 创建每条信息的根div
   const bubble = element.createDiv({
-    cls: ["chat-view-bubble", `chat-view-align-${align}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
+    cls: ["chat-view-bubble", `chat-view-align-${msg_isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
   });
 
   // 创建icon项
-  let iconSrc = headerIcon.get(header)
   const div_icon = bubble.createDiv({
     cls: ["chat-view-qq-icon"]
   });
   let div_img;
   {
     // img
-    if (header.length > 0) {
-      div_img = div_icon.createEl("img", {attr: {"src": iconSrc}});
+    if (msg_sender.length > 0) {
+      div_img = div_icon.createEl("img", {attr: {"src": msg_iconSrc}});
     }
   }
   // 主题色
@@ -83,14 +79,27 @@ export function createChatBubble_withIcon(
   // 创建消息项
   const div_msg = bubble.createDiv({
     cls: ["chat-view-qq-msg"]
-  });
+  });  
+  // 发送附属信息
   {
-    // 发送者
-    if (header.length > 0) {
-      div_msg.createEl("p"/*headerEl*/, {text: header, cls: ["chat-view-qq-header"]});
+    let div_title = div_msg.createDiv({cls: ["chat-view-qq-title"]})
+    // 发送者群头衔
+    if (msg_groupTitle.length > 0) {
+      div_title.createEl("p", {text: msg_groupTitle, attr: {"title": msg_groupTitle}, cls: ["chat-view-qq-groupTitle"]});
     }
+    // 发送者群昵称
+    if (msg_sender.length > 0) {
+      div_title.createEl("p", {text: msg_sender, cls: ["chat-view-qq-sender"]});
+    }
+    // 发送时间
+    if (msg_isShowTime && msg_dateTime.length > 0) {
+      div_title.createEl("p", {text: msg_dateTime, cls: ["chat-view-qq-dateTime"]})
+    }
+  }
+  // 发送信息内容
+  {
     div_msg.createDiv({attr: {"style": "clear: both;"}});
-    if (message.length > 0) {
+    if (msg_sender.length > 0) {
       let pop = div_msg.createDiv({cls: ["pop"]})
       {
         // 小尖角
@@ -99,9 +108,9 @@ export function createChatBubble_withIcon(
         // 全部信息
         let messages_all = pop.createEl("div", {cls: ["chat-view-qq-message-all", " word99"]});
         let qq_img_re = /!\[\]\((.*?[.jpg|.gif|.png|.webp])\)/
-        for (let j=0; j<message.length; j++) {
+        for (let j=0; j<msg_content.length; j++) {
           // 单行信息
-          let msg_line = message[j]
+          let msg_line = msg_content[j]
           let message_line = messages_all.createEl("div", {cls: ["chat-view-qq-message-line"]});
           let msg_splits = msg_line.split(qq_img_re)
           if (msg_splits.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');

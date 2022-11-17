@@ -278,16 +278,38 @@ html {
 .chat-view-align-left .chat-view-qq-icon img {margin-left: 15px;float: left;}
 .chat-view-align-right .chat-view-qq-icon img {margin-right: 15px;float: right;}
 
-
-.chat-view-bubble-mode-qq .chat-view-qq-header {
+.chat-view-qq-title p{
     font-size: 14px;
-	margin: 0;
+    margin: 0;
 }
-.chat-view-align-left .chat-view-qq-header {
-	float: left;
+.chat-view-qq-title .chat-view-qq-groupTitle{
+    font-weight: bold;
+    padding: 0 0.3em 0 0.3em;
+    border-radius: 0.4em;
+    color: #f6fefd;
+    background-color: #a8b0c5;
 }
-.chat-view-align-right .chat-view-qq-header {
-	float: right;
+.chat-view-qq-title .chat-view-qq-groupTitle[title$="管理员"]{
+    background-color: rgb(61, 226, 212);
+}
+.chat-view-qq-title .chat-view-qq-groupTitle[title$="群主"]{
+    background-color: rgb(255, 213, 57);
+}
+.chat-view-qq-title .chat-view-qq-sender {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+}
+.chat-view-align-left .chat-view-qq-groupTitle,
+.chat-view-align-left .chat-view-qq-sender,
+.chat-view-align-right .chat-view-qq-dateTime {
+    float: left;
+}
+.chat-view-align-right .chat-view-qq-groupTitle,
+.chat-view-align-right .chat-view-qq-sender,
+.chat-view-align-left .chat-view-qq-dateTime {
+    float: right;
 }
 
 .chat-view-qq-msg,
@@ -329,7 +351,6 @@ div.chat-view-qq-message-all
 	position: relative;
 	width: 0;
 	height: 0;
-	margin-top: 5px;
 	border-top: 0px solid transparent;
 	border-bottom: 14px solid transparent;
 }
@@ -349,12 +370,16 @@ div.chat-view-qq-message-all
     border-right: 7px solid transparent;
 }
 
+.shape,
+.chat-view-qq-message-all {
+    margin-top: 9px;
+}
+
 .chat-view-qq-message-all {
 	display: inline-block; /*inline-block*/
 	word-wrap: break-word;
 	color: var(--qq-msg-color);
 	font-size: 27px;
-	margin-top: 5px;
 	margin-bottom: 5px;
 	padding: 8px 15px 8px 15px;
 	background-color: var(--qq-msg-bg-color);

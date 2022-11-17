@@ -14,7 +14,7 @@ version 是魔改版本
 	"id": "obsidian-chat-view-qq",
 	"name": "Chat View QQ",
 	"version-by": "1.2.1",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"minAppVersion": "0.15.0",
 	"description": "魔改于QQ Chat View，可以直接复制QQ聊天记录中的信息，实现自动渲染",
 	"author": "LincZero",
@@ -96,6 +96,12 @@ LincZero:
 	- 再次强调，不要用来伪造聊天用于不良用途
 
 ## 更新日志
+
+### v0.4.4（20221117）
+
+新增了 群头衔的渲染
+
+修改了 源文件一些变量名称
 
 ### v0.4.3（20221117）
 

@@ -31,7 +31,7 @@ class ChatPatterns {
 
 	// static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/;
   static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 分别是：名字 空格 日期空格 时间
-  static readonly qq_qunTouXian = /【.*?】(.*?$)/
+  static readonly qq_qunTouXian = /【(.*?)】(.*?$)/
   static readonly qq_chehui = /(.*?)撤回了一条消息/;
   static readonly qq_jinqyun = /(.*?)加入本群。/;
   
@@ -179,9 +179,9 @@ export function chat_qq (
   const rawLines = source.split("\n")/*.filter((line) => ChatPatterns.joined.test(line.trim()))*/;
   const lines = rawLines.map((rawLine) => rawLine.trim());
   const formatConfigs = new Map<string, string>();
-  let selfConfigs = new Array<String>();  // 新增：多个己方
-  const colorConfigs = new Map<string, string>();
-  const headerIcon = new Map<string, string>();		// 新增：头像图片
+  let selfConfigs = new Array<String>();              // 多个己方
+  const iconConfigs = new Map<string, string>();      // 未处理的头像
+  const iconSrcConfigs = new Map<string, string>();		// 处理过后的头像
   let icons = [
     "https://img0.baidu.com/it/u=3452693033,2914629743&fm=253",
     "https://img2.baidu.com/it/u=2231228778,2513904551&fm=253",
@@ -207,7 +207,7 @@ export function chat_qq (
     const configs = settings.chatQQandName.split(",").map((l) => l.trim());
     for (const config of configs) {
       const [k, v] = config.split("=").map((c) => c.trim());
-      if (k.length > 0) colorConfigs.set(k, v);
+      if (k.length > 0) iconConfigs.set(k, v);
     }
   }
   for (const line of lines) {
@@ -220,12 +220,12 @@ export function chat_qq (
         else formatConfigs.set(k, v);
       }
     }
-    // 匹配正则 "colors"
+    // 匹配正则 "icon"
     if (ChatPatterns.colors.test(line)) {
       const configs = line.replace("[", "").replace("]", "").split(",").map((l) => l.trim());
       for (const config of configs) {
         const [k, v] = config.split("=").map((c) => c.trim());
-        if (k.length > 0 /*&& COLORS.contains(v)*/) colorConfigs.set(k, v);
+        if (k.length > 0) iconConfigs.set(k, v);
       }
     }
   }
@@ -253,61 +253,62 @@ export function chat_qq (
     }
     // 对话消息【魔改】
     else if (ChatPatterns.qq_msg.test(line)) {
-      /*el.createEl("p", {text: "===============", cls: ["chat-view-comment", "chat-view-qq-comment"]})
-      el.createEl("p", {text: line.trim(), cls: ["chat-view-comment", "chat-view-qq-comment"]})*/
-      let header = line.match(ChatPatterns.qq_msg)[1]
-      if (ChatPatterns.qq_qunTouXian.test(header)) header = header.match(ChatPatterns.qq_qunTouXian)[1]; // 如果有群头衔则去除
-      const continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0);
-      const subtext = line.match(ChatPatterns.qq_msg)[2];
-      let prevHeader = "";
+      let msg_sender = line.match(ChatPatterns.qq_msg)[1]                               // 消息发送者
+      let msg_groupTitle = ""                                                           // 消息发送者群头衔
+      if (ChatPatterns.qq_qunTouXian.test(msg_sender)) {
+        msg_groupTitle = msg_sender.match(ChatPatterns.qq_qunTouXian)[1];
+        msg_sender = msg_sender.match(ChatPatterns.qq_qunTouXian)[2];
+      }
+      const msg_continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0); // 是否与上句是同一人发的
+      const msg_dateTime = line.match(ChatPatterns.qq_msg)[2];                          // 日期时间
       
-      // 支持多行信息
-      let message = new Array()
+      let msg_content = new Array()                                                     // 消息内容，支持多行信息
       while(true){
         if (index >= lines.length-1) break;
         index++;
         line = lines[index].trim().replace("&nbsp;", " ");
         if (line.replace(/\s*/g,"")=="") break;
-        message.push(line);
+        msg_content.push(line);
       }
 
-      // 如果没有头像，则自动分配头像
-      if (!headerIcon.get(header)) {
-        let qqHeader = colorConfigs.get(header)
+      console.log(msg_sender)
+      // iconSrcConfig中没有，就从iconConfig中去找并处理后放到iconSrcConfig中
+      if (!iconSrcConfigs.get(msg_sender)) {
+        let iconConfigsItem = iconConfigs.get(msg_sender)
+        let iconSrcConfigsItem = ""
         // 有指定头像
-        if (qqHeader) {
+        if (iconConfigsItem) {
           // QQ头像
-          if (/^\d+$/.test(qqHeader)) headerIcon.set(header, `http://q2.qlogo.cn/headimg_dl?dst_uin=${qqHeader}&spec=40`);
-          // 颜色头像
-          // else if (COLORS.contains(qqHeader)) headerIcon.set(header, `flagColor_${qqHeader}`) // 颜色标记
-          // 网址头像
-          else if(/^http/.test(qqHeader)) {
-            headerIcon.set(header, qqHeader);
+          if (/^\d+$/.test(iconConfigsItem)) {
+            iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconConfigsItem}&spec=40`
           }
-          // 库内图片
-          else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(qqHeader)) {
-            let src = "app://local/"+this.app.vault.adapter.basePath+"/"+_.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+qqHeader
-            headerIcon.set(header, src);
+          // 网址头像
+          else if(/^http/.test(iconConfigsItem)) {
+            iconSrcConfigsItem = iconConfigsItem
+          }
+          // 相对路径图片
+          else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(iconConfigsItem)) {
+            iconSrcConfigsItem = "app://local/"+this.app.vault.adapter.basePath+"/"+_.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+iconConfigsItem
           }
           // 其他头像
           else {
-            headerIcon.set(header, qqHeader);
+            iconSrcConfigsItem = iconConfigsItem
           }
         }
-        // 自动分配默认头像
-        else if (countDefaultIcon < numDefaultIcon) {
-          /*let file, scripts = document.getElementsByTagName("script"); 
-          file = scripts[scripts.length - 1].getAttribute("src");
-
-          let path2 = require('dfs').join(adapter.getBasePath(), this.manifest.dir);*/
-
-          headerIcon.set(header, icons[countDefaultIcon++])
-        }
-        // 默认QQ头像
+        // 无指定头像，自动分配默认头像
         else {
-          headerIcon.set(header, `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`);
+          // 随机头像
+          if (countDefaultIcon < numDefaultIcon) {
+            iconSrcConfigsItem = icons[countDefaultIcon++]
+          }
+          // 默认QQ头像
+          else {
+            iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`
+          }
         }
+        iconSrcConfigs.set(msg_sender, iconSrcConfigsItem)
       }
+      let msg_iconSrc:string = iconSrcConfigs.get(msg_sender)
     
       // 该渲染项的设置，会覆盖全局设置
       let sytle_width = formatConfigs.get("width");
@@ -317,21 +318,24 @@ export function chat_qq (
       if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
       if (style_all) el.setAttr("Style", style_all)
 
+      let msg_isSelf:boolean = selfConfigs.includes(msg_sender)
+      let msg_isShowTime:boolean = formatConfigs.get("time") && formatConfigs.get("time")=="show"
       createChatBubble_withIcon(
-        header,											// header
-        prevHeader,									// prevHeader
-        message,										// message，注意自增
-        subtext,										// subtext
-        KEYMAP[line.charAt(0)], 
+        msg_sender,											// 信息发送者
+        msg_groupTitle,									// 群头衔
+        msg_iconSrc,                    // 群头像
+        msg_content,										// 信息内容，注意自增
+        msg_dateTime,										// 信息日期和时间
+        msg_continued,									// 是否连发
+        msg_isSelf,                     // 是否自己
+        msg_isShowTime,                 // 是否显示时间
+        source,
         el,
         _,
-        continued,									// continued
-        headerIcon,
-        selfConfigs,
         main_this
       );
 
-      registerContextMenu(el, main_this)
+      registerContextMenu(el, this)
     }
   }
 }
@@ -344,13 +348,14 @@ export function chat_wechat (
   main_this: any,
 ) {
   let settings: ChatPluginSettings = main_this.settings
+
   // 这一步把空行全部搞没了…………
-  const rawLines = source.split("\n")/*.filter((line) => ChatPatterns.joined.test(line.trim()))*/;
+  const rawLines = source.split("\n")
   const lines = rawLines.map((rawLine) => rawLine.trim());
   const formatConfigs = new Map<string, string>();
-  let selfConfigs = new Array<String>();  // 新增：多个己方
-  const colorConfigs = new Map<string, string>();
-  const headerIcon = new Map<string, string>();		// 新增：头像图片
+  let selfConfigs = new Array<String>();
+  const iconConfigs = new Map<string, string>();
+  const iconSrcConfigs = new Map<string, string>();
   let icons = [
     "https://img0.baidu.com/it/u=3452693033,2914629743&fm=253",
     "https://img2.baidu.com/it/u=2231228778,2513904551&fm=253",
@@ -395,32 +400,58 @@ export function chat_wechat (
     }
     // 对话消息【魔改】
     else if (ChatPatterns.wechat_msg.test(line)) {
-      const header = line.match(ChatPatterns.wechat_msg)[1]
-      const continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0);
-      const subtext = "";
-      let prevHeader = "";
+      const msg_sender = line.match(ChatPatterns.wechat_msg)[1]
+      const msg_groupTitle = ""
+      const msg_continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0);
+      const msg_dateTime = "";
       
       // 支持多行信息
-      let message = new Array()
+      let msg_content = new Array()
       while(true){
         if (index >= lines.length-1) break;
         index++;
         line = lines[index].trim().replace("&nbsp;", " ");
         if (line.replace(/\s*/g,"")=="") break;
-        message.push(line);
+        msg_content.push(line);
       }
 
-      // 如果没有头像，则自动分配头像
-      if (!headerIcon.get(header)) {
-        // 自动分配默认头像
-        if (countDefaultIcon < numDefaultIcon) {
-          headerIcon.set(header, icons[countDefaultIcon++])
+      // iconSrcConfig中没有，就从iconConfig中去找并处理后放到iconSrcConfig中
+      if (!iconSrcConfigs.get(msg_sender)) {
+        let iconConfigsItem = iconConfigs.get(msg_sender)
+        let iconSrcConfigsItem = ""
+        // 有指定头像
+        if (iconConfigsItem) {
+          // QQ头像
+          if (/^\d+$/.test(iconConfigsItem)) {
+            iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconConfigsItem}&spec=40`
+          }
+          // 网址头像
+          else if(/^http/.test(iconConfigsItem)) {
+            iconSrcConfigsItem = iconConfigsItem
+          }
+          // 相对路径图片
+          else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(iconConfigsItem)) {
+            iconSrcConfigsItem = "app://local/"+this.app.vault.adapter.basePath+"/"+_.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+iconConfigsItem
+          }
+          // 其他头像
+          else {
+            iconSrcConfigsItem = iconConfigsItem
+          }
         }
-        // 默认QQ头像
+        // 无指定头像，自动分配默认头像
         else {
-          headerIcon.set(header, `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`);
+          // 随机头像
+          if (countDefaultIcon < numDefaultIcon) {
+            iconSrcConfigsItem = icons[countDefaultIcon++]
+          }
+          // 默认QQ头像
+          else {
+            iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`
+          }
         }
+        iconSrcConfigs.set(msg_sender, iconSrcConfigsItem)
       }
+      let msg_iconSrc:string = iconSrcConfigs.get(msg_sender)
     
       // 该渲染项的设置，会覆盖全局设置
       let sytle_width = formatConfigs.get("width");
@@ -430,21 +461,24 @@ export function chat_wechat (
       if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
       if (style_all) el.setAttr("Style", style_all)
 
+      let msg_isSelf:boolean = selfConfigs.includes(msg_sender)
+      let msg_isShowTime:boolean = formatConfigs.get("time") && formatConfigs.get("time")=="show"
       createChatBubble_withIcon(
-        header,											// header
-        prevHeader,									// prevHeader
-        message,										// message，注意自增
-        subtext,										// subtext
-        KEYMAP[line.charAt(0)], 
+        msg_sender,											// 信息发送者
+        msg_groupTitle,									// 群头衔
+        msg_iconSrc,                    // 群头像
+        msg_content,										// 信息内容，注意自增
+        msg_dateTime,										// 信息日期和时间
+        msg_continued,									// 是否连发
+        msg_isSelf,                     // 是否自己
+        msg_isShowTime,                 // 是否显示时间
+        source,
         el,
         _,
-        continued,									// continued
-        headerIcon,
-        selfConfigs,
         main_this
       );
 
-      registerContextMenu(el, main_this)
+      registerContextMenu(el, this)
     }
   }
 }

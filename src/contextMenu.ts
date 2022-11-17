@@ -14,8 +14,10 @@ var domtoimage = require('dom-to-image');
 // 给element注册事件
 export function registerContextMenu(
   el: HTMLElement, 
-  main_this: any
+  codeBlock_this: any
 ){
+  let main_this: any = codeBlock_this.main_this
+  
   el.oncontextmenu = (e)=>{
     e.preventDefault() // 不然新的菜单不弹出
     
