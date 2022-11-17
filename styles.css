@@ -278,9 +278,9 @@ html {
 .chat-view-align-left .chat-view-qq-icon img {margin-left: 15px;float: left;}
 .chat-view-align-right .chat-view-qq-icon img {margin-right: 15px;float: right;}
 
-.chat-view-qq-title p{
+.chat-view-bubble-mode-qq .chat-view-qq-title p{
     font-size: 14px;
-    margin: 0;
+    margin: 0 0.2em 0 0.2em;
 }
 .chat-view-qq-title .chat-view-qq-groupTitle{
     font-weight: bold;
@@ -298,8 +298,6 @@ html {
 .chat-view-qq-title .chat-view-qq-sender {
     overflow-x: hidden;
     text-overflow: ellipsis;
-    margin-left: 0.4em;
-    margin-right: 0.4em;
 }
 .chat-view-align-left .chat-view-qq-groupTitle,
 .chat-view-align-left .chat-view-qq-sender,

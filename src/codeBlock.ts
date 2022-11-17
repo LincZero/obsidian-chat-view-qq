@@ -30,7 +30,7 @@ class ChatPatterns {
 	static readonly voice = /<v\s+([^>]+)>([^<]+)<\/v>/;	// chat-webvtt模式下的对话检测
 
 	// static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/;
-  static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 分别是：名字 空格 日期空格 时间
+  static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
   static readonly qq_qunTouXian = /【(.*?)】(.*?$)/
   static readonly qq_chehui = /(.*?)撤回了一条消息/;
   static readonly qq_jinqyun = /(.*?)加入本群。/;
@@ -260,7 +260,9 @@ export function chat_qq (
         msg_sender = msg_sender.match(ChatPatterns.qq_qunTouXian)[2];
       }
       const msg_continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0); // 是否与上句是同一人发的
-      const msg_dateTime = line.match(ChatPatterns.qq_msg)[2];                          // 日期时间
+      const msg_date: string = line.match(ChatPatterns.qq_msg)[3] ? line.match(ChatPatterns.qq_msg)[3]: ""
+      const msg_time: string = line.match(ChatPatterns.qq_msg)[5] ? line.match(ChatPatterns.qq_msg)[5]: ""
+      const msg_dateTime = msg_date + msg_time                                          // 日期时间
       
       let msg_content = new Array()                                                     // 消息内容，支持多行信息
       while(true){
@@ -271,7 +273,6 @@ export function chat_qq (
         msg_content.push(line);
       }
 
-      console.log(msg_sender)
       // iconSrcConfig中没有，就从iconConfig中去找并处理后放到iconSrcConfig中
       if (!iconSrcConfigs.get(msg_sender)) {
         let iconConfigsItem = iconConfigs.get(msg_sender)
