@@ -221,11 +221,10 @@ div.chat-view-wood .chat-view-header {
 	--qq-msg-color: black;
 	--qq-bg-color: rgba(255, 255, 255, 0.8);
 }
-@font-face {
-    /*font-family: 'NotoColorEmoji';*/
-    /*src: url('./font/NotoColorEmoji.ttf') format('truetype');*/
-    /*src: url('E:/Cloud/data/Group/public/home/Soft2/System/Windows/Environment/android-sdk-windows/platforms/android-23/data/fonts') format('truetype');*/
-}
+/*@font-face {
+    font-family: 'NotoColorEmoji';
+    src: url('./font/NotoColorEmoji.ttf') format('truetype');
+}*/
 
 body,
 html {
