@@ -4,7 +4,11 @@
 
 ## 基本用法
 
-### QQ格式
+该插件虽然叫 “Chat View **QQ**”，但这只是因为该插件一开始是只是在原插件的基础上加了识别和渲染QQ格式的功能
+
+但后来在其他的的提议下，又适配了其他不同的格式
+
+### QQ 格式
 
 ```chat-qq
 {self=用户, time=show}
@@ -22,19 +26,97 @@
 
 ```
 
-### 微信格式
+### 微信 格式
+
+windows版复制格式
 
 ```chat-wechat
 {self=用户}
-[作者 LincZero=762699299]
 
 用户: 
 请问这个插件需要怎么使用呢？ 
   
-【作者】LincZero:
+作者 LincZero:
 只要将聊天记录直接复制到chat-wechat代码框即可，无需任何额外操作与配置，简单易用
 
 ```
+
+mac版复制格式
+
+```chat-wechat
+{self=用户, time=show}
+
+用户 2022/11/17 21:07
+请问这个插件需要怎么使用呢？
+
+作者 LincZero 2022/11/17 21:08
+只要将聊天记录直接复制到chat-wechat代码框即可，无需任何额外操作与配置，简单易用
+```
+
+### Telegram 格式
+
+windows版复制格式
+
+```chat-tg
+{self=用户}
+
+用户, [2022-11-22 5:05]
+请问这个插件需要怎么使用呢？
+
+作者 LincZero, [2022-11-22 5:21]
+只要将聊天记录直接复制到chat-wechat代码框即可，无需任何额外操作与配置，简单易用
+```
+
+mac版复制格式
+
+``` chat-tg
+
+< 用户:
+请问这个插件需要怎么使用呢？
+
+> 作者 LincZero:
+只要将聊天记录直接复制到chat-wechat代码框即可，无需任何额外操作与配置，简单易用
+```
+
+### 原插件 格式
+
+Chat-View 原插件的格式
+
+```chat
+< Fitzwilliam Darcy | Just listen to me, all right? You simply cannot fathom the amount of courage I've had to muster to say this.
+
+# Lizzie gazed at Darcy with a baffled look on her face. Darcy was now sweating profusely. This only unsettled her even more. What was happening?
+
+> Elizabeth Bennett | Mr. Darcy, are you all right? Why did you come here?
+
+...
+
+< Fitzwilliam Darcy | I came here to tell you that I'm in love with you. I'm deeply, unabashedly, utterly in love with you.
+```
+
+### Webvtt 格式
+
+Chat-View 原插件的另一种格式，这是一种 **网络视频文本轨道格式**
+
+```chat-webvtt
+WEBVTT
+Self: John Smith, fjorn@gmail.com
+MaxWidth: 70
+Header: h3
+
+00:00:00.000 --> 00:01:04.270
+<v John Smith>No one touch it, it just works. It is the definition of an absolutely perfect Chat View. Do not defile it! Or else...</v>
+
+00:00:05.790 --> 00:00:06.930
+<v John Smith>Going forward, obviously.</v>
+
+00:00:04.310 --> 00:00:04.940
+<v Bob Anderson>Uhm?</v>
+
+00:00:04.310 --> 00:00:04.940
+<v fjorn@gmail.com>Uhm - would be correct! I have no idea what John is talking about!</v>
+```
+
 
 ## （可选）配置操作
 
@@ -61,6 +143,29 @@
 别人:
 这是别人说的话
 
+```
+
+### 切换渲染风格
+
+目前支持的渲染风格有：qq、default、minimal
+
+不同各种聊天格式的默认渲染风格为：
+- chat-qq: qq
+- chat-wechat: qq
+- chat-tg: default
+- chat: default
+- chat-webvtt: default
+
+你也通过 `{style=渲染风格}` 配置来指定，例如：
+
+``` chat-tg
+{mode=qq}
+
+< 用户:
+请问这个插件需要怎么使用呢？
+
+> 作者 LincZero:
+只要将聊天记录直接复制到chat-wechat代码框即可，无需任何额外操作与配置，简单易用
 ```
 
 ### 显示对话时间
@@ -111,9 +216,9 @@
 
 ### 设置QQ头像
 
-使用建议：插件会为每一名用户自动分配默认头像，我也**并不建议**你为所有的聊天记录分配头像，只建议为常用的记录对象在全局设置中进行头像的指定
+> #### 设置QQ头像
 
-（这里仅演示QQ头像，更多的见下面 “多种格式图片的使用” 一节）
+使用建议：插件会为每一名用户自动分配默认头像，我也**并不建议**你为所有的聊天记录分配头像，只建议为常用的记录对象在全局设置中进行头像的指定
 
 ```chat-qq
 [LincZero=762699299]
@@ -132,9 +237,13 @@ LincZero 0:00:00
 
 ```
 
-### 设置微信头像
+> #### 设置微信头像
 
 由于微信API的变动，不能直接获取了（一般需要小程序过去授权）
+
+> #### 设置自定义头像
+
+（见下面 “多种格式图片的使用” 一节）
 
 ## 扩展操作
 
@@ -177,6 +286,10 @@ LincZero 0:00:00
 
 这里介绍一些使用技巧
 
+插件特点：
+- 复制即记录，基本无需额外人工修改
+- 相较于传统的长截图，有着占用内存低、方便修改内容、方便修改显示的比例的优点
+
 该插件可以很方便地记录：
 1. 群友给你的灵感
 2. 有自己QQ给自己发信息记录东西习惯的可以用这个来备份
@@ -205,3 +318,6 @@ LincZero 0:00:00
 特别是不要伪造我说的话
 ———《我确实没说过》
 ```
+
+
+

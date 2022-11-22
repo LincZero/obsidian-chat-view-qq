@@ -345,9 +345,11 @@ export class Chat_qq extends Chat {
   }
 }
 
-// 【魔改】微信格式
+// 微信格式
 export class Chat_wechat extends Chat {
-  static readonly reg_wechat_msg = /(.*?)(:\s*?)$/
+  static readonly reg_wechat_msg_win = /^(.*?):\s*?$/
+  static readonly reg_wechat_msg_mac = /^(.*?)\s(\d+\/\d+\/\d+)\s(\d+:\d+)$/
+  static readonly reg_wechat_msg = [Chat_wechat.reg_wechat_msg_win, Chat_wechat.reg_wechat_msg_mac]
 
   // override render method
   render(){
@@ -363,13 +365,20 @@ export class Chat_wechat extends Chat {
         for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
       }
       // 对话消息
-      else if (Chat_wechat.reg_wechat_msg.test(line)) {
+      else if (Chat_wechat.reg_wechat_msg[0].test(line) || Chat_wechat.reg_wechat_msg[1].test(line)) {
         let msgItem = new MsgItem(this)
 
-        msgItem.sender = line.match(Chat_wechat.reg_wechat_msg)[1]
+        if (Chat_wechat.reg_wechat_msg[0].test(line)) {
+          msgItem.sender = line.match(Chat_wechat.reg_wechat_msg[0])[1]
+          msgItem.dateTime = ""
+        } else {
+          msgItem.sender = line.match(Chat_wechat.reg_wechat_msg[1])[1]
+          msgItem.dateTime = line.match(Chat_wechat.reg_wechat_msg[1])[2] 
+            + " " 
+            + line.match(Chat_wechat.reg_wechat_msg[1])[3]
+        }
         msgItem.groupTitle = ""
         msgItem.isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0);
-        msgItem.dateTime = ""
         
         while(true){
           if (index >= this.lines.length-1) break;
@@ -390,6 +399,71 @@ export class Chat_wechat extends Chat {
         if (style_all) this.el.setAttr("Style", style_all)
 
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
+        
+        msgItem.render()
+
+        registerContextMenu(this.el, this)
+      }
+    }
+  }
+}
+
+// 电报格式
+export class Chat_telegram extends Chat {
+  static readonly reg_tg_msg_win = /^(.*?),\s\[(\d+-\d+-\d+)\s(\d+:\d+)\]\s*?$/
+  static readonly reg_tg_msg_mac = /^(>|<)\s(.*?):\s*?$/
+  static readonly reg_tg_msg = [Chat_telegram.reg_tg_msg_win, Chat_telegram.reg_tg_msg_mac]
+
+  // override render method
+  render(){
+    this.from = this.from ? this.from : "telegram"
+    this.style = this.style ? this.style : "default"
+
+    let continuedCount = 0;
+    for (let index = 0; index < this.lines.length; index++) {
+      let line = this.lines[index].trim();
+      // 省略消息
+      if (line === "...") {
+        const delimiter = this.el.createDiv({cls: ["delimiter"]});
+        for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+      }
+      // 对话消息
+      else if (Chat_telegram.reg_tg_msg[0].test(line) || Chat_telegram.reg_tg_msg[1].test(line)) {
+        let msgItem = new MsgItem(this)
+
+        if (Chat_telegram.reg_tg_msg[0].test(line)) {
+          msgItem.sender = line.match(Chat_telegram.reg_tg_msg[0])[1]
+          msgItem.dateTime = line.match(Chat_telegram.reg_tg_msg[0])[2] 
+            + " " 
+            + line.match(Chat_telegram.reg_tg_msg[0])[3]
+          msgItem.isSelf = false
+        } else {
+          msgItem.sender = line.match(Chat_telegram.reg_tg_msg[1])[2]
+          msgItem.dateTime = ""
+          msgItem.isSelf = line.match(Chat_telegram.reg_tg_msg[1])[1]=="<"
+        }
+        msgItem.groupTitle = ""
+        msgItem.isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0);
+        
+        while(true){
+          if (index >= this.lines.length-1) break;
+          index++;
+          line = this.lines[index].trim().replace("&nbsp;", " ");
+          if (line.replace(/\s*/g,"")=="") break;
+          msgItem.content.push(line);
+        }
+
+        this.iconConfig(msgItem)
+      
+        // 该渲染项的设置，会覆盖全局设置
+        let sytle_width = this.formatConfigs.get("width");
+        let style_max_height = this.formatConfigs.get("max-height");
+        let style_all = ""
+        if (sytle_width) style_all+=`;width: ${sytle_width}px`
+        if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
+        if (style_all) this.el.setAttr("Style", style_all)
+
+        msgItem.isSelf = msgItem.isSelf || this.selfConfigs.includes(msgItem.sender)
         
         msgItem.render()
 

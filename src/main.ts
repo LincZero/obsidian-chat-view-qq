@@ -1,7 +1,7 @@
 import {Plugin, Notice} from "obsidian";
 
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
-import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat} from "./codeBlock"
+import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat, Chat_telegram} from "./codeBlock"
 
 /* 文件引用流
  * main.ts
@@ -25,7 +25,7 @@ export default class ChatViewPlugin extends Plugin {
 		if (this.settings.width) document.documentElement.style.setProperty('--qq-width', this.settings.width+"px")
 		if (this.settings.maxHeight) document.documentElement.style.setProperty('--qq-max-height', this.settings.maxHeight+"px")
 
-		// chat-webvtt 格式
+		// webvtt 格式
 		this.registerMarkdownCodeBlockProcessor("chat-webvtt", (source, el, _) => {
 			new Chat_webvtt(source, el, _, this).render()
 		});
@@ -35,14 +35,19 @@ export default class ChatViewPlugin extends Plugin {
 			new Chat_original(source, el, _, this).render()
 		});
 
-		// 【魔改】QQ 格式
+		// QQ 格式
 		this.registerMarkdownCodeBlockProcessor("chat-qq", (source, el, _) => {
 			new Chat_qq(source, el, _, this).render()
 		});
 
-		// 【魔改】微信 格式
+		// 微信 格式
 		this.registerMarkdownCodeBlockProcessor("chat-wechat", (source, el, _) => {
 			new Chat_wechat(source, el, _, this).render()
+		});
+
+		// 电报 格式
+		this.registerMarkdownCodeBlockProcessor("chat-tg", (source, el, _) => {
+			new Chat_telegram(source, el, _, this).render()
 		});
 
 		// Vault 是一个资源库，用于存储和管理文档和文件
