@@ -74,7 +74,7 @@ export class ChatSettingTab extends PluginSettingTab {
 		.setName('昵称-QQ 表')
 		.setDesc('用于设置聊天头像')
 		.addTextArea(text => text
-			.setPlaceholder('例如：昵称1=QQ1, 昵称2=QQ2')
+			.setPlaceholder('例如：马化腾=10001, 田所浩二=114514')
 			.setValue(this.plugin.settings.chatQQandName)
 			.onChange(async (value) => {
 				console.log('Secret: ' + value);

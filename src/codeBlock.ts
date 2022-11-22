@@ -1,4 +1,4 @@
-import {createChatBubble, createChatBubble_withIcon} from "./render"
+import {createChatBubble, A_msg} from "./render"
 import {ChatPluginSettings} from "./settings"
 import {registerContextMenu} from "./contextMenu"
 
@@ -164,18 +164,6 @@ export function chat (
       }
     }
   }
-}
-
-export class A_msg {
-  msg_sender: string    								// 信息发送者
-  msg_groupTitle: string								// 群头衔
-  msg_iconSrc: string                   // 群头像
-  msg_content = new Array<string>()			// 信息内容，注意数组
-  msg_dateTime: string									// 信息日期和时间
-  msg_isContinued: boolean							// 是否连发
-  msg_isSelf: boolean                   // 是否自己
-  msg_isShowTime: boolean               // 是否显示时间
-  constructor(){}
 }
 
 // 通用 Chat 基类
@@ -367,13 +355,7 @@ export class Chat_qq extends Chat {
         a_msg.msg_isSelf = this.selfConfigs.includes(a_msg.msg_sender)
         a_msg.msg_isShowTime = this.formatConfigs.get("time") && this.formatConfigs.get("time")=="show"
         
-        createChatBubble_withIcon(
-          a_msg,
-          this.source,
-          this.el,
-          this._,
-          this.main_this
-        );
+        a_msg.render(this)
 
         registerContextMenu(this.el, this)
       }
@@ -423,13 +405,7 @@ export class Chat_wechat extends Chat {
         a_msg.msg_isSelf = this.selfConfigs.includes(a_msg.msg_sender)
         a_msg.msg_isShowTime = this.formatConfigs.get("time") && this.formatConfigs.get("time")=="show"
         
-        createChatBubble_withIcon(
-          a_msg,
-          this.source,
-          this.el,
-          this._,
-          this.main_this
-        );
+        a_msg.render(this)
 
         registerContextMenu(this.el, this)
       }
