@@ -1,4 +1,5 @@
 import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext} from "obsidian";
+import {A_msg} from "./codeBlock"
 
 /**
  *  .chat-view-bubble.chat-view-bubble-mode-qq
@@ -19,21 +20,14 @@ import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext} from 
  */
 // 创建聊天窗口（有头像版）被循环调用的
 export function createChatBubble_withIcon(
-  msg_sender: string,
-  msg_groupTitle: string,
-  msg_iconSrc: string,
-  msg_content: Array<string>,	// 支持多行信息
-  msg_dateTime: string,
-  msg_isContinued: boolean,
-  msg_isSelf: boolean,
-  msg_isShowTime: boolean,
+  a_msg: A_msg,
   source: string,
   element: HTMLElement,
   _: MarkdownPostProcessorContext,
   main_this: any
 ) {
 
-  const marginClass = msg_isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
+  const marginClass = a_msg.msg_isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
   const colorConfigClass = `chat-view-black`; //${colorConfigs.get(continued ? prevHeader : header)}`;
   /*const widthClass = formatConfigs.has("mw") ?
     `chat-view-max-width-${formatConfigs.get("mw")}`
@@ -45,7 +39,7 @@ export function createChatBubble_withIcon(
 
   // 创建每条信息的根div
   const bubble = element.createDiv({
-    cls: ["chat-view-bubble", `chat-view-align-${msg_isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
+    cls: ["chat-view-bubble", `chat-view-align-${a_msg.msg_isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
   });
 
   // 创建icon项
@@ -55,8 +49,8 @@ export function createChatBubble_withIcon(
   let div_img;
   {
     // img
-    if (msg_sender.length > 0) {
-      div_img = div_icon.createEl("img", {attr: {"src": msg_iconSrc}});
+    if (a_msg.msg_sender.length > 0) {
+      div_img = div_icon.createEl("img", {attr: {"src": a_msg.msg_iconSrc}});
     }
   }
   // 主题色
@@ -84,22 +78,22 @@ export function createChatBubble_withIcon(
   {
     let div_title = div_msg.createDiv({cls: ["chat-view-qq-title"]})
     // 发送者群头衔
-    if (msg_groupTitle.length > 0) {
-      div_title.createEl("p", {text: msg_groupTitle, attr: {"title": msg_groupTitle}, cls: ["chat-view-qq-groupTitle"]});
+    if (a_msg.msg_groupTitle.length > 0) {
+      div_title.createEl("p", {text: a_msg.msg_groupTitle, attr: {"title": a_msg.msg_groupTitle}, cls: ["chat-view-qq-groupTitle"]});
     }
     // 发送者群昵称
-    if (msg_sender.length > 0) {
-      div_title.createEl("p", {text: msg_sender, cls: ["chat-view-qq-sender"]});
+    if (a_msg.msg_sender.length > 0) {
+      div_title.createEl("p", {text: a_msg.msg_sender, cls: ["chat-view-qq-sender"]});
     }
     // 发送时间
-    if (msg_isShowTime && msg_dateTime.length > 0) {
-      div_title.createEl("p", {text: msg_dateTime, cls: ["chat-view-qq-dateTime"]})
+    if (a_msg.msg_isShowTime && a_msg.msg_dateTime.length > 0) {
+      div_title.createEl("p", {text: a_msg.msg_dateTime, cls: ["chat-view-qq-dateTime"]})
     }
   }
   // 发送信息内容
   {
     div_msg.createDiv({attr: {"style": "clear: both;"}});
-    if (msg_sender.length > 0) {
+    if (a_msg.msg_sender.length > 0) {
       let pop = div_msg.createDiv({cls: ["pop"]})
       {
         // 小尖角
@@ -108,9 +102,9 @@ export function createChatBubble_withIcon(
         // 全部信息
         let messages_all = pop.createEl("div", {cls: ["chat-view-qq-message-all", " word99"]});
         let qq_img_re = /!\[\]\((.*?[.jpg|.gif|.png|.webp])\)/
-        for (let j=0; j<msg_content.length; j++) {
+        for (let j=0; j<a_msg.msg_content.length; j++) {
           // 单行信息
-          let msg_line = msg_content[j]
+          let msg_line = a_msg.msg_content[j]
           let message_line = messages_all.createEl("div", {cls: ["chat-view-qq-message-line"]});
           let msg_splits = msg_line.split(qq_img_re)
           if (msg_splits.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
