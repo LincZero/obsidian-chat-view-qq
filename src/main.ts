@@ -4,13 +4,13 @@ import {Plugin, Notice} from "obsidian";
 // 全局设置
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
 // 解析语法并渲染
-import {chat_webvtt, chat, Chat_qq, chat_wechat} from "./codeBlock"
+import {chat_webvtt, chat, Chat_qq, Chat_wechat} from "./codeBlock"
 
 
 export default class ChatViewPlugin extends Plugin {
 	settings: ChatPluginSettings; // 插件配置
 	
-	override async onload(): Promise<void> {
+	async onload(): Promise<void> {
 	// async onload() {
 		// 插件配置
 		await this.loadSettings();
@@ -34,9 +34,9 @@ export default class ChatViewPlugin extends Plugin {
 		});
 
 		// 【魔改】微信 格式
-		/*this.registerMarkdownCodeBlockProcessor("chat-wechat", (source, el, _) => {
-			chat_wechat(source, el, _, this)
-		});*/
+		this.registerMarkdownCodeBlockProcessor("chat-wechat", (source, el, _) => {
+			new Chat_wechat(source, el, _, this).render()
+		});
 
 		// Vault 是一个资源库，用于存储和管理文档和文件
 		/*new Notice(this.app.vault.getName()); // 这个是整个库的名字
