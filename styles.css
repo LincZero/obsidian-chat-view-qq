@@ -399,9 +399,9 @@ div.chat-view-qq-message-all
 	float: 0;
 }
 
-.word99 {
-    /*width: {{ info.word99 }}px;*/
-}
+/*.word99 {
+    width: {{ info.word99 }}px;
+}*/
 
 .author {
     font-size: 13px;

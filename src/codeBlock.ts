@@ -1,4 +1,4 @@
-import {createChatBubble, A_msg} from "./render"
+import {createChatBubble, MsgItem} from "./render"
 import {ChatPluginSettings} from "./settings"
 import {registerContextMenu} from "./contextMenu"
 
@@ -6,170 +6,13 @@ import * as webvtt from "node-webvtt";
 import { moment, Notice } from 'obsidian'
 import { MarkdownPostProcessorContext } from 'obsidian';
 
-
-const KEYMAP: Record<string, string> = {">": "right", "<": "left", "^": "center"};
-const CONFIGS: Record<string, string[]> = {
-	"header": ["h2", "h3", "h4", "h5", "h6"],
-	"mw": ["50", "55", "60", "65", "70", "75", "80", "85", "90"],
-	"mode": ["default", "minimal"],
-};
-const COLORS = [
-	"red", "orange", "yellow", "green", "blue", "purple", "grey", "brown", "indigo", "teal", "pink", "slate", "wood"
-];
-
-// 正则匹配（固定）
-class ChatPatterns {
-	static readonly message = /(^>|<|\^)/;	// 发送消息，正则：>或<开头
-	static readonly delimiter = /.../;			// 省略消息，正则：省略号
-	static readonly comment = /^#/;					// 全局消息，正则：#开头
-	static readonly colors = /\[(.*?)\]/;		// 颜色设置，正则：[]包围，例如[Albus Dumbledore=teal, Minerva McGonagall=pink]
-	static readonly format = /{(.*?)}/;			// 格式设置，正则：{}包围，例如{mw=90,mode=minimal}
-	static readonly joined = RegExp([ChatPatterns.message, ChatPatterns.delimiter, ChatPatterns.colors, ChatPatterns.comment, ChatPatterns.format]
-		.map((pattern) => pattern.source)
-		.join("|"));																				// 不名正则？
-	static readonly voice = /<v\s+([^>]+)>([^<]+)<\/v>/;	// chat-webvtt模式下的对话检测
-
-	// static readonly qq_msg = /(.*?)(\s|&nbsp;)([0-2][0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/;
-  static readonly qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
-  static readonly qq_qunTouXian = /【(.*?)】(.*?$)/
-  static readonly qq_chehui = /(.*?)撤回了一条消息/;
-  static readonly qq_jinqyun = /(.*?)加入本群。/;
-  
-  static readonly wechat_msg = /(.*?)(:\s*?)$/
-}
-
-interface Message {
-	readonly header: string;
-	readonly body: string;
-	readonly subtext: string;
-}
-
-// chat-webvtt 格式
-export function chat_webvtt (
-  source: string,
-  el: HTMLElement,
-  _: MarkdownPostProcessorContext
-) {
-  const vtt = webvtt.parse(source, {meta: true});
-  const messages: Message[] = [];
-  const self = vtt.meta && "Self" in vtt.meta ? vtt.meta.Self as string : undefined;
-  const selves = self ? self.split(",").map((val) => val.trim()) : undefined;
-
-  const formatConfigs = new Map<string, string>();
-  const maxWidth = vtt.meta && "MaxWidth" in vtt.meta ? vtt.meta.MaxWidth : undefined;
-  const headerConfig = vtt.meta && "Header" in vtt.meta ? vtt.meta.Header : undefined;
-  const modeConfig = vtt.meta && "Mode" in vtt.meta ? vtt.meta.Mode : undefined;
-  if (CONFIGS["mw"].contains(maxWidth)) formatConfigs.set("mw", maxWidth);
-  if (CONFIGS["header"].contains(headerConfig)) formatConfigs.set("header", headerConfig);
-  if (CONFIGS["mode"].contains(modeConfig)) formatConfigs.set("mode", modeConfig);
-  console.log(formatConfigs);
-
-  for (let index = 0; index < vtt.cues.length; index++) {
-    const cue = vtt.cues[index];
-    const start = moment(Math.round(cue.start * 1000)).format("HH:mm:ss.SSS");
-    const end = moment(Math.round(cue.end * 1000)).format("HH:mm:ss.SSS");
-    if (ChatPatterns.voice.test(cue.text)) {
-      const matches = (cue.text as string).match(ChatPatterns.voice);
-      messages.push(<Message>{header: matches[1], body: matches[2], subtext: `${start} to ${end}`});
-    } else {
-      messages.push(<Message>{header: "", body: cue.text, subtext: `${start} to ${end}`});
-    }
-  }
-
-  const headers = messages.map((message) => message.header);
-  const uniqueHeaders = new Set<string>(headers);
-  uniqueHeaders.delete("");
-  console.log(messages);
-  console.log(uniqueHeaders);
-
-  const colorConfigs = new Map<string, string>();
-  Array.from(uniqueHeaders).forEach((h, i) => colorConfigs.set(h, COLORS[i % COLORS.length]));
-  console.log(colorConfigs);
-
-  messages.forEach((message, index, arr) => {
-    const prevHeader = index > 0 ? arr[index - 1].header : "";
-    const align = selves && selves.contains(message.header) ? "right" : "left";
-    const continued = message.header === prevHeader;
-    createChatBubble(
-      continued ? "" : message.header, prevHeader, message.body, message.subtext, align, el,
-      continued, colorConfigs, formatConfigs,
-    );
-  });
-}
-
-// chat 格式
-export function chat (
-  source: string,
-  el: HTMLElement,
-  _: MarkdownPostProcessorContext
-) {
-  const rawLines = source.split("\n").filter((line) => ChatPatterns.joined.test(line.trim()));
-  const lines = rawLines.map((rawLine) => rawLine.trim());
-  const formatConfigs = new Map<string, string>();
-  const colorConfigs = new Map<string, string>();
-
-  // 遍历1
-  for (const line of lines) {
-    // 匹配正则 "format"
-    if (ChatPatterns.format.test(line)) {
-      const configs = line.replace("{", "").replace("}", "").split(",").map((l) => l.trim());
-      for (const config of configs) {
-        const [k, v] = config.split("=").map((c) => c.trim());
-        if (Object.keys(CONFIGS).contains(k) && CONFIGS[k].contains(v)) formatConfigs.set(k, v);
-      }
-    }
-    // 匹配正则 "colors"
-    else if (ChatPatterns.colors.test(line)) {
-      const configs = line.replace("[", "").replace("]", "").split(",").map((l) => l.trim());
-      for (const config of configs) {
-        const [k, v] = config.split("=").map((c) => c.trim());
-        if (k.length > 0 && COLORS.contains(v)) colorConfigs.set(k, v);
-      }
-    }
-  }
-  // 遍历2（重设行数，重新遍历。先知道了格式后，再来渲染对话）
-  let continuedCount = 0;
-  for (let index = 0; index < lines.length; index++) {
-    const line = lines[index].trim();
-    // 全局消息
-    if (ChatPatterns.comment.test(line)) {
-      el.createEl("p", {text: line.substring(1).trim(), cls: ["chat-view-comment"]})
-    }
-    // 省略消息
-    else if (line === "...") {
-      const delimiter = el.createDiv({cls: ["delimiter"]});
-      for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
-    }
-    // 对话消息
-    else if (ChatPatterns.message.test(line)) {
-      const components = line.substring(1).split("|");
-      if (components.length > 0) {
-        const first = components[0];																									// 说话的人
-        const header = components.length > 1 ? first.trim() : "";											// ？信息头？
-        const message = components.length > 1 ? components[1].trim() : first.trim();	// 发送的信息
-        const subtext = components.length > 2 ? components[2].trim() : "";						// 底部文字（通常是时间）
-        const continued = index > 0 && line.charAt(0) === lines[index - 1].charAt(0) && header === ""; // 上一消息是不是同一个人发的
-        let prevHeader = "";
-        if (continued) {
-          continuedCount++;
-          const prevComponents = lines[index - continuedCount].trim().substring(1).split("|");
-          prevHeader = prevComponents[0].length > 1 ? prevComponents[0].trim() : "";
-        } else {
-          continuedCount = 0;
-        }
-        createChatBubble(	// 创建聊天窗口
-          header, prevHeader, message, subtext, KEYMAP[line.charAt(0)], el, continued,
-          colorConfigs, formatConfigs,
-        );
-      }
-    }
-  }
-}
-
 // 通用 Chat 基类
 export class Chat {
+  static readonly reg_icon = /\[(.*?)\]/;		// 颜色设置，正则：[]包围，例如[Albus Dumbledore=teal, Minerva McGonagall=pink]
+  static readonly reg_format = /{(.*?)}/;			// 格式设置，正则：{}包围，例如{mw=90,mode=minimal}
+  
   protected source: string;                       // 代码块里的内容
-  protected el: HTMLElement;                      // 注册渲染的元素
+  public el: HTMLElement;                      // 注册渲染的元素
   protected _: MarkdownPostProcessorContext;      // Md后处理器上下文
   protected main_this: any;                       // 上一层指针
 
@@ -178,6 +21,9 @@ export class Chat {
   selfConfigs = new Array<string>()             // 多个己方
   iconConfigs = new Map<string, string>()       // 未处理的头像
   iconSrcConfigs = new Map<string, string>()    // 处理过后的头像
+  isShowTime = false                            // 是否显示时间
+  from: string                                  // 格式模式
+  style: string                                 // 渲染模式
 
   icons = [
     "https://img0.baidu.com/it/u=3452693033,2914629743&fm=253",
@@ -231,16 +77,15 @@ export class Chat {
     // 局部配置
     for (const line of this.lines) {
       // 匹配正则 "format"
-      if (ChatPatterns.format.test(line)) {
+      if (Chat.reg_format.test(line)) {
         const configs = line.replace("{", "").replace("}", "").split(",").map((l) => l.trim());
         for (const config of configs) {
           const [k, v] = config.split("=").map((c) => c.trim());
-          if (k=="self") this.selfConfigs.push(v);
-          else this.formatConfigs.set(k, v);
+          this.formatConfigs.set(k, v);
         }
       }
       // 匹配正则 "icon"
-      if (ChatPatterns.colors.test(line)) {
+      if (Chat.reg_icon.test(line)) {
         const configs = line.replace("[", "").replace("]", "").split(",").map((l) => l.trim());
         for (const config of configs) {
           const [k, v] = config.split("=").map((c) => c.trim());
@@ -248,13 +93,24 @@ export class Chat {
         }
       }
     }
+    // 梳理formatConfigs
+    if (this.formatConfigs){
+      if (this.formatConfigs.get("self")) this.selfConfigs.push(this.formatConfigs.get("self"));
+      if (this.formatConfigs.get("style")) this.style = this.formatConfigs.get("style");
+      else if (this.formatConfigs.get("mode")) this.style = this.formatConfigs.get("mode");
+      if (this.formatConfigs.get("from")) this.from = this.formatConfigs.get("from");
+      if (this.formatConfigs.get("time")) {
+        let strShowTime:string = this.formatConfigs.get("time")
+        this.isShowTime = (strShowTime=="show" || strShowTime=="true")
+      }
+    }
   }
 
   // 将icon配置转化成icon地址
-  iconConfig(a_msg: A_msg){
+  iconConfig(msgItem: MsgItem){
     // iconSrcConfig中没有，就从iconConfig中去找并处理后放到iconSrcConfig中
-    if (!this.iconSrcConfigs.get(a_msg.msg_sender)) {
-      let iconConfigsItem = this.iconConfigs.get(a_msg.msg_sender)
+    if (!this.iconSrcConfigs.get(msgItem.sender)) {
+      let iconConfigsItem = this.iconConfigs.get(msgItem.sender)
       let iconSrcConfigsItem = ""
       // 有指定头像
       if (iconConfigsItem) {
@@ -286,9 +142,9 @@ export class Chat {
           iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`
         }
       }
-      this.iconSrcConfigs.set(a_msg.msg_sender, iconSrcConfigsItem)
+      this.iconSrcConfigs.set(msgItem.sender, iconSrcConfigsItem)
     }
-    a_msg.msg_iconSrc = this.iconSrcConfigs.get(a_msg.msg_sender)
+    msgItem.iconSrc = this.iconSrcConfigs.get(msgItem.sender)
   }
   
   // 渲染
@@ -299,10 +155,128 @@ export class Chat {
   }
 }
 
-// QQ 格式
-export class Chat_qq extends Chat {
+// Webvtt 格式
+export class Chat_webvtt extends Chat {
   // override render method
   render(){
+    this.from = this.from ? this.from : "webvtt"
+    this.style = this.style ? this.style : "webvtt"
+
+    interface Message {
+      readonly header: string;
+      readonly body: string;
+      readonly subtext: string;
+    }
+    const COLORS = [
+      "red", "orange", "yellow", "green", "blue", "purple", "grey", "brown", "indigo", "teal", "pink", "slate", "wood"
+    ];
+    const CONFIGS: Record<string, string[]> = {
+      "header": ["h2", "h3", "h4", "h5", "h6"],
+      "mw": ["50", "55", "60", "65", "70", "75", "80", "85", "90"],
+      "mode": ["default", "minimal"],
+    };
+
+    const vtt = webvtt.parse(this.source, {meta: true});
+    const messages: Message[] = [];
+    const self = vtt.meta && "Self" in vtt.meta ? vtt.meta.Self as string : undefined;
+    const selves = self ? self.split(",").map((val) => val.trim()) : undefined;
+
+    const formatConfigs = new Map<string, string>();
+    const maxWidth = vtt.meta && "MaxWidth" in vtt.meta ? vtt.meta.MaxWidth : undefined;
+    const headerConfig = vtt.meta && "Header" in vtt.meta ? vtt.meta.Header : undefined;
+    const modeConfig = vtt.meta && "Mode" in vtt.meta ? vtt.meta.Mode : undefined;
+    if (CONFIGS["mw"].contains(maxWidth)) formatConfigs.set("mw", maxWidth);
+    if (CONFIGS["header"].contains(headerConfig)) formatConfigs.set("header", headerConfig);
+    if (CONFIGS["mode"].contains(modeConfig)) formatConfigs.set("mode", modeConfig);
+    console.log(formatConfigs);
+
+    for (let index = 0; index < vtt.cues.length; index++) {
+      const cue = vtt.cues[index];
+      const start = moment(Math.round(cue.start * 1000)).format("HH:mm:ss.SSS");
+      const end = moment(Math.round(cue.end * 1000)).format("HH:mm:ss.SSS");
+      if (/<v\s+([^>]+)>([^<]+)<\/v>/.test(cue.text)) {
+        const matches = (cue.text as string).match(/<v\s+([^>]+)>([^<]+)<\/v>/);
+        messages.push(<Message>{header: matches[1], body: matches[2], subtext: `${start} to ${end}`});
+      } else {
+        messages.push(<Message>{header: "", body: cue.text, subtext: `${start} to ${end}`});
+      }
+    }
+
+    const headers = messages.map((message) => message.header);
+    const uniqueHeaders = new Set<string>(headers);
+    uniqueHeaders.delete("");
+    console.log(messages);
+    console.log(uniqueHeaders);
+
+    const colorConfigs = new Map<string, string>();
+    Array.from(uniqueHeaders).forEach((h, i) => colorConfigs.set(h, COLORS[i % COLORS.length]));
+    console.log(colorConfigs);
+
+    messages.forEach((message, index, arr) => {
+      const prevHeader = index > 0 ? arr[index - 1].header : "";
+      const align = selves && selves.contains(message.header) ? "right" : "left";
+      const continued = message.header === prevHeader;
+      createChatBubble(
+        continued ? "" : message.header, prevHeader, message.body, message.subtext, align, this.el,
+        continued, colorConfigs, formatConfigs,
+      );
+    });
+  }
+}
+
+// 原版 Chat 格式
+export class Chat_original extends Chat {
+  // override render method
+  render(){
+    this.from = this.from ? this.from : "default"
+    this.style = this.style ? this.style : "default"
+
+    let continuedCount = 0;
+    for (let index = 0; index < this.lines.length; index++) {
+      const line = this.lines[index].trim();
+      // 全局消息
+      if (/^#/.test(line)) {
+        this.el.createEl("p", {text: line.substring(1).trim(), cls: ["chat-view-comment"]})
+      }
+      // 省略消息
+      else if (line === "...") {
+        const delimiter = this.el.createDiv({cls: ["delimiter"]});
+        for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+      }
+      // 对话消息
+      else if (/(^>|<|\^)/.test(line)) {
+        let msgItem = new MsgItem(this)
+        
+        const components = line.substring(1).split("|");
+        if (components.length > 0) {
+          const first = components[0];
+          msgItem.sender = components.length > 1 ? first.trim() : "";
+          msgItem.groupTitle = ""
+          msgItem.iconSrc = ""
+          msgItem.content.push(components.length > 1 ? components[1].trim() : first.trim());
+          msgItem.dateTime = components.length > 2 ? components[2].trim() : "";
+          msgItem.isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0) && msgItem.sender === "";
+          msgItem.isSelf = line.charAt(0) == "<" ? true : false // 删掉了 ^: center
+
+          msgItem.render()
+        }
+      }
+    }
+  }
+}
+
+// QQ 格式
+export class Chat_qq extends Chat {
+  static readonly reg_qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
+  static readonly reg_qq_qunTouXian = /【(.*?)】(.*?$)/
+  static readonly reg_qq_chehui = /(.*?)撤回了一条消息/;
+  static readonly reg_qq_jinqyun = /(.*?)加入本群。/;
+
+  // override render method
+  render(){
+    this.from = this.from ? this.from : "qq"
+    this.style = this.style ? this.style : "qq"
+
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {
       let line = this.lines[index].trim();
@@ -312,37 +286,37 @@ export class Chat_qq extends Chat {
         for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
       }
       // 撤回消息
-      else if (ChatPatterns.qq_chehui.test(line)) {
+      else if (Chat_qq.reg_qq_chehui.test(line)) {
         this.el.createEl("p", {text: line.trim(), cls: ["chat-view-comment", "chat-view-qq-comment"]})
       }
       // 进群消息
-      else if (ChatPatterns.qq_jinqyun.test(line)) {
+      else if (Chat_qq.reg_qq_jinqyun.test(line)) {
         this.el.createEl("p", {text: line.trim(), cls: ["chat-view-comment", "chat-view-qq-comment"]})
       }
       // 对话消息
-      else if (ChatPatterns.qq_msg.test(line)) {
-        let a_msg = new A_msg()
+      else if (Chat_qq.reg_qq_msg.test(line)) {
+        let msgItem = new MsgItem(this)
 
-        a_msg.msg_sender = line.match(ChatPatterns.qq_msg)[1]                               // 消息发送者
-        a_msg.msg_groupTitle = ""                                                           // 消息发送者群头衔
-        if (ChatPatterns.qq_qunTouXian.test(a_msg.msg_sender)) {
-          a_msg.msg_groupTitle = a_msg.msg_sender.match(ChatPatterns.qq_qunTouXian)[1];
-          a_msg.msg_sender = a_msg.msg_sender.match(ChatPatterns.qq_qunTouXian)[2];
+        msgItem.sender = line.match(Chat_qq.reg_qq_msg)[1]                               // 消息发送者
+        msgItem.groupTitle = ""                                                           // 消息发送者群头衔
+        if (Chat_qq.reg_qq_qunTouXian.test(msgItem.sender)) {
+          msgItem.groupTitle = msgItem.sender.match(Chat_qq.reg_qq_qunTouXian)[1];
+          msgItem.sender = msgItem.sender.match(Chat_qq.reg_qq_qunTouXian)[2];
         }
-        a_msg.msg_isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0); // 是否与上句是同一人发的
-        const msg_date: string = line.match(ChatPatterns.qq_msg)[3] ? line.match(ChatPatterns.qq_msg)[3]: ""
-        const msg_time: string = line.match(ChatPatterns.qq_msg)[5] ? line.match(ChatPatterns.qq_msg)[5]: ""
-        a_msg.msg_dateTime = msg_date + msg_time                                          // 日期时间
+        msgItem.isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0); // 是否与上句是同一人发的
+        const msg_date: string = line.match(Chat_qq.reg_qq_msg)[3] ? line.match(Chat_qq.reg_qq_msg)[3]: ""
+        const msg_time: string = line.match(Chat_qq.reg_qq_msg)[5] ? line.match(Chat_qq.reg_qq_msg)[5]: ""
+        msgItem.dateTime = msg_date + msg_time                                          // 日期时间
         
         while(true){
           if (index >= this.lines.length-1) break;
           index++;
           line = this.lines[index].trim().replace("&nbsp;", " ");
           if (line.replace(/\s*/g,"")=="") break;
-          a_msg.msg_content.push(line);
+          msgItem.content.push(line);
         }
 
-        this.iconConfig(a_msg)
+        this.iconConfig(msgItem)
       
         // 该渲染项的设置，会覆盖全局设置
         let sytle_width = this.formatConfigs.get("width");
@@ -352,10 +326,9 @@ export class Chat_qq extends Chat {
         if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
         if (style_all) this.el.setAttr("Style", style_all)
 
-        a_msg.msg_isSelf = this.selfConfigs.includes(a_msg.msg_sender)
-        a_msg.msg_isShowTime = this.formatConfigs.get("time") && this.formatConfigs.get("time")=="show"
+        msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
-        a_msg.render(this)
+        msgItem.render()
 
         registerContextMenu(this.el, this)
       }
@@ -365,8 +338,13 @@ export class Chat_qq extends Chat {
 
 // 【魔改】微信格式
 export class Chat_wechat extends Chat {
+  static readonly reg_wechat_msg = /(.*?)(:\s*?)$/
+
   // override render method
   render(){
+    this.from = this.from ? this.from : "qq"
+    this.style = this.style ? this.style : "qq"
+
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {
       let line = this.lines[index].trim();
@@ -376,23 +354,23 @@ export class Chat_wechat extends Chat {
         for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
       }
       // 对话消息
-      else if (ChatPatterns.wechat_msg.test(line)) {
-        let a_msg = new A_msg()
+      else if (Chat_wechat.reg_wechat_msg.test(line)) {
+        let msgItem = new MsgItem(this)
 
-        a_msg.msg_sender = line.match(ChatPatterns.wechat_msg)[1]
-        a_msg.msg_groupTitle = ""
-        a_msg.msg_isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0);
-        a_msg.msg_dateTime = ""
+        msgItem.sender = line.match(Chat_wechat.reg_wechat_msg)[1]
+        msgItem.groupTitle = ""
+        msgItem.isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0);
+        msgItem.dateTime = ""
         
         while(true){
           if (index >= this.lines.length-1) break;
           index++;
           line = this.lines[index].trim().replace("&nbsp;", " ");
           if (line.replace(/\s*/g,"")=="") break;
-          a_msg.msg_content.push(line);
+          msgItem.content.push(line);
         }
 
-        this.iconConfig(a_msg)
+        this.iconConfig(msgItem)
       
         // 该渲染项的设置，会覆盖全局设置
         let sytle_width = this.formatConfigs.get("width");
@@ -402,10 +380,9 @@ export class Chat_wechat extends Chat {
         if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
         if (style_all) this.el.setAttr("Style", style_all)
 
-        a_msg.msg_isSelf = this.selfConfigs.includes(a_msg.msg_sender)
-        a_msg.msg_isShowTime = this.formatConfigs.get("time") && this.formatConfigs.get("time")=="show"
+        msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
-        a_msg.render(this)
+        msgItem.render()
 
         registerContextMenu(this.el, this)
       }

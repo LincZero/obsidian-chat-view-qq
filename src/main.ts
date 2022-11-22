@@ -1,11 +1,18 @@
 import {Plugin, Notice} from "obsidian";
-// import {MarkdownRenderChild} from "obsidian"; // md后处理器
 
-// 全局设置
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
-// 解析语法并渲染
-import {chat_webvtt, chat, Chat_qq, Chat_wechat} from "./codeBlock"
+import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat} from "./codeBlock"
 
+/* 文件引用流
+ * main.ts
+ * codeBlock.ts 	负责解析语法，循环调用render.ts的A_msg类
+ * render.ts 			负责生成对话项
+ * settings.ts 		全局设置菜单
+ * 
+ * main.ts 			<- codeBlock.ts
+ *         			<- settings.ts
+ * codeBlock.ts <- render.ts
+ */
 
 export default class ChatViewPlugin extends Plugin {
 	settings: ChatPluginSettings; // 插件配置
@@ -20,12 +27,12 @@ export default class ChatViewPlugin extends Plugin {
 
 		// chat-webvtt 格式
 		this.registerMarkdownCodeBlockProcessor("chat-webvtt", (source, el, _) => {
-			chat_webvtt(source, el, _)
+			new Chat_webvtt(source, el, _, this).render()
 		});
 
 		// chat 格式
 		this.registerMarkdownCodeBlockProcessor("chat", (source, el, _) => {
-			chat(source, el, _)
+			new Chat_original(source, el, _, this).render()
 		});
 
 		// 【魔改】QQ 格式

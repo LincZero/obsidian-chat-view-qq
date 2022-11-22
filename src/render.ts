@@ -18,27 +18,40 @@ import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext} from 
  * 						(.chat-view-qq-message-msg)
  */
 
-export class A_msg {
-  msg_sender: string    								// 信息发送者
-  msg_groupTitle: string								// 群头衔
-  msg_iconSrc: string                   // 群头像
-  msg_content = new Array<string>()			// 信息内容，注意数组
-  msg_dateTime: string									// 信息日期和时间
-  msg_isContinued: boolean							// 是否连发
-  msg_isSelf: boolean                   // 是否自己
-  msg_isShowTime: boolean               // 是否显示时间
+export class MsgItem {
+  block_this: any
 
-  constructor(){}
+  // 必填参数
+  sender: string    								// 信息发送者
+  iconSrc: string                   // 群头像
+  content = new Array<string>()			// 信息内容，注意数组
 
-  render(block_this: any) {
-    const marginClass = this.msg_isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
+  // 可选参数
+  groupTitle: string = ""						// 群头衔
+  dateTime: string = ""							// 信息日期和时间
+  isContinued: boolean = false			// 是否连发
+  isSelf: boolean = false           // 是否自己
+
+  LStyle = ["qq", "wechat", "default"]
+
+  constructor(block_this: any){
+    this.block_this = block_this
+  }
+
+  render() {
+    if (this.block_this.style=="qq") this.render_qq()
+    else this.render_default()
+  }
+
+  render_qq() {
+    const marginClass = this.isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
     const colorConfigClass = `chat-view-black`;
-    const modeClass = `chat-view-bubble-mode-qq`
+    const modeClass = `chat-view-bubble-mode-${this.block_this.style}`;
   
     // 创建每条信息的根div
-    let el: HTMLElement = block_this.el
+    let el: HTMLElement = this.block_this.el
     const bubble = el.createDiv({
-      cls: ["chat-view-bubble", `chat-view-align-${this.msg_isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
+      cls: ["chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
     });
   
     // 创建icon项
@@ -48,8 +61,8 @@ export class A_msg {
     let div_img;
     {
       // img
-      if (this.msg_sender.length > 0) {
-        div_img = div_icon.createEl("img", {attr: {"src": this.msg_iconSrc}});
+      if (this.sender.length > 0) {
+        div_img = div_icon.createEl("img", {attr: {"src": this.iconSrc}});
       }
     }
     // 创建消息项
@@ -60,22 +73,22 @@ export class A_msg {
     {
       let div_title = div_msg.createDiv({cls: ["chat-view-qq-title"]})
       // 发送者群头衔
-      if (this.msg_groupTitle.length > 0) {
-        div_title.createEl("p", {text: this.msg_groupTitle, attr: {"title": this.msg_groupTitle}, cls: ["chat-view-qq-groupTitle"]});
+      if (this.groupTitle.length > 0) {
+        div_title.createEl("p", {text: this.groupTitle, attr: {"title": this.groupTitle}, cls: ["chat-view-qq-groupTitle"]});
       }
       // 发送者群昵称
-      if (this.msg_sender.length > 0) {
-        div_title.createEl("p", {text: this.msg_sender, cls: ["chat-view-qq-sender"]});
+      if (this.sender.length > 0) {
+        div_title.createEl("p", {text: this.sender, cls: ["chat-view-qq-sender"]});
       }
       // 发送时间
-      if (this.msg_isShowTime && this.msg_dateTime.length > 0) {
-        div_title.createEl("p", {text: this.msg_dateTime, cls: ["chat-view-qq-dateTime"]})
+      if (this.block_this.isShowTime && this.dateTime.length > 0) {
+        div_title.createEl("p", {text: this.dateTime, cls: ["chat-view-qq-dateTime"]})
       }
     }
     // 发送信息内容
     {
       div_msg.createDiv({attr: {"style": "clear: both;"}});
-      if (this.msg_sender.length > 0) {
+      if (this.sender.length > 0) {
         let pop = div_msg.createDiv({cls: ["pop"]})
         {
           // 小尖角
@@ -84,9 +97,9 @@ export class A_msg {
           // 全部信息
           let messages_all = pop.createEl("div", {cls: ["chat-view-qq-message-all", " word99"]});
           let qq_img_re = /!\[\]\((.*?[.jpg|.gif|.png|.webp])\)/
-          for (let j=0; j<this.msg_content.length; j++) {
+          for (let j=0; j<this.content.length; j++) {
             // 单行信息
-            let msg_line = this.msg_content[j]
+            let msg_line = this.content[j]
             let message_line = messages_all.createEl("div", {cls: ["chat-view-qq-message-line"]});
             let msg_splits = msg_line.split(qq_img_re)
             if (msg_splits.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
@@ -115,9 +128,9 @@ export class A_msg {
                 // this.app.vault.adapter.basePath // 可能报错，但能运行
                 // this.app.vault.getName()
                 let src = "app://local/"
-                  +block_this.main_this.app.vault.adapter.basePath
+                  +this.block_this.main_this.app.vault.adapter.basePath
                   +"/"
-                  +block_this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")
+                  +this.block_this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")
                   +"/"+msg_splits[i]
                 message_line.createEl('img', {
                   cls: ["chat-view-qq-message-msg"],
@@ -132,6 +145,38 @@ export class A_msg {
     }
     bubble.createDiv({attr: {"style": "clear: both;"}});
   }
+
+  render_default() {
+    const marginClass = this.isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
+    // const colorConfigClass = `chat-view-${colorConfigs.get(continued ? prevHeader : header)}`;
+    const widthClass = this.block_this.formatConfigs.has("mw") ?
+      `chat-view-max-width-${this.block_this.formatConfigs.get("mw")}`
+      : (Platform.isMobile ? "chat-view-mobile-width" : "chat-view-desktop-width");
+    const modeClass = `chat-view-bubble-mode-${this.block_this.style}`;
+    const headerEl:keyof HTMLElementTagNameMap = "h4"
+    /*= formatConfigs.has("header") ?
+      formatConfigs.get("header") as keyof HTMLElementTagNameMap :
+      "h4";*/
+    // 创建div
+    let el: HTMLElement = this.block_this.el
+    const bubble = el.createDiv({
+      cls: ["chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass/*, colorConfigClass, widthClass*/, modeClass]
+    });
+    // 创建元素
+    if (this.sender.length > 0) bubble.createEl(headerEl, {text: this.sender, cls: ["chat-view-header"]});
+    if (this.content[0].length > 0) bubble.createEl("p", {text: this.content[0], cls: ["chat-view-message"]});
+    if (this.dateTime.length > 0) bubble.createEl("sub", {text: this.dateTime, cls: ["chat-view-subtext"]});
+  }
+  /* 
+    * 说一下这个div结构
+    * 一层：Obsidian自带的
+    * 			cm-preview-code-block cm-embed-block markdown-rendered
+    * 二层：这里创建的整体
+    * 			block-language-chat-qq
+    * 三层：单个对话框
+    * 			chat-view-bubble chat-view-align-undefined chat-view-default-vertical-margin chat-view-undefined chat-view-desktop-width chat-view-bubble-mode-default
+    * 四层：h4、p、sub
+    */
 }
 
 // 创建聊天窗口
