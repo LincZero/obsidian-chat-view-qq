@@ -1,21 +1,20 @@
-English | [中文](./README_zh.md)
+[English](./README.md) | 中文
 
-**English version is machine translated**
+## 说明
 
-## Descriptions
+==该插件只是为了方便记录聊天记录，请勿用作伪造聊天记录以及犯罪用途==
 
-==This plugin is for the convenience of recording chat records. Do not use it for fake chat records or criminal purposes==
-
-Supported Format：
+目前支持的格式：
 - qq
 - wecaht (win & mac)
 - telegram (win & mac)
 - webvtt
 
-Obsidian Plugin，The magic changes to [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)
+Obsidian插件，魔改于 [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)
 
-`version-by` is the [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view) version on which the magic is based<br/>
-`version` the revised edition
+保存了原插件的功能，不需要同时使用两个插件<br/>
+`version-by` 是版本是魔改基于的原版版本<br/>
+`version` 是魔改版本
 
 ```json
 {
@@ -24,72 +23,75 @@ Obsidian Plugin，The magic changes to [obsidian-chat-view](https://github.com/a
 	"version-by": "1.2.1",
 	"version": "0.5.0",
 	"minAppVersion": "0.15.0",
-	"description": "The magic changes to obsidian-chat-view。It can directly copy the information in the chat records of QQ and other platforms, and automatically render the chat interface",
+	"description": "魔改于Chat View，可以直接复制QQ等平台聊天记录中的信息，并自动渲染聊天界面",
 	"author": "LincZero | Aditya Majethia",
 	"isDesktopOnly": false
 }
 ```
 
-## Use Examples
+## 使用示例
 
-==The functions of the original plug-in are retained. See  [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view) for the functions of the original plug-in。Here is only to demonstrate the new features after the magic change==<br/>
-==See the [demo.md](./demo.md) file for other formats and more extensions==
+==保留了原插件的功能，原插件功能详见 [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)，这里仅演示魔改后新增的功能==<br/>
+==其他格式和更多扩展操作详见 [demo.md](./demo.md) 文件==
 
-method of application：<br/>
+使用：（复制代码块里的内容，不要复制代码块）<br/>
 
 QQ
 
 ````
 ```chat-qq
-{self=SelfName, width=Local render width, max-height=Local maximum render height, time=show # Whether to display the time}
-[user1=user1 QQ, user2=user2 QQ, user3=user3 QQ]
+{self=自己的昵称 例如群友1 可选, width=要渲染的宽度 可选, max-height=最大渲染高度 超出会边滚动框 可选, time=show表示显示消息发送时间}
+[群友1=群友1的QQ, 群友2=群友2的QQ, 群友3=群友3的QQ 可选 不选就就默认分配头像]
 
-【Group Title】user1 2022-11-11 18:38:25  
-msg1
+【话唠】云猫猫 2022-11-11 18:38:25  
+公猫？  
 
-user2 10:38:43  
-msg2  
+群友1 10:38:43  
+语雀？  
+
+群友2 10:39:06  
+是啊
   
-user3加入本群。  
+群友3加入本群。  
   
-user3 10:51:31  
-Hello
+群友3 10:51:31  
+大家好，我是群友3。水瓶座男一枚~
 
 ...
 
 ```
 ````
 
-WeChat
+微信
 
 ````
 ```chat-wechat
 {self=LincZero}
 
 LincZero:
-666
+啊对
 
 LincZero:
-[emoji]
+[动画表情]
 ```
 ````
 
-效果：（V0.3.3 new Style）
+效果：（V0.3.3新增的样式）
 
 ![img](README.assets/665IOT2Z[GG{QFY$0M2A}G.png)
 
-## Plug-in Features
+## 插件特点
 
-- Copying is recording without too much manual modification
-  - It also retains many optional customization options
-- Compared with the traditional long screenshot, it has the advantages of low memory consumption, convenient modification of the content and convenient modification of the display ratio
-- It can be easily recorded：
-  - Your friends give you inspiration
-  - Have their own QQ to send their own information to record things can use this to back up
-  - It can be used to record famous quotes
-  - Don't use it to fake chat for bad purposes
+- 复制即记录，无需过多的人工修改
+  - 同时也保留了许多可选的自定义选项
+- 相较于传统的长截图，有着占用内存低、方便修改内容、方便修改显示的比例的优点
+- 可以很方便地记录：
+  - 群友给你的灵感
+  - 有自己QQ给自己发信息记录东西习惯的可以用这个来备份
+  - 可以用来记录名人名言
+  - 再次强调，不要用来伪造聊天用于不良用途
 
-## Update Logs
+## 更新日志
 
 ### v0.5.0（20221122）
 

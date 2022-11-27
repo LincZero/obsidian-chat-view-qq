@@ -230,6 +230,7 @@ export class Chat_webvtt extends Chat {
 
       msgItem.render()
     });
+    registerContextMenu(this)
   }
 }
 
@@ -271,12 +272,14 @@ export class Chat_original extends Chat {
         }
       }
     }
+    registerContextMenu(this)
   }
 }
 
 // QQ 格式
 export class Chat_qq extends Chat {
   static readonly reg_qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
+  static readonly reg_qq_msg_pindao = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
   static readonly reg_qq_qunTouXian = /【(.*?)】(.*?$)/
   static readonly reg_qq_chehui = /(.*?)撤回了一条消息/;
   static readonly reg_qq_jinqyun = /(.*?)加入本群。/;
@@ -338,10 +341,9 @@ export class Chat_qq extends Chat {
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
         msgItem.render()
-
-        registerContextMenu(this.el, this)
       }
     }
+    registerContextMenu(this)
   }
 }
 
@@ -401,10 +403,9 @@ export class Chat_wechat extends Chat {
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
         msgItem.render()
-
-        registerContextMenu(this.el, this)
       }
     }
+    registerContextMenu(this)
   }
 }
 
@@ -466,9 +467,8 @@ export class Chat_telegram extends Chat {
         msgItem.isSelf = msgItem.isSelf || this.selfConfigs.includes(msgItem.sender)
         
         msgItem.render()
-
-        registerContextMenu(this.el, this)
       }
     }
+    registerContextMenu(this)
   }
 }

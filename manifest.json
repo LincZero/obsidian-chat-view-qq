@@ -4,7 +4,7 @@
 	"version-by": "1.2.1",
 	"version": "0.5.0",
 	"minAppVersion": "0.15.0",
-	"description": "魔改于Chat View，可以直接复制QQ聊天记录中的信息，并自动渲染QQ聊天界面",
+	"description": "魔改于Chat View，可以直接复制QQ等平台聊天记录中的信息，并自动渲染聊天界面",
 	"author": "LincZero",
 	"isDesktopOnly": false,
 	"repo": "https://github.com/LincZero/obsidian-chat-view-qq"
