@@ -1,5 +1,9 @@
 English | [中文](./README_zh.md)
 
+**由于新版QQ导致消息难以直接复制黏贴，作者本人也不用了，所以放弃维护……**
+
+**以前是比较方便的，直接拖拽选择一堆对话，然后复制黏贴到ob里就完事了……**
+
 **English version is machine translated**
 
 ## Descriptions
