@@ -323,12 +323,9 @@ html {
     float: right;
 }
 
-.chat-view-qq-msg,
-.pop,
-div.chat-view-qq-message-all
-{
-	max-width: var(--qq-msg-max-width);
-}
+.chat-view-qq-msg { max-width: var(--qq-msg-max-width); }
+.chat-view-qq-msg>.pop,
+.chat-view-qq-msg>.pop>div.chat-view-qq-message-all { width: 100%; }
 
 .chat-view-qq-msg {
     display: inline-block;

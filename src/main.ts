@@ -22,8 +22,11 @@ export default class ChatViewPlugin extends Plugin {
 		// 插件配置
 		await this.loadSettings();
 		this.addSettingTab(new ChatSettingTab(this.app, this)); // 这将添加一个设置选项卡，以便用户可以配置插件的各个方面
-		if (this.settings.width) document.documentElement.style.setProperty('--qq-width', this.settings.width+"px")
-		if (this.settings.maxHeight) document.documentElement.style.setProperty('--qq-max-height', this.settings.maxHeight+"px")
+		if (this.settings.width) document.documentElement.style.setProperty('--qq-width',
+			Number.isFinite(Number(this.settings.width)) ? this.settings.width+"px" : this.settings.width)
+		if (this.settings.maxHeight) document.documentElement.style.setProperty('--qq-max-height',
+			Number.isFinite(Number(this.settings.maxHeight)) ? this.settings.maxHeight+"px" : this.settings.maxHeight)
+
 		if (this.settings.isPcStyle) { document.body.classList.add('pc-chat') } // 电脑风格
 		else { document.body.classList.remove('pc-chat') } // 手机风格
 

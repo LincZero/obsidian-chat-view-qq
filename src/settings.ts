@@ -5,8 +5,8 @@ import ChatViewPlugin from "./main"
 export interface ChatPluginSettings {
 	chatSelfName: string,
 	chatQQandName: string,
-	width: number,
-	maxHeight: number,
+	width: string,
+	maxHeight: string,
 	isRenderMd: boolean,
 	isPcStyle: boolean,
 }
@@ -15,8 +15,8 @@ export interface ChatPluginSettings {
 export const DEFAULT_SETTINGS: ChatPluginSettings = {
 	chatSelfName: '我, me',
 	chatQQandName: '',
-	width: 900,
-	maxHeight: 1100,
+	width: '100%',
+	maxHeight: '1100',
 	isRenderMd: true,
 	isPcStyle: true,
 }
@@ -40,25 +40,25 @@ export class ChatSettingTab extends PluginSettingTab {
 		// 创建一个新的设置项
 		new Setting(containerEl)
 		.setName('默认渲染宽度')
-		.setDesc('【重启插件生效】用于渲染记录')
+		.setDesc('【重启插件生效】用于渲染记录，不填单位为px')
 		.addText(text => text
 			.setPlaceholder("例如：900")
 			.setValue(String(this.plugin.settings.width))
 			.onChange(async (value) => {
 				console.log('Secret: ' + value);
-				this.plugin.settings.width = Number(value);
+				this.plugin.settings.width = value;
 				await this.plugin.saveSettings();
 			}));
 
 		new Setting(containerEl)
 		.setName('默认渲染最大高度')
-		.setDesc('【重启插件生效】用于渲染记录，超过后会变成滚动框')
+		.setDesc('【重启插件生效】用于渲染记录，超过后会变成滚动框，不填单位为px')
 		.addText(text => text
 			.setPlaceholder("例如：1100")
 			.setValue(String(this.plugin.settings.maxHeight))
 			.onChange(async (value) => {
 				console.log('Secret: ' + value);
-				this.plugin.settings.maxHeight = Number(value);
+				this.plugin.settings.maxHeight = value;
 				await this.plugin.saveSettings();
 			}));
 		
