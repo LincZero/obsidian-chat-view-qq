@@ -43,7 +43,7 @@ esbuild.build({
 		'@codemirror/view',
 		...builtins],
 	format: 'cjs',
-	watch: !prod,
+	// watch: !prod, // 废弃，不再支持
 	target: 'es2016',
 	logLevel: "info",
 	sourcemap: prod ? false : 'inline',
