@@ -107,10 +107,8 @@ export class ChatSettingTab extends PluginSettingTab {
 					this.plugin.settings.isPcStyle = value;
 					await this.plugin.saveSettings();
 
-					// 电脑风格
-					if (value) { document.body.classList.add('pc-chat') }
-					// 手机风格
-					else { document.body.classList.remove('pc-chat') }
+					if (value) { document.body.classList.add('pc-chat') } // 电脑风格
+					else { document.body.classList.remove('pc-chat') } // 手机风格
 				}));
 	}
 }

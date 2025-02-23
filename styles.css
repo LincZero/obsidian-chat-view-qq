@@ -235,13 +235,16 @@ html {
 }
 
 /* pc状态下，字体变小 */
-.pc-chat .block-language-chat-qq, .pc-chat .block-language-chat-wechat {
-    font-size: 14px;
+.pc-chat .block-language-chat-qq .chat-view-qq-message-all,
+.pc-chat .block-language-chat-wechat .chat-view-qq-message-all {
+    font-size: var(--front-text-size); /* --code-size or 14px */
 }
-.pc-chat .block-language-chat-qq p:first-child, .pc-chat .block-language-chat-wechat p:first-child {
+.pc-chat .block-language-chat-qq .chat-view-qq-message-all p:first-child,
+.pc-chat .block-language-chat-wechat .chat-view-qq-message-all p:first-child {
     margin-top: 0;
 }
-.pc-chat .block-language-chat-qq p:last-child, .pc-chat .block-language-chat-wechat p:last-child {
+.pc-chat .block-language-chat-qq .chat-view-qq-message-all p:last-child,
+.pc-chat .block-language-chat-wechat .chat-view-qq-message-all p:last-child {
     margin-bottom: 0;
 }
 
