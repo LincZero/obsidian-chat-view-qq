@@ -348,8 +348,12 @@ export class Chat_qq extends Chat {
 }
 
 // 微信格式
+// 
+// 匹配问题：
+// 需要满足 `空行 + 文字 + : + 换行`
+// 微信的复制出来的格式是简化过的，所以是存在歧义的。如果你对话内容中有 `空行 + 文字 + : + 换行`，那么也会识别为对话
 export class Chat_wechat extends Chat {
-  static readonly reg_wechat_msg_win = /^(.*?):\s*?$/
+  static readonly reg_wechat_msg_win = /^(.*?):$/ // 以前是 /^(.*?):*?$/，我也忘了 `*?` 表示的是什么了，先删了
   static readonly reg_wechat_msg_mac = /^(.*?)\s(\d+\/\d+\/\d+)\s(\d+:\d+)$/
   static readonly reg_wechat_msg = [Chat_wechat.reg_wechat_msg_win, Chat_wechat.reg_wechat_msg_mac]
 
@@ -386,7 +390,13 @@ export class Chat_wechat extends Chat {
           if (index >= this.lines.length-1) break;
           index++;
           line = this.lines[index].trim().replace("&nbsp;", " ");
-          if (line.replace(/\s*/g,"")=="") break;
+          if (line.replace(/\s*/g,"")=="") { // 如果空行，且下一行是是对话人，break。否则继续
+            if (this.lines.length > index+1) {
+              let nextContent = this.lines[index+1]
+              if (Chat_wechat.reg_wechat_msg[0].test(nextContent) || Chat_wechat.reg_wechat_msg[1].test(nextContent))
+                break
+            }
+          }
           msgItem.content.push(line);
         }
 
