@@ -278,7 +278,9 @@ export class Chat_original extends Chat {
 
 // QQ 格式
 export class Chat_qq extends Chat {
-  static readonly reg_qq_msg = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
+  static readonly reg_qq_msg = /(.*?):?(\s|&nbsp;)((\d\d\d\d-)?\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字1 空格 日期3 空格 时间6 空格
+  // 旧版：如 `【Group Title】user1 2022-11-11 18:38:25`
+  // NT版：如 `(๑• . •๑): 02-23 18:05:27`
   static readonly reg_qq_msg_pindao = /(.*?)(\s|&nbsp;)(\d\d\d\d-\d\d-\d\d(\s|&nbsp;))?([0-2]?[0-9]:[0-6][0-9]:[0-6][0-9])(\s*?)$/; // 1~6分别是：名字 空格 日期空格 空格 时间 空格
   static readonly reg_qq_qunTouXian = /【(.*?)】(.*?$)/
   static readonly reg_qq_chehui = /(.*?)撤回了一条消息/;
@@ -317,7 +319,7 @@ export class Chat_qq extends Chat {
         }
         msgItem.isContinued = index > 0 && line.charAt(0) === this.lines[index - 1].charAt(0); // 是否与上句是同一人发的
         const msg_date: string = line.match(Chat_qq.reg_qq_msg)[3] ? line.match(Chat_qq.reg_qq_msg)[3]: ""
-        const msg_time: string = line.match(Chat_qq.reg_qq_msg)[5] ? line.match(Chat_qq.reg_qq_msg)[5]: ""
+        const msg_time: string = line.match(Chat_qq.reg_qq_msg)[6] ? line.match(Chat_qq.reg_qq_msg)[6]: ""
         msgItem.dateTime = msg_date + msg_time                                          // 日期时间
         
         while(true){
