@@ -19,9 +19,6 @@ jobs:                         # 工作流
         node-version: '20'
     - name: npm depend1
       run: npm ci                 # (npm ci代替npm install以获得更快的速度)
-    - name: npm depend2
-      working-directory: ./src/ABConverter/
-      run: npm ci
     - name: npm build
       run: npm run build
     - name: upload build artifact
