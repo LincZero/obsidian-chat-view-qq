@@ -5,8 +5,9 @@ import ChatViewPlugin from "./main"
 export interface ChatPluginSettings {
 	chatSelfName: string,
 	chatQQandName: string,
-	width: Number,
-	maxHeight: Number
+	width: number,
+	maxHeight: number,
+	isRenderMd: boolean,
 }
 
 // 设置内容的默认值，这是一个类似枚举的东西
@@ -14,7 +15,8 @@ export const DEFAULT_SETTINGS: ChatPluginSettings = {
 	chatSelfName: '我, me',
 	chatQQandName: '',
 	width: 900,
-	maxHeight: 1100
+	maxHeight: 1100,
+	isRenderMd: true,
 }
 
 // 设置内容
@@ -81,5 +83,16 @@ export class ChatSettingTab extends PluginSettingTab {
 				this.plugin.settings.chatQQandName = value;
 				await this.plugin.saveSettings();
 			}));
+
+		new Setting(containerEl)
+			.setName('强制渲染对话为md')
+			.setDesc('全局生效，目前仅部分格式生效')
+			.addToggle(text => text
+				.setValue(this.plugin.settings.isRenderMd)
+				.onChange(async (value) => {
+					console.log('Secret: ' + value);
+					this.plugin.settings.isRenderMd = value;
+					await this.plugin.saveSettings();
+				}));
 	}
 }
