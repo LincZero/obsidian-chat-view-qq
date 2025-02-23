@@ -47,8 +47,9 @@ sub.chat-view-subtext {
 }
 
 div.chat-view-bubble {
-    width: fit-content;
+    /* width: fit-content; */
     min-width: 30%;
+    width: 100%;
 }
 
 div.chat-view-bubble-mode-default {
