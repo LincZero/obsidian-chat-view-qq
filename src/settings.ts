@@ -8,6 +8,7 @@ export interface ChatPluginSettings {
 	width: number,
 	maxHeight: number,
 	isRenderMd: boolean,
+	isPcStyle: boolean,
 }
 
 // 设置内容的默认值，这是一个类似枚举的东西
@@ -17,6 +18,7 @@ export const DEFAULT_SETTINGS: ChatPluginSettings = {
 	width: 900,
 	maxHeight: 1100,
 	isRenderMd: true,
+	isPcStyle: true,
 }
 
 // 设置内容
@@ -93,6 +95,22 @@ export class ChatSettingTab extends PluginSettingTab {
 					console.log('Secret: ' + value);
 					this.plugin.settings.isRenderMd = value;
 					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('电脑风格')
+			.setDesc('默认 (false) 为手机风格，电脑风格的字会更少，用于显示更多内容')
+			.addToggle(text => text
+				.setValue(this.plugin.settings.isPcStyle)
+				.onChange(async (value) => {
+					console.log('Secret: ' + value);
+					this.plugin.settings.isPcStyle = value;
+					await this.plugin.saveSettings();
+
+					// 电脑风格
+					if (value) { document.body.classList.add('pc-chat') }
+					// 手机风格
+					else { document.body.classList.remove('pc-chat') }
 				}));
 	}
 }

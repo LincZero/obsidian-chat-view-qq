@@ -234,6 +234,17 @@ html {
     height: 100%;
 }
 
+/* pc状态下，字体变小 */
+.pc-chat .block-language-chat-qq, .pc-chat .block-language-chat-wechat {
+    font-size: 14px;
+}
+.pc-chat .block-language-chat-qq p:first-child, .pc-chat .block-language-chat-wechat p:first-child {
+    margin-top: 0;
+}
+.pc-chat .block-language-chat-qq p:last-child, .pc-chat .block-language-chat-wechat p:last-child {
+    margin-bottom: 0;
+}
+
 .block-language-chat-qq,
 .block-language-chat-wechat{
    width: var(--qq-width); 
