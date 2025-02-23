@@ -331,12 +331,14 @@ export class Chat_qq extends Chat {
         this.iconConfig(msgItem)
       
         // 该渲染项的设置，会覆盖全局设置
-        let sytle_width = this.formatConfigs.get("width");
-        let style_max_height = this.formatConfigs.get("max-height");
-        let style_all = ""
-        if (sytle_width) style_all+=`;width: ${sytle_width}px`
-        if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
-        if (style_all) this.el.setAttr("Style", style_all)
+        let sytle_width = this.formatConfigs.get('width');
+        let style_max_height = this.formatConfigs.get('max-height');
+        let style_all = ''
+        if (sytle_width) style_all += (';width: ' + 
+          (Number.isFinite(Number(sytle_width)) ? sytle_width+'px' : sytle_width))
+        if (style_max_height) style_all += (';max-height: ' +
+          (Number.isFinite(Number(style_max_height)) ? style_max_height+'px' : style_max_height))
+        if (style_all) this.el.setAttr('Style', style_all)
 
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
@@ -403,12 +405,14 @@ export class Chat_wechat extends Chat {
         this.iconConfig(msgItem)
       
         // 该渲染项的设置，会覆盖全局设置
-        let sytle_width = this.formatConfigs.get("width");
-        let style_max_height = this.formatConfigs.get("max-height");
-        let style_all = ""
-        if (sytle_width) style_all+=`;width: ${sytle_width}px`
-        if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
-        if (style_all) this.el.setAttr("Style", style_all)
+        let sytle_width = this.formatConfigs.get('width');
+        let style_max_height = this.formatConfigs.get('max-height');
+        let style_all = ''
+        if (sytle_width) style_all += (';width: ' + 
+          (Number.isFinite(Number(sytle_width)) ? sytle_width+'px' : sytle_width))
+        if (style_max_height) style_all += (';max-height: ' +
+          (Number.isFinite(Number(style_max_height)) ? style_max_height+'px' : style_max_height))
+        if (style_all) this.el.setAttr('Style', style_all)
 
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
@@ -467,12 +471,14 @@ export class Chat_telegram extends Chat {
         this.iconConfig(msgItem)
       
         // 该渲染项的设置，会覆盖全局设置
-        let sytle_width = this.formatConfigs.get("width");
-        let style_max_height = this.formatConfigs.get("max-height");
-        let style_all = ""
-        if (sytle_width) style_all+=`;width: ${sytle_width}px`
-        if (style_max_height) style_all+=`;max-height: ${style_max_height}px`
-        if (style_all) this.el.setAttr("Style", style_all)
+        let sytle_width = this.formatConfigs.get('width');
+        let style_max_height = this.formatConfigs.get('max-height');
+        let style_all = ''
+        if (sytle_width) style_all += (';width: ' + 
+          (Number.isFinite(Number(sytle_width)) ? sytle_width+'px' : sytle_width))
+        if (style_max_height) style_all += (';max-height: ' +
+          (Number.isFinite(Number(style_max_height)) ? style_max_height+'px' : style_max_height))
+        if (style_all) this.el.setAttr('Style', style_all)
 
         msgItem.isSelf = msgItem.isSelf || this.selfConfigs.includes(msgItem.sender)
         
