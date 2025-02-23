@@ -295,7 +295,7 @@ export class Chat_qq extends Chat {
     for (let index = 0; index < this.lines.length; index++) {
       let line = this.lines[index].trim()
       // 省略消息
-      if (line === "...") {
+      if (line === '...' || line === '(...)') {
         const delimiter = this.el.createDiv({cls: ["delimiter"]});
         for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
       }
@@ -326,7 +326,13 @@ export class Chat_qq extends Chat {
           if (index >= this.lines.length-1) break;
           index++;
           line = this.lines[index].trim().replace("&nbsp;", " ");
-          if (line.replace(/\s*/g,"")=="") break;
+          if (line.replace(/\s*/g,"")=="") { // 如果空行，且下一行是是对话人，break。否则继续
+            if (this.lines.length > index+1) {
+              let nextContent = this.lines[index+1]
+              if (Chat_qq.reg_qq_msg.test(nextContent) || Chat_qq.reg_qq_chehui.test(nextContent) || Chat_qq.reg_qq_jinqyun.test(nextContent) || nextContent == '(...)')
+                break
+            }
+          }
           msgItem.content.push(line);
         }
 
@@ -370,7 +376,7 @@ export class Chat_wechat extends Chat {
     for (let index = 0; index < this.lines.length; index++) {
       let line = this.lines[index].trim()
       // 省略消息
-      if (line === "...") {
+      if (line === '...' || line === '(...)') {
         const delimiter = this.el.createDiv({cls: ["delimiter"]});
         for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
       }
@@ -397,7 +403,7 @@ export class Chat_wechat extends Chat {
           if (line.replace(/\s*/g,"")=="") { // 如果空行，且下一行是是对话人，break。否则继续
             if (this.lines.length > index+1) {
               let nextContent = this.lines[index+1]
-              if (Chat_wechat.reg_wechat_msg[0].test(nextContent) || Chat_wechat.reg_wechat_msg[1].test(nextContent))
+              if (Chat_wechat.reg_wechat_msg[0].test(nextContent) || Chat_wechat.reg_wechat_msg[1].test(nextContent) || nextContent == '(...)')
                 break
             }
           }
