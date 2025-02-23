@@ -1,7 +1,7 @@
 import {Plugin, Notice} from "obsidian";
 
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
-import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat, Chat_telegram} from "./codeBlock"
+import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat, Chat_telegram, Chat_auto} from "./codeBlock"
 
 /* 文件引用流
  * main.ts
@@ -31,8 +31,13 @@ export default class ChatViewPlugin extends Plugin {
 		});
 
 		// chat 格式
-		this.registerMarkdownCodeBlockProcessor("chat", (source, el, _) => {
+		this.registerMarkdownCodeBlockProcessor("chat-old", (source, el, _) => {
 			new Chat_original(source, el, _, this).render()
+		});
+
+		// 自动 格式
+		this.registerMarkdownCodeBlockProcessor("chat", (source, el, _) => {
+			new Chat_auto(source, el, _, this).render()
 		});
 
 		// QQ 格式

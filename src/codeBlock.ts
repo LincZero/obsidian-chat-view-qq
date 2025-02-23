@@ -50,7 +50,7 @@ export class Chat {
     this.source = source;
     this.el = el;
     this._ =  _;
-    this. main_this = main_this;
+    this.main_this = main_this;
 
     const rawLines = source.split("\n");
     this.lines = rawLines.map((rawLine) => rawLine.trim());
@@ -243,7 +243,7 @@ export class Chat_original extends Chat {
 
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {
-      const line = this.lines[index].trim();
+      const line = this.lines[index].trim()
       // 全局消息
       if (/^#/.test(line)) {
         this.el.createEl("p", {text: line.substring(1).trim(), cls: ["chat-view-comment"]})
@@ -291,7 +291,7 @@ export class Chat_qq extends Chat {
 
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {
-      let line = this.lines[index].trim();
+      let line = this.lines[index].trim()
       // 省略消息
       if (line === "...") {
         const delimiter = this.el.createDiv({cls: ["delimiter"]});
@@ -364,7 +364,7 @@ export class Chat_wechat extends Chat {
 
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {
-      let line = this.lines[index].trim();
+      let line = this.lines[index].trim()
       // 省略消息
       if (line === "...") {
         const delimiter = this.el.createDiv({cls: ["delimiter"]});
@@ -432,7 +432,7 @@ export class Chat_telegram extends Chat {
 
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {
-      let line = this.lines[index].trim();
+      let line = this.lines[index].trim()
       // 省略消息
       if (line === "...") {
         const delimiter = this.el.createDiv({cls: ["delimiter"]});
@@ -480,5 +480,34 @@ export class Chat_telegram extends Chat {
       }
     }
     registerContextMenu(this)
+  }
+}
+
+// Auto Chat 格式
+// 可以智能识别 qq/wechat 格式并应用，且支持渲染md内容
+export class Chat_auto extends Chat {
+
+  // override render method
+  render(){
+    // 先智能识别格式
+    // 智能识别时，第一个有效内容不能是特殊格式，如 `...` / `撤回信息` / `进群信息` 等
+    // 优先级: 从复杂到简单, qq > wechat > tg
+    for (let index = 0; index < this.lines.length; index++) {
+      let line = this.lines[index].trim()
+      if (line.length == 0) continue
+      else if (Chat_qq.reg_qq_msg.test(line)) {
+        this.el.classList.add('block-language-chat-qq')
+        return new Chat_qq(this.source, this.el, this._, this.main_this).render()
+      }
+      else if (Chat_wechat.reg_wechat_msg[0].test(line) || Chat_wechat.reg_wechat_msg[1].test(line)) {
+        this.el.classList.add('block-language-chat-wechat')
+        return new Chat_wechat(this.source, this.el, this._, this.main_this).render()
+      }
+      else if (Chat_telegram.reg_tg_msg[0].test(line) || Chat_telegram.reg_tg_msg[1].test(line)) {
+        this.el.classList.add('block-language-chat-tg')
+        return new Chat_telegram(this.source, this.el, this._, this.main_this).render()
+      }
+      continue
+    }
   }
 }
