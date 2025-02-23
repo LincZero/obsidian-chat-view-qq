@@ -86,7 +86,7 @@ LincZero:
 
 效果：（V0.3.3 new Style）
 
-![img](README.assets/665IOT2Z[GG{QFY$0M2A}G.png)
+![img](assets/665IOT2Z[GG{QFY$0M2A}G.png)
 
 ## Plug-in Features
 
