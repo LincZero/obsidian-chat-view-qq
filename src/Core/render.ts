@@ -16,9 +16,14 @@
  * 						(.chat-view-qq-message-msg)
  */
 
-export const render_setting = { // 需要初始化
+export const render_setting: { // 需要初始化
+  fn_renderMarkdown: any,
+  registerContextMenu: any,
+  main_setting: any
+} = {
   fn_renderMarkdown: (md: string, el: HTMLElement, ctx: any) => {},
-  registerContextMenu: (codeBlock_this: any) => {}
+  registerContextMenu: (codeBlock_this: any) => {},
+  main_setting: {}
 }
 
 export class MsgItem {
@@ -103,7 +108,7 @@ export class MsgItem {
       let messages_all = pop.createEl("div", {cls: ["chat-view-qq-message-all", " word99"]});
 
       // b1. md渲染
-      if (this.block_this.main_this.settings.isRenderMd) {
+      if (render_setting.main_setting.isRenderMd) {
         render_setting.fn_renderMarkdown(this.content.join('\n'), messages_all, this.block_this.ctx)
       }
       // b2. 普通渲染

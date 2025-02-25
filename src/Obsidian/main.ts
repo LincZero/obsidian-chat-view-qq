@@ -22,17 +22,6 @@ export default class ChatViewPlugin extends Plugin {
 	settings: ChatPluginSettings; // 插件配置
 	
 	async onload(): Promise<void> {
-		// 初始化渲染函数
-		render_setting.fn_renderMarkdown = (md: string, el: HTMLElement, ctx: any) => {
-			el.classList.add("markdown-rendered")
-			const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
-			if (ctx) ctx.addChild(mdrc);
-			// @ts-ignore 新接口，但旧接口似乎不支持
-			MarkdownRenderer.render(this.app, md, el, this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
-			// MarkdownRenderer.render(this.block_this.main_this.app, this.content.join('\n'), messages_all, this.block_this.main_this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
-		}
-		render_setting.registerContextMenu = registerContextMenu
-
 		// 插件配置
 		await this.loadSettings();
 		this.addSettingTab(new ChatSettingTab(this.app, this)); // 这将添加一个设置选项卡，以便用户可以配置插件的各个方面
@@ -43,6 +32,18 @@ export default class ChatViewPlugin extends Plugin {
 
 		if (this.settings.isPcStyle) { document.body.classList.add('pc-chat') } // 电脑风格
 		else { document.body.classList.remove('pc-chat') } // 手机风格
+
+		// 初始化渲染函数
+		render_setting.fn_renderMarkdown = (md: string, el: HTMLElement, ctx: any) => {
+			el.classList.add("markdown-rendered")
+			const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
+			if (ctx) ctx.addChild(mdrc);
+			// @ts-ignore 新接口，但旧接口似乎不支持
+			MarkdownRenderer.render(this.app, md, el, this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+			// MarkdownRenderer.render(this.block_this.main_this.app, this.content.join('\n'), messages_all, this.block_this.main_this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+		}
+		render_setting.registerContextMenu = registerContextMenu
+		render_setting.main_setting = this.settings
 
 		// webvtt 格式
 		this.registerMarkdownCodeBlockProcessor("chat-webvtt", (source, el, _) => {

@@ -90,7 +90,7 @@ export class Chat {
   // 全局配置与局部配置
   config(){
     // 全局配置
-    let settings: ChatPluginSettings = this.main_this.settings
+    let settings: ChatPluginSettings = render_setting.main_setting
     if (settings.chatSelfName) {
       const configs = settings.chatSelfName.split(",").map((l) => l.trim());
       this.selfConfigs = configs
