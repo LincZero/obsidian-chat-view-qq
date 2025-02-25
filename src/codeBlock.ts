@@ -27,8 +27,8 @@ export class Chat {
 
   // TODO 使用随机头像 + seed (用hash(iconname)得到) 锚定，是最好的。
   // 随机头像类似：
-  // - https://github.com/wave-charts/avatar-gen/ , https://avatar.gaoxiazhitu.com/
-  // - https://github.com/Codennnn/vue-color-avatar , https://vue-color-avatar.leoku.dev/ (better)
+  // - https://github.com/Codennnn/vue-color-avatar 3.5k star, https://vue-color-avatar.leoku.dev/ (better)
+  // - https://github.com/wave-charts/avatar-gen/ 528 star, https://avatar.gaoxiazhitu.com/
   icons = [
     "https://img0.baidu.com/it/u=3452693033,2914629743&fm=253",
     "https://img2.baidu.com/it/u=2231228778,2513904551&fm=253",
