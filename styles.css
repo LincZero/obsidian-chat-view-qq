@@ -203,7 +203,7 @@ div.chat-view-wood .chat-view-header {
 /* LincZero魔改所新增的样式 */
 
 :root {
-	--qq-width: 900px;
+	--qq-width: 100%;
 	--qq-max-height: 1100px;
 	--qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon));
 	--qq-width-icon: 80px;
@@ -227,6 +227,11 @@ div.chat-view-wood .chat-view-header {
     src: url('./font/NotoColorEmoji.ttf') format('truetype');
 }*/
 
+/* 环境适配兼容 */
+:root {
+    --qq-font-size: 16px; /* --front-text-size --code-size or 16px */
+}
+
 body,
 html {
     margin: 0px;
@@ -238,7 +243,7 @@ html {
 /* pc状态下，字体变小 */
 .pc-chat .block-language-chat-qq .chat-view-qq-message-all,
 .pc-chat .block-language-chat-wechat .chat-view-qq-message-all {
-    font-size: var(--front-text-size); /* --code-size or 14px */
+    font-size: var(--qq-font-size);
 }
 .pc-chat .block-language-chat-qq .chat-view-qq-message-all p:first-child,
 .pc-chat .block-language-chat-wechat .chat-view-qq-message-all p:first-child {
@@ -330,11 +335,13 @@ html {
 .chat-view-qq-msg>.pop>div.chat-view-qq-message-all { width: 100%; }
 
 .chat-view-qq-msg {
+    box-sizing: border-box;
     display: inline-block;
+    margin-bottom: 10px;
+    
 	word-wrap: break-word;
     color: var(--qq-text-color);
     padding-top: 17px;
-    margin-bottom: 10px;
 	padding-left: 17px;
 	padding-right: 17px;
 }
@@ -386,11 +393,13 @@ html {
 }
 
 .chat-view-qq-message-all {
+    box-sizing: border-box;
 	display: inline-block; /*inline-block*/
+    margin-bottom: 5px;
+
 	word-wrap: break-word;
 	color: var(--qq-msg-color);
 	font-size: 27px;
-	margin-bottom: 5px;
 	padding: 8px 15px 8px 15px;
 	background-color: var(--qq-msg-bg-color);
 }

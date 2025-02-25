@@ -13,7 +13,6 @@ interface Options {
  * 渲染 - codeBlock/fence 规则
  */
 function render_fence(md: MarkdownIt, options?: Partial<Options>): void {
-  console.log('进入代码块了')
   const oldFence = md.renderer.rules.fence || function(tokens:any, idx:any, options:any, env:any, self:any) {
     return self.renderToken(tokens, idx, options);
   };
@@ -23,9 +22,8 @@ function render_fence(md: MarkdownIt, options?: Partial<Options>): void {
     let token = tokens[idx]
     let lines = token.content.split('\n')
     const codeBlockType = token.info.toLowerCase() as string
-    console.log('进入代码块了2', codeBlockType, ['chat-webvtt', 'chat-old', 'chat', 'chat-qq', 'chat-wechat', 'chat-tg'].includes(codeBlockType))
     if (!['chat-webvtt', 'chat-old', 'chat', 'chat-qq', 'chat-wechat', 'chat-tg'].includes(codeBlockType)) { return oldFence(tokens, idx, options, env, self) }
-    console.log('进入代码块了3')
+
     const el: HTMLDivElement = document.createElement('div'); el.classList.add("cv-note");
     if (codeBlockType == 'chat-webvtt') { new Chat_webvtt(token.content, el, null, this).render() }
     else if (codeBlockType == 'chat-old') { new Chat_original(token.content, el, null, this).render() }
