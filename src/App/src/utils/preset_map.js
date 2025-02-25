@@ -5,6 +5,8 @@ export const preset_map = {
 'Normal markdown': `\
 \`^\` 点击编辑区域上面的预设下拉框，可以切换其他demo
 
+**! 仅供记录聊天灵感、知识性对话等，切勿用作不法用途**
+
 ## 切分符
 
 对于最简单常用的wechat格式，为: \`空行(首行不用) + 内容 + 冒号\`
@@ -17,7 +19,7 @@ export const preset_map = {
 
 \`\`\`chat
 me:
-大家出来说话，自我介绍一下
+**大家**出来说话，自我介绍*一下*
 
 deepseek:
 我是 deepseek

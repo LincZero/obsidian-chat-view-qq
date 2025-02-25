@@ -208,19 +208,18 @@ div.chat-view-wood .chat-view-header {
 	--qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon));
 	--qq-width-icon: 80px;
 }
-:root,
-.theme-dark {
+:root.theme-dark {
 	--qq-text-color: rgb(94, 94, 94);
 	--qq-msg-bg-color: rgb(35, 35, 35);
 	--qq-msg-color: rgb(253, 253, 253);
 	--qq-bg-color: rgb(1, 1, 1);
 }
-:root,
-.theme-light {
+:root, /* 默认明亮模式 */
+:root.theme-light {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
-	--qq-bg-color: rgba(255, 255, 255, 0.8);
+	--qq-bg-color: #d3d3d3;
 }
 /*@font-face {
     font-family: 'NotoColorEmoji';
