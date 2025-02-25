@@ -302,12 +302,12 @@ export class Chat_original extends Chat {
       const line = this.lines[index].trim()
       // 全局消息
       if (/^#/.test(line)) {
-        this.el.createEl("p", {text: line.substring(1).trim(), cls: ["chat-view-comment"]})
+        const p = document.createElement('p'); this.el.appendChild(p); p.classList.add('chat-view-comment'); p.textContent = line.substring(1).trim()
       }
       // 省略消息
       else if (line === "...") {
-        const delimiter = this.el.createDiv({cls: ["delimiter"]});
-        for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+        const delimiter = document.createElement('div'); this.el.appendChild(delimiter); delimiter.classList.add('delimiter');
+        for (let i = 0; i < 3; i++) { const delimiter_sub = document.createElement('div'); delimiter.appendChild(delimiter_sub); delimiter_sub.classList.add('dot'); }
       }
       // 对话消息
       else if (/(^>|<|\^)/.test(line)) {
@@ -352,16 +352,16 @@ export class Chat_qq extends Chat {
       let line = this.lines[index].trim()
       // 省略消息
       if (line === '...' || line === '(...)') {
-        const delimiter = this.el.createDiv({cls: ["delimiter"]});
-        for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+        const delimiter = document.createElement('div'); this.el.appendChild(delimiter); delimiter.classList.add('delimiter');
+        for (let i = 0; i < 3; i++) { const delimiter_sub = document.createElement('div'); delimiter.appendChild(delimiter_sub); delimiter_sub.classList.add('dot'); }
       }
       // 撤回消息
       else if (Chat_qq.reg_qq_chehui.test(line)) {
-        this.el.createEl("p", {text: line.trim(), cls: ["chat-view-comment", "chat-view-qq-comment"]})
+        const p = document.createElement('p'); this.el.appendChild(p); p.classList.add('chat-view-comment', 'chat-view-qq-comment'); p.textContent = line.trim()
       }
       // 进群消息
       else if (Chat_qq.reg_qq_jinqyun.test(line)) {
-        this.el.createEl("p", {text: line.trim(), cls: ["chat-view-comment", "chat-view-qq-comment"]})
+        const p = document.createElement('p'); this.el.appendChild(p); p.classList.add('chat-view-comment', 'chat-view-qq-comment'); p.textContent = line.trim()
       }
       // 对话消息
       else if (Chat_qq.reg_qq_msg.test(line)) {
@@ -433,8 +433,8 @@ export class Chat_wechat extends Chat {
       let line = this.lines[index].trim()
       // 省略消息
       if (line === '...' || line === '(...)') {
-        const delimiter = this.el.createDiv({cls: ["delimiter"]});
-        for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+        const delimiter = document.createElement('div'); this.el.appendChild(delimiter); delimiter.classList.add('delimiter');
+        for (let i = 0; i < 3; i++) { const delimiter_sub = document.createElement('div'); delimiter.appendChild(delimiter_sub); delimiter_sub.classList.add('dot'); }
       }
       // 对话消息
       else if (Chat_wechat.reg_wechat_msg[0].test(line) || Chat_wechat.reg_wechat_msg[1].test(line)) {
@@ -503,8 +503,8 @@ export class Chat_telegram extends Chat {
       let line = this.lines[index].trim()
       // 省略消息
       if (line === "...") {
-        const delimiter = this.el.createDiv({cls: ["delimiter"]});
-        for (let i = 0; i < 3; i++) delimiter.createDiv({cls: ["dot"]});
+        const delimiter = document.createElement('div'); this.el.appendChild(delimiter); delimiter.classList.add('delimiter');
+        for (let i = 0; i < 3; i++) { const delimiter_sub = document.createElement('div'); delimiter.appendChild(delimiter_sub); delimiter_sub.classList.add('dot'); }
       }
       // 对话消息
       else if (Chat_telegram.reg_tg_msg[0].test(line) || Chat_telegram.reg_tg_msg[1].test(line)) {

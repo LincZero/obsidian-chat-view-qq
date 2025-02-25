@@ -57,55 +57,51 @@ export class MsgItem {
     const modeClass = `chat-view-bubble-mode-${this.block_this.style}`;
   
     // 创建每条信息的根div
-    let el: HTMLElement = this.block_this.el
-    const bubble = el.createDiv({
-      cls: ["chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass],
-    });
-  
+    const el: HTMLElement = this.block_this.el
+    const bubble = document.createElement('div'); el.appendChild(bubble); bubble.classList.add("chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass)
+
     // 创建icon项
-    const div_icon = bubble.createDiv({
-      cls: ["chat-view-qq-icon"]
-    });
+    const div_icon = document.createElement('div'); bubble.appendChild(div_icon); div_icon.classList.add("chat-view-qq-icon")
     let div_img;
     {
       // img
       if (this.sender.length > 0) {
-        div_img = div_icon.createEl("img", {attr: {"src": this.iconSrc}});
+        div_img = document.createElement('img'); div_icon.appendChild(div_img); div_img.setAttribute('src', this.iconSrc)
       }
     }
     // 创建消息项
-    const div_msg = bubble.createDiv({
-      cls: ["chat-view-qq-msg"]
-    });  
+    const div_msg = document.createElement('div'); bubble.appendChild(div_msg); div_msg.classList.add("chat-view-qq-msg")
     // 发送附属信息
     {
-      let div_title = div_msg.createDiv({cls: ["chat-view-qq-title"]})
+      const div_title = document.createElement('div'); div_msg.appendChild(div_title); div_title.classList.add("chat-view-qq-title")
       // 发送者群头衔
       if (this.groupTitle.length > 0) {
-        div_title.createEl("p", {text: this.groupTitle, attr: {"title": this.groupTitle}, cls: ["chat-view-qq-groupTitle"]});
+        const p = document.createElement('p'); div_title.appendChild(p); p.classList.add("chat-view-qq-groupTitle");
+        p.textContent = this.groupTitle; p.setAttribute("title", this.groupTitle)
       }
       // 发送者群昵称
       if (this.sender.length > 0) {
-        div_title.createEl("p", {text: this.sender, cls: ["chat-view-qq-sender"]});
+        const p = document.createElement('p'); div_title.appendChild(p); p.classList.add("chat-view-qq-sender"); p.textContent = this.sender
       }
       // 发送时间
       if (this.block_this.isShowTime && this.dateTime.length > 0) {
-        div_title.createEl("p", {text: this.dateTime, cls: ["chat-view-qq-dateTime"]})
+        const p = document.createElement('p'); div_title.appendChild(p); p.classList.add("chat-view-qq-dateTime");
+          p.textContent = this.dateTime
       }
     }
     // 发送信息内容
     ;(()=>{
-      div_msg.createDiv({attr: {"style": "clear: both;"}});
+      const div_tmp = document.createElement('div'); div_msg.appendChild(div_tmp); div_tmp.setAttribute('style', 'clear: both;')
       if (this.sender.length <= 0) {
-        div_msg.createDiv({attr: {"style": "clear: both;"}});
+        const div_tmp = document.createElement('div'); div_msg.appendChild(div_tmp); div_tmp.setAttribute('style', 'clear: both;')
         return
       }
-      let pop = div_msg.createDiv({cls: ["pop"]})
+      const pop = document.createElement('div'); div_msg.appendChild(pop); pop.classList.add('pop')
       // 小尖角
-      pop.createDiv({cls: ["shape-zero"]})
-      .createDiv({cls: ["shape"]})
+      const shape1 = document.createElement('div'); pop.appendChild(shape1); shape1.classList.add('shape-zero')
+      const shape2 = document.createElement('div'); shape1.appendChild(shape2); shape2.classList.add('shape')
       // 全部信息
-      let messages_all = pop.createEl("div", {cls: ["chat-view-qq-message-all", " word99"]});
+      const messages_all = document.createElement('div'); pop.appendChild(messages_all); messages_all.classList.add("chat-view-qq-message-all", "word99")
 
       // b1. md渲染
       if (render_setting.main_setting.isRenderMd) {
@@ -117,28 +113,21 @@ export class MsgItem {
         for (let j=0; j<this.content.length; j++) {
           // 单行信息
           let msg_line = this.content[j]
-          let message_line = messages_all.createEl("div", {cls: ["chat-view-qq-message-line"]});
+          const message_line = document.createElement('div'); messages_all.appendChild(message_line); message_line.classList.add("chat-view-qq-message-line")
           let msg_splits = msg_line.split(qq_img_re)
           if (msg_splits.length % 2 == 0) console.warn('【可能产生的错误】正则split分割数复数');
           for (let i=0; i<msg_splits.length; i++) {
             // 分隔后的文字信息
-            if (i%2==0) message_line.createEl('span', {
-              text: msg_splits[i], 
-              cls: ["chat-view-qq-message-text"]
-            });
+            if (i%2==0) {
+              const span = document.createElement('span'); message_line.appendChild(span); span.classList.add("chat-view-qq-message-text"); span.textContent = msg_splits[i]
+            }
             // 分隔后的QQ图片/绝对路径图片信息
             else if (/^file:\/\/\//.test(msg_splits[i])) {
-              message_line.createEl('img', {
-                cls: ["chat-view-qq-message-msg"],
-                attr: {"src": msg_splits[i].replace("file:///", "app://local/")}
-              });
+              const img = document.createElement('img'); message_line.appendChild(img); img.classList.add("chat-view-qq-message-msg"); img.setAttribute('src', msg_splits[i].replace("file:///", "app://local/"))
             }
             // 网址图片
             else if(/^http/.test(msg_splits[i])) {
-              message_line.createEl('img', {
-                cls: ["chat-view-qq-message-msg"],
-                attr: {"src": msg_splits[i] }
-              });
+              const img = document.createElement('img'); message_line.appendChild(img); img.classList.add("chat-view-qq-message-msg"); img.setAttribute('src', msg_splits[i])
             }
             // 分隔后的普通图片信息（相对路径）
             else {
@@ -149,17 +138,14 @@ export class MsgItem {
                 +"/"
                 +this.block_this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")
                 +"/"+msg_splits[i]
-              message_line.createEl('img', {
-                cls: ["chat-view-qq-message-msg"],
-                attr: {"src": src }
-              });
+              const img = document.createElement('img'); message_line.appendChild(img); img.classList.add("chat-view-qq-message-msg"); img.setAttribute('src', src)
             }
           }
         }
       }
-      div_msg.createDiv({attr: {"style": "clear: both;"}});
+      const div_tmp2 = document.createElement('div'); div_msg.appendChild(div_tmp2); div_tmp2.setAttribute('style', 'clear:both')
     })()
-    bubble.createDiv({attr: {"style": "clear: both;"}});
+    const div_tmp = document.createElement('div'); bubble.appendChild(div_tmp); div_tmp.setAttribute('style', 'clear:both')
   }
 
   render_default() {
@@ -175,13 +161,17 @@ export class MsgItem {
       "h4";*/
     // 创建div
     let el: HTMLElement = this.block_this.el
-    const bubble = el.createDiv({
-      cls: ["chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass/*, colorConfigClass, widthClass*/, modeClass]
-    });
+    const bubble = document.createElement('div'); el.appendChild(bubble); bubble.classList.add("chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass/*, colorConfigClass, widthClass*/, modeClass)
     // 创建元素
-    if (this.sender.length > 0) bubble.createEl(headerEl, {text: this.sender, cls: ["chat-view-header"]});
-    if (this.content[0].length > 0) bubble.createEl("p", {text: this.content[0], cls: ["chat-view-message"]});
-    if (this.dateTime.length > 0) bubble.createEl("sub", {text: this.dateTime, cls: ["chat-view-subtext"]});
+    if (this.sender.length > 0) {
+      const div_tmp = document.createElement('h4'); bubble.appendChild(div_tmp); div_tmp.classList.add("chat-view-header"); div_tmp.textContent = this.sender
+    }
+    if (this.content[0].length > 0) {
+      const div_tmp = document.createElement('p'); bubble.appendChild(div_tmp); div_tmp.classList.add("chat-view-message"); div_tmp.textContent = this.content[0]
+    }
+    if (this.dateTime.length > 0) {
+      const div_tmp = document.createElement('sub'); bubble.appendChild(div_tmp); div_tmp.classList.add("chat-view-subtext"); div_tmp.textContent = this.dateTime
+    }
   }
   /* 
     * 说一下这个div结构
