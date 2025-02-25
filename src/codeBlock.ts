@@ -37,6 +37,33 @@ export class Chat {
     "https://img2.baidu.com/it/u=804455831,2693824866&fm=253",
     "https://img0.baidu.com/it/u=2940741436,1248193933&fm=253"
   ];
+  webIcons: { [key:string]: string } = { // TODO 明暗模式，这里默认明亮模式 TODO 通用的部分可以拆分出来优化
+    // "https://www.deepseek.com/favicon.ico", "https://favicon-ico.vercel.app/?url=https://github.com/"
+    "github": "https://favicone.com/" + "github" + ".com",
+    "chatgpt": "https://favicone.com/" + "chatgpt" + ".com",
+    "google": "https://favicone.com/" + "google" + ".com",
+    "kimi": "https://favicone.com/" + "kimi" + ".com",
+    "poe": "https://favicone.com/" + "poe" + ".com",
+    "claude": "https://favicone.com/" + "claude" + ".com",
+    "doubao": "https://favicone.com/" + "doubao" + ".com",
+    "cursor": "https://favicone.com/" + "cursor" + ".com",
+    "segmentfault": "https://favicone.com/" + "segmentfault" + ".com",
+    "baidu": "https://favicone.com/" + "baidu" + ".com",
+    "zhihu": "https://favicone.com/" + "zhihu" + ".com",
+    "bing": "https://favicone.com/" + "bing" + ".com",
+    "youtube": "https://favicone.com/" + "youtube" + ".com",
+
+    "deepseek": "https://www.deepseek.com/favicon.ico", // "https://favicone.com/" + "deepseek" + ".com", icon版有点糊
+    "bilibili": "https://favicone.com/" + "www.bilibili" + ".com",
+    "sf": "https://favicone.com/" + "sf" + ".com",
+    "ob": "https://favicone.com/" + "obsidian.md",
+    "obsidian": "https://favicone.com/" + "obsidian.md",
+    "juejin": "https://favicone.com/" + "juejin.cn",
+    "csdn": "https://favicone.com/" + "csdn.net",
+    "tongyi": "https://favicone.com/" + "tongyi.aliyun" + ".com",
+    "gemini": "https://favicone.com/" + "gemini.google" + ".com",
+    "copilot": "https://github.com/favicons/favicon-copilot.png", // "https://github.com/favicons/favicon-copilot-dark.png",
+  };
   numDefaultIcon = this.icons.length;		        // 图库中含有图片数量
   countDefaultIcon = 0; 											  // 已使用的图库数量
 
@@ -108,43 +135,65 @@ export class Chat {
 
   // 将icon配置转化成icon地址
   iconConfig(msgItem: MsgItem){
+    msgItem.iconSrc = this.getIcon(msgItem.sender)
+  }
+  // 一个通用的 `iconName 转 iconUrl 地址` 函数
+  // 智能识别各种类型的iconName并智能转换
+  getIcon(iconName: string) {
     // iconSrcConfig中没有，就从iconConfig中去找并处理后放到iconSrcConfig中
-    if (!this.iconSrcConfigs.get(msgItem.sender)) {
-      let iconConfigsItem = this.iconConfigs.get(msgItem.sender)
-      let iconSrcConfigsItem = ""
-      // 有指定头像
-      if (iconConfigsItem) {
-        // QQ头像
-        if (/^\d+$/.test(iconConfigsItem)) {
-          iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconConfigsItem}&spec=40`
-        }
-        // 网址头像
-        else if(/^http/.test(iconConfigsItem)) {
-          iconSrcConfigsItem = iconConfigsItem
-        }
-        // 相对路径图片
-        else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(iconConfigsItem)) {
-          iconSrcConfigsItem = "app://local/"+this.main_this.app.vault.adapter.basePath+"/"+this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+iconConfigsItem
-        }
-        // 其他头像
-        else {
-          iconSrcConfigsItem = iconConfigsItem
-        }
-      }
-      // 无指定头像，自动分配默认头像
-      else {
-        // 随机头像
-        if (this.countDefaultIcon < this.numDefaultIcon) {
-          iconSrcConfigsItem = this.icons[this.countDefaultIcon++]
-        }
-        // 默认QQ头像
-        else {
-          iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`
-        }
-      }
-      this.iconSrcConfigs.set(msgItem.sender, iconSrcConfigsItem)
+    if (this.iconSrcConfigs.get(iconName)) {
+      return this.iconSrcConfigs.get(iconName)
     }
-    msgItem.iconSrc = this.iconSrcConfigs.get(msgItem.sender)
+    let iconConfigsItem = this.iconConfigs.get(iconName)
+    let iconSrcConfigsItem = ""
+    // 有指定过头像 (在总设置中) 或缓存过 (第二次调用重复名)
+    if (iconConfigsItem) {
+      // QQ头像
+      if (/^\d+$/.test(iconConfigsItem)) {
+        iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconConfigsItem}&spec=40`
+      }
+      // 网址头像
+      else if(/^http/.test(iconConfigsItem)) {
+        iconSrcConfigsItem = iconConfigsItem
+      }
+      // 相对路径图片
+      else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(iconConfigsItem)) {
+        iconSrcConfigsItem = "app://local/"+this.main_this.app.vault.adapter.basePath+"/"+this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+iconConfigsItem
+      }
+      // 其他头像
+      else {
+        iconSrcConfigsItem = iconConfigsItem
+      }
+    }
+    // 无指定头像，自动分配默认头像
+    else {
+      // favicon头像 - 仅hostname
+      if (iconName in this.webIcons) {
+        iconSrcConfigsItem = this.webIcons[iconName]
+      }
+      // favicon头像 - 完整url
+      else if (/(.com|.cn|.xyz|.io)$/.test(iconName)) {
+        iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconName}&spec=40`
+      }
+      // 网址头像
+      else if(/^http/.test(iconName)) {
+        iconSrcConfigsItem = iconName
+      }
+      // 名称为qq号
+      else if (/^\d+$/.test(iconName)) {
+        iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconName}&spec=40`
+      }
+      // 随机头像
+      else if (this.countDefaultIcon < this.numDefaultIcon) {
+        iconSrcConfigsItem = this.icons[this.countDefaultIcon++]
+      }
+      // 默认QQ头像
+      else {
+        iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=0&spec=40`
+      }
+    }
+    this.iconSrcConfigs.set(iconName, iconSrcConfigsItem)
+    return iconSrcConfigsItem
   }
   
   // 渲染

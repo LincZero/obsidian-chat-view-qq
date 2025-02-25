@@ -284,6 +284,7 @@ html {
 .chat-view-align-left .chat-view-qq-icon {float: left;}
 .chat-view-align-right .chat-view-qq-icon {float: right;}
 .chat-view-qq-icon img {
+    background-color: #eee; /* 默认图标以明亮模式获取 (避免带alpha) */
     width: 55px;
 	height: 55px;
 	border-radius: 50%;
