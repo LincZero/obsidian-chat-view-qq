@@ -10,6 +10,9 @@
       </a>
     </div>
     <div class="menu-1" style="padding: 0 16px; font-weight:bold; font-size: 16px; float: right;">
+      <a href="https://linczero.github.io/obsidian-chat-view-qq/">在线交互</a>
+    </div>
+    <div class="menu-1" style="padding: 0 16px; font-weight:bold; font-size: 16px; float: right;">
       <a href="https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/Obsidian-Chat-View-QQ/">在线文档</a>
     </div>
   </div>
