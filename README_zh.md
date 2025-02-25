@@ -10,7 +10,8 @@
 - telegram (win & mac)
 - webvtt
 
-Obsidian插件，魔改于 [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)
+Obsidian插件，魔改于 [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)。
+做了许多更适配中国使用的工作，如qq/wechat格式、智能头像、智能识别格式等
 
 保存了原插件的功能，不需要同时使用两个插件<br/>
 `version-by` 是版本是魔改基于的原版版本<br/>
@@ -38,7 +39,7 @@ Obsidian插件，魔改于 [obsidian-chat-view](https://github.com/adifyr/obsidi
 
 QQ
 
-````
+````md
 ```chat-qq
 {self=自己的昵称 例如群友1 可选, width=要渲染的宽度 可选, max-height=最大渲染高度 超出会边滚动框 可选, time=show表示显示消息发送时间}
 [群友1=群友1的QQ, 群友2=群友2的QQ, 群友3=群友3的QQ 可选 不选就就默认分配头像]

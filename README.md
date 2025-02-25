@@ -1,13 +1,3 @@
-2025-02-15 补充： **更新到版本: 9.9.17-31363 (64位) 及以上，又能拖拽选择一堆对话，然后复制黏贴啦！**
-
----
-
-**由于新版QQ导致消息难以直接复制黏贴，作者本人也不用了，所以放弃维护……**
-
-**以前是比较方便的，直接拖拽选择一堆对话，然后复制黏贴到ob里就完事了……**
-
----
-
 English | [中文](./README_zh.md)
 
 **English version is machine translated**
@@ -23,6 +13,7 @@ Supported Format：
 - webvtt
 
 Obsidian Plugin，The magic changes to [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view)
+We have done a lot of work that is more suitable for Chinese use, such as qq/wechat format, intelligent avatar, intelligent recognition format and so on.
 
 `version-by` is the [obsidian-chat-view](https://github.com/adifyr/obsidian-chat-view) version on which the magic is based<br/>
 `version` the revised edition
@@ -49,7 +40,7 @@ method of application：<br/>
 
 QQ
 
-````
+````md
 ```chat-qq
 {self=SelfName, width=Local render width, max-height=Local maximum render height, time=show # Whether to display the time}
 [user1=user1 QQ, user2=user2 QQ, user3=user3 QQ]
@@ -100,6 +91,27 @@ LincZero:
   - Don't use it to fake chat for bad purposes
 
 ## Update Logs
+
+### 1.3.0（20250223）
+
+此处不再维护 Update Logs，具体更新详情见 Github 的 Releases 页
+
+> [!note]
+> 
+> 关于之前的停更说明：
+> 
+> (1) 旧版QQ以前是比较方便的，直接拖拽选择一堆对话，然后复制黏贴到ob里就完事了。这也使得该插件可以非常轻松地记录信息
+> 操作量为3 (拖拽 Ctrl+C Ctrl+V)
+> 
+> (2) **后来有非常长一段时间没有进行更新**，主要是因为自从QQ推出**NT版本**后，消息难以直接复制黏贴。
+> 而该插件又主要是针对QQ信息进行特化的，新版本QQ无法很方便地进行复制，导致插件用起来非常难受。作者本人也不用了，所以放弃维护……
+> NT版QQ操作量增加为9! (拖拽 点收藏 点收藏界面 点击刚刚收藏的对话 拖拽 复制 黏贴 关闭 关闭)
+> (如果你还要把收藏给删了，操作量就是11了! )
+> 这是完全不可接受的
+> 
+> (3) QQ NT版本在过了数年后……才把这个功能费搞了回来
+> 2025-02-15 补充： **更新到版本: 9.9.17-31363 (64位) 及以上，又能拖拽选择一堆对话，然后复制黏贴啦！**
+> 希望后面不要再把这个功能给删了......真的气人
 
 ### v0.5.0（20221122）
 
