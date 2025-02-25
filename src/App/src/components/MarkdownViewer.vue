@@ -45,39 +45,46 @@ onMounted(()=>{
 
   padding: 10px 20px 500px;
   overflow: auto;
-
-  >div.ab-note { // ob和vuepress版本外面有一层，但这里没有，要给间距
-    margin: 26px 0;
-  }
 }
 </style>
 
-<style>
-/** 一些markdown样式校正 */
-.ab-app-render ul {
-  margin: 0;
-  padding-left: 20px;
-  list-style-type: disc;
-}
-.ab-app-render table {
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-}
-.ab-app-render th, .ab-app-render td {
-  border: solid 1px currentColor;
-  padding: 0 4px;
-}
-.ab-app-render h2 {
-  color: #ffc078;
-}
-.ab-app-render strong {
-  color: red;
-}
-.ab-app-render em {
-  color: yellow;
-}
-.ab-app-render s {
-  color: gray;
+<style lang="scss">
+.ab-app-render {
+  /* ob和vuepress版本外面有一层，但这里没有，要给间距 */
+  >div>div.ab-note,
+  >div>div.cv-note {
+    margin: 26px 0;
+  }
+
+  /** 一些markdown样式校正，不知道为什么，默认的行为有很多很怪 */
+  ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+  }
+  table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: solid 1px currentColor;
+    padding: 0 4px;
+  }
+  h2 {
+    color: #ffc078;
+  }
+  p {
+    display: inline;
+  }
+  strong {
+    color: red;
+  }
+  em {
+    color: yellow;
+  }
+  s {
+    color: gray;
+  }
 }
 </style>
