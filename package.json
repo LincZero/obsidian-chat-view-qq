@@ -6,7 +6,9 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"app:dev": "vite --config ./src/App/vite.config.js",
+		"app:build": "vite build --config ./src/App/vite.config.js"
 	},
 	"keywords": [],
 	"author": "Aditya Majethia",
