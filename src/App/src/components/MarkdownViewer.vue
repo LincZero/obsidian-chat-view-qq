@@ -75,7 +75,7 @@ onMounted(()=>{
     color: #ffc078;
   }
   p {
-    display: inline;
+    display: block;
   }
   strong {
     color: red;

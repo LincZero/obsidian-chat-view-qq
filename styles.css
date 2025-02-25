@@ -244,12 +244,13 @@ html {
 .pc-chat .block-language-chat-wechat .chat-view-qq-message-all {
     font-size: var(--qq-font-size);
 }
-.pc-chat .block-language-chat-qq .chat-view-qq-message-all p:first-child,
-.pc-chat .block-language-chat-wechat .chat-view-qq-message-all p:first-child {
+
+.block-language-chat-qq .chat-view-qq-message-all p:first-child,
+.block-language-chat-wechat .chat-view-qq-message-all p:first-child {
     margin-top: 0;
 }
-.pc-chat .block-language-chat-qq .chat-view-qq-message-all p:last-child,
-.pc-chat .block-language-chat-wechat .chat-view-qq-message-all p:last-child {
+.block-language-chat-qq .chat-view-qq-message-all p:last-child,
+.block-language-chat-wechat .chat-view-qq-message-all p:last-child {
     margin-bottom: 0;
 }
 
