@@ -1,9 +1,11 @@
 import {Plugin, Notice} from "obsidian";
-import { MarkdownRenderChild, MarkdownRenderer } from "obsidian";
 
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
-import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat, Chat_telegram, Chat_auto} from "./codeBlock"
-import { render_setting } from "./render"
+import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat, Chat_telegram, Chat_auto} from "../Core/codeBlock"
+
+import { render_setting } from "../Core/render"
+import { MarkdownRenderChild, MarkdownRenderer } from "obsidian";
+import { registerContextMenu } from "./contextMenu"
 
 /* 文件引用流
  * main.ts
@@ -25,9 +27,11 @@ export default class ChatViewPlugin extends Plugin {
 			el.classList.add("markdown-rendered")
 			const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
 			if (ctx) ctx.addChild(mdrc);
+			// @ts-ignore 新接口，但旧接口似乎不支持
 			MarkdownRenderer.render(this.app, md, el, this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
 			// MarkdownRenderer.render(this.block_this.main_this.app, this.content.join('\n'), messages_all, this.block_this.main_this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
 		}
+		render_setting.registerContextMenu = registerContextMenu
 
 		// 插件配置
 		await this.loadSettings();

@@ -1,4 +1,4 @@
-import {App, PluginSettingTab, Setting} from "obsidian"; // 新增
+import { App, PluginSettingTab, Setting } from "obsidian"; // 新增
 import ChatViewPlugin from "./main"
 
 // 设置内容的接口

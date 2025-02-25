@@ -1,6 +1,5 @@
-import {MsgItem} from "./render"
-import {ChatPluginSettings} from "./settings"
-import {registerContextMenu} from "./contextMenu"
+import { MsgItem, render_setting } from "./render"
+import { ChatPluginSettings } from "../Obsidian/settings"
 
 import * as webvtt from "node-webvtt";
 import { MarkdownPostProcessorContext } from 'obsidian';
@@ -287,7 +286,7 @@ export class Chat_webvtt extends Chat {
 
       msgItem.render()
     });
-    registerContextMenu(this)
+    render_setting.registerContextMenu(this)
   }
 }
 
@@ -329,7 +328,7 @@ export class Chat_original extends Chat {
         }
       }
     }
-    registerContextMenu(this)
+    render_setting.registerContextMenu(this)
   }
 }
 
@@ -410,7 +409,7 @@ export class Chat_qq extends Chat {
         msgItem.render()
       }
     }
-    registerContextMenu(this)
+    render_setting.registerContextMenu(this)
   }
 }
 
@@ -484,7 +483,7 @@ export class Chat_wechat extends Chat {
         msgItem.render()
       }
     }
-    registerContextMenu(this)
+    render_setting.registerContextMenu(this)
   }
 }
 
@@ -550,7 +549,7 @@ export class Chat_telegram extends Chat {
         msgItem.render()
       }
     }
-    registerContextMenu(this)
+    render_setting.registerContextMenu(this)
   }
 }
 

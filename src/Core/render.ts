@@ -104,7 +104,7 @@ export class MsgItem {
 
       // b1. md渲染
       if (this.block_this.main_this.settings.isRenderMd) {
-        setting.fn_renderMarkdown(this.content.join('\n'), messages_all, this.block_this.ctx)
+        render_setting.fn_renderMarkdown(this.content.join('\n'), messages_all, this.block_this.ctx)
       }
       // b2. 普通渲染
       else {

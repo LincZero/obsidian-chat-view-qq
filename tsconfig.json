@@ -21,6 +21,6 @@
     "**/*.ts", "typings.d.ts"
   ],
   "exclude": [
-    "/src/App"
+    "src/App/"
   ]
 }
