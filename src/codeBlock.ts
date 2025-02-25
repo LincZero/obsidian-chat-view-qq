@@ -3,7 +3,6 @@ import {ChatPluginSettings} from "./settings"
 import {registerContextMenu} from "./contextMenu"
 
 import * as webvtt from "node-webvtt";
-import { moment, Notice } from 'obsidian'
 import { MarkdownPostProcessorContext } from 'obsidian';
 
 // 通用 Chat 基类
@@ -203,7 +202,7 @@ export class Chat {
   // 渲染
   render(){
     console.log("没有重载 render()！")
-    new Notice("没有重载 render()！")
+    // new Notice("没有重载 render()！")
     throw "没有重载 render()！"
   }
 }
@@ -251,8 +250,13 @@ export class Chat_webvtt extends Chat {
     // 填充message
     for (let index = 0; index < vtt.cues.length; index++) {
       const cue = vtt.cues[index];
-      const start = moment(Math.round(cue.start * 1000)).format("HH:mm:ss.SSS");
-      const end = moment(Math.round(cue.end * 1000)).format("HH:mm:ss.SSS");
+      // const start = moment(Math.round(cue.start * 1000)).format("HH:mm:ss.SSS");
+      // const end = moment(Math.round(cue.end * 1000)).format("HH:mm:ss.SSS");
+      // 去除moment库依赖
+      const start_date = new Date(Math.round(cue.start * 1000))
+      const start = `${String(start_date.getHours()).padStart(2, '0')}:${String(start_date.getMinutes()).padStart(2, '0')}:${String(start_date.getSeconds()).padStart(2, '0')}.${String(start_date.getMilliseconds()).padStart(3, '0')}`;
+      const end_date = new Date(Math.round(cue.end * 1000))
+      const end = `${String(end_date.getHours()).padStart(2, '0')}:${String(end_date.getMinutes()).padStart(2, '0')}:${String(end_date.getSeconds()).padStart(2, '0')}.${String(end_date.getMilliseconds()).padStart(3, '0')}`;
       if (/<v\s+([^>]+)>([^<]+)<\/v>/.test(cue.text)) {
         const matches = (cue.text as string).match(/<v\s+([^>]+)>([^<]+)<\/v>/);
         messages.push(<Message>{header: matches[1], body: matches[2], subtext: `${start} to ${end}`});

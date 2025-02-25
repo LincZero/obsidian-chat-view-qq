@@ -1,5 +1,3 @@
-import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext, MarkdownRenderChild, MarkdownRenderer} from "obsidian";
-
 /**
  *  .chat-view-bubble.chat-view-bubble-mode-qq
  * 	  .chat-view-qq-icon
@@ -17,6 +15,11 @@ import {Platform, Notice, FileSystemAdapter, MarkdownPostProcessorContext, Markd
  * 						.chat-view-qq-message-text
  * 						(.chat-view-qq-message-msg)
  */
+
+export const render_setting = { // 需要初始化
+  fn_renderMarkdown: (md: string, el: HTMLElement, ctx: any) => {},
+  registerContextMenu: (codeBlock_this: any) => {}
+}
 
 export class MsgItem {
   block_this: any
@@ -101,10 +104,7 @@ export class MsgItem {
 
       // b1. md渲染
       if (this.block_this.main_this.settings.isRenderMd) {
-        messages_all.classList.add("markdown-rendered")
-        const mdrc: MarkdownRenderChild = new MarkdownRenderChild(messages_all);
-        if (this.block_this.ctx) this.block_this.ctx.addChild(mdrc);
-        MarkdownRenderer.render(this.block_this.main_this.app, this.content.join('\n'), messages_all, this.block_this.main_this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+        setting.fn_renderMarkdown(this.content.join('\n'), messages_all, this.block_this.ctx)
       }
       // b2. 普通渲染
       else {
@@ -114,7 +114,7 @@ export class MsgItem {
           let msg_line = this.content[j]
           let message_line = messages_all.createEl("div", {cls: ["chat-view-qq-message-line"]});
           let msg_splits = msg_line.split(qq_img_re)
-          if (msg_splits.length % 2 == 0) new Notice('【可能产生的错误】正则split分割数复数');
+          if (msg_splits.length % 2 == 0) console.warn('【可能产生的错误】正则split分割数复数');
           for (let i=0; i<msg_splits.length; i++) {
             // 分隔后的文字信息
             if (i%2==0) message_line.createEl('span', {
@@ -160,9 +160,9 @@ export class MsgItem {
   render_default() {
     const marginClass = this.isContinued ? "chat-view-small-vertical-margin" : "chat-view-default-vertical-margin";
     // const colorConfigClass = `chat-view-${colorConfigs.get(continued ? prevHeader : header)}`;
-    const widthClass = this.block_this.formatConfigs.has("mw") ?
-      `chat-view-max-width-${this.block_this.formatConfigs.get("mw")}`
-      : (Platform.isMobile ? "chat-view-mobile-width" : "chat-view-desktop-width");
+    // const widthClass = this.block_this.formatConfigs.has("mw") ?
+    //   `chat-view-max-width-${this.block_this.formatConfigs.get("mw")}`
+    //   : (Platform.isMobile ? "chat-view-mobile-width" : "chat-view-desktop-width");
     const modeClass = `chat-view-bubble-mode-${this.block_this.style}`;
     const headerEl:keyof HTMLElementTagNameMap = "h4"
     /*= formatConfigs.has("header") ?

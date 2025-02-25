@@ -1,7 +1,9 @@
 import {Plugin, Notice} from "obsidian";
+import { MarkdownRenderChild, MarkdownRenderer } from "obsidian";
 
 import {ChatPluginSettings, ChatSettingTab, DEFAULT_SETTINGS} from "./settings"
 import {Chat_webvtt, Chat_original, Chat_qq, Chat_wechat, Chat_telegram, Chat_auto} from "./codeBlock"
+import { render_setting } from "./render"
 
 /* 文件引用流
  * main.ts
@@ -18,7 +20,15 @@ export default class ChatViewPlugin extends Plugin {
 	settings: ChatPluginSettings; // 插件配置
 	
 	async onload(): Promise<void> {
-	// async onload() {
+		// 初始化渲染函数
+		render_setting.fn_renderMarkdown = (md: string, el: HTMLElement, ctx: any) => {
+			el.classList.add("markdown-rendered")
+			const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
+			if (ctx) ctx.addChild(mdrc);
+			MarkdownRenderer.render(this.app, md, el, this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+			// MarkdownRenderer.render(this.block_this.main_this.app, this.content.join('\n'), messages_all, this.block_this.main_this.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+		}
+
 		// 插件配置
 		await this.loadSettings();
 		this.addSettingTab(new ChatSettingTab(this.app, this)); // 这将添加一个设置选项卡，以便用户可以配置插件的各个方面
