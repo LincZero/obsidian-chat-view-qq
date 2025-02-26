@@ -20,10 +20,12 @@ async function handleInputChange() {
 
   // 仅限app的设置项
   if (fontSize.value) {
-    document.documentElement.style.setProperty('--qq-font-size', fontSize.value)
+    if (/^\d+$/.test(fontSize.value)) document.documentElement.style.setProperty('--qq-font-size', fontSize.value + 'px')
+    else document.documentElement.style.setProperty('--qq-font-size', fontSize.value)
   }
   if (iconSize.value) {
-    document.documentElement.style.setProperty('--qq-width-icon', 'calc(' + iconSize.value + ' + 25px)')
+    if (/^\d+$/.test(iconSize.value)) document.documentElement.style.setProperty('--qq-width-icon', 'calc(' + iconSize.value + 'px + 25px)')
+    else document.documentElement.style.setProperty('--qq-width-icon', 'calc(' + iconSize.value + ' + 25px)')
   }
   if (isDark.value) {
     document.documentElement.classList.remove('theme-light');
@@ -79,7 +81,7 @@ const isDark = ref(true)
     </div>
     <div>
       <label for="icon-size">头像大小</label>
-      <input id="icon-size" v-model="iconSize" @change="handleInputChange()" placeholder="55px">
+      <input id="icon-size" v-model="iconSize" @change="handleInputChange()" placeholder="55px, 可设为0隐藏头像">
     </div>
     <div>
       <label>更多渲染风格/动态显示 (未开发，敬请期待)</label>
