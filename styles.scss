@@ -222,7 +222,7 @@ div.chat-view-wood .chat-view-header {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
-	--qq-bg-color: #d3d3d3;
+	--qq-bg-color: #ffffff;
 }
 // vuepress环境
 html[data-theme="dark"] {
@@ -235,7 +235,7 @@ html[data-theme="light"] {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
-	--qq-bg-color: #d3d3d3;
+	--qq-bg-color: #ffffff;
 }
 // pc/vuepress状态下，字体变小
 .pc-chat, html[data-theme="light"], html[data-theme="dark"] {

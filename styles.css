@@ -223,7 +223,7 @@ div.chat-view-wood .chat-view-header {
   --qq-text-color: #333;
   --qq-msg-bg-color: #eef3f8;
   --qq-msg-color: black;
-  --qq-bg-color: #d3d3d3;
+  --qq-bg-color: #ffffff;
 }
 
 html[data-theme="dark"] {
@@ -237,7 +237,7 @@ html[data-theme="light"] {
   --qq-text-color: #333;
   --qq-msg-bg-color: #eef3f8;
   --qq-msg-color: black;
-  --qq-bg-color: #d3d3d3;
+  --qq-bg-color: #ffffff;
 }
 
 .pc-chat .cv-note .chat-view-qq-message-all, .pc-chat .block-language-chat-qq .chat-view-qq-message-all, .pc-chat .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="light"] .cv-note .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="dark"] .cv-note .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-wechat .chat-view-qq-message-all {
