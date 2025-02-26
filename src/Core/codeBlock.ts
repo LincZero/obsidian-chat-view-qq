@@ -158,17 +158,17 @@ export class Chat {
       else if(/^http/.test(iconConfigsItem)) {
         iconSrcConfigsItem = iconConfigsItem
       }
-      // 相对路径图片
-      else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(iconConfigsItem)) {
-        // ob
-        if (this.main_this.app?.vault?.adapter?.basePath) {
-          iconSrcConfigsItem = "app://local/"+this.main_this.app.vault.adapter.basePath+"/"+this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+iconConfigsItem
-        }
-        // vuepress
-        else {
-          iconSrcConfigsItem = iconConfigsItem
-        }
-      }
+      // 相对路径图片 (头像不再支持相对路径)
+      // else if(/(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.svg|\.bmp)$/gi.test(iconConfigsItem)) {
+      //   // ob
+      //   if (this.main_this.app?.vault?.adapter?.basePath) {
+      //     iconSrcConfigsItem = "app://local/"+this.main_this.app.vault.adapter.basePath+"/"+this._.sourcePath.replace(/(\/(?!.*?\/).*?\.md$)/, "")+"/"+iconConfigsItem
+      //   }
+      //   // vuepress
+      //   else {
+      //     iconSrcConfigsItem = iconConfigsItem
+      //   }
+      // }
       // 其他头像
       else {
         iconSrcConfigsItem = iconConfigsItem
