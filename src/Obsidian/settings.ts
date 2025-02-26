@@ -13,7 +13,7 @@ export interface ChatPluginSettings {
 
 // 设置内容的默认值，这是一个类似枚举的东西
 export const DEFAULT_SETTINGS: ChatPluginSettings = {
-	chatSelfName: '我, me',
+	chatSelfName: '我, me, user',
 	chatQQandName: '',
 	width: '100%',
 	maxHeight: '1100',
@@ -66,7 +66,7 @@ export class ChatSettingTab extends PluginSettingTab {
 			.setName('自己的昵称')											 // 设置项名字
 			.setDesc('自己的对话框将从右侧弹出，己方有多个昵称时用逗号隔开')					 // 设置项提示
 			.addText(text => text												// 输入框
-				.setPlaceholder('例如：我, 吾, 朕, me')				// 没有内容时的提示
+				.setPlaceholder('例如：我, 吾, 朕, me, user')				// 没有内容时的提示
 				.setValue(this.plugin.settings.chatSelfName)
 				.onChange(async (value) => {
 					console.log('Secret: ' + value);

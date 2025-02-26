@@ -240,11 +240,7 @@ html[data-theme="light"] {
   --qq-bg-color: #d3d3d3;
 }
 
-.pc-chat .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-qq .chat-view-qq-message-all {
-  font-size: var(--qq-font-size);
-}
-
-.pc-chat .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-wechat .chat-view-qq-message-all {
+.pc-chat .cv-note .chat-view-qq-message-all, .pc-chat .block-language-chat-qq .chat-view-qq-message-all, .pc-chat .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="light"] .cv-note .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="dark"] .cv-note .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-wechat .chat-view-qq-message-all {
   font-size: var(--qq-font-size);
 }
 
@@ -260,7 +256,7 @@ html {
   height: 100%;
 }
 
-div.block-language-chat-qq, div.block-language-chat-wechat {
+div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
   width: var(--qq-width);
   max-height: var(--qq-max-height);
   overflow-y: scroll;
@@ -268,11 +264,11 @@ div.block-language-chat-qq, div.block-language-chat-wechat {
   background-color: var(--qq-bg-color);
 }
 
-div.block-language-chat-qq .chat-view-qq-message-all p:first-child, div.block-language-chat-wechat .chat-view-qq-message-all p:first-child {
+div.cv-note .chat-view-qq-message-all p:first-child, div.block-language-chat-qq .chat-view-qq-message-all p:first-child, div.block-language-chat-wechat .chat-view-qq-message-all p:first-child {
   margin-top: 0;
 }
 
-div.block-language-chat-qq .chat-view-qq-message-all p:last-child, div.block-language-chat-wechat .chat-view-qq-message-all p:last-child {
+div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .chat-view-qq-message-all p:last-child, div.block-language-chat-wechat .chat-view-qq-message-all p:last-child {
   margin-bottom: 0;
 }
 

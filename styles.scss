@@ -239,11 +239,10 @@ html[data-theme="light"] {
 }
 // pc/vuepress状态下，字体变小
 .pc-chat, html[data-theme="light"], html[data-theme="dark"] {
-	.block-language-chat-qq .chat-view-qq-message-all {
-		font-size: var(--qq-font-size);
-	}
-	.block-language-chat-wechat .chat-view-qq-message-all {
-		font-size: var(--qq-font-size);
+	.cv-note, .block-language-chat-qq, .block-language-chat-wechat {
+		.chat-view-qq-message-all {
+			font-size: var(--qq-font-size);
+		}
 	}
 }
 /*@font-face {
@@ -259,7 +258,7 @@ html {
 	height: 100%;
 }
 
-div.block-language-chat-qq, div.block-language-chat-wechat {
+div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	.chat-view-qq-message-all p:first-child { margin-top: 0; }
 	.chat-view-qq-message-all p:last-child { margin-bottom: 0; }
 
