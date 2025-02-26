@@ -210,27 +210,22 @@ div.chat-view-wood .chat-view-header {
 	--qq-width-icon: 80px;
 
 	--qq-font-size: 16px; /* --front-text-size --code-size or 16px */
-}
-.theme-dark {
-	--qq-text-color: rgb(94, 94, 94);
-	--qq-msg-bg-color: rgb(35, 35, 35);
-	--qq-msg-color: rgb(253, 253, 253);
-	--qq-bg-color: rgb(1, 1, 1);
-}
-:root, // 默认明亮模式
-.theme-light {
+
+	// 默认明亮模式
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
 	--qq-bg-color: #ffffff;
 }
-// vuepress环境
+// obsidian版用theme-xxx，vuepress版用data-theme，app版两者都用。不存把:root放过来，会有bug
+.theme-dark,
 html[data-theme="dark"] {
 	--qq-text-color: rgb(94, 94, 94);
 	--qq-msg-bg-color: rgb(35, 35, 35);
 	--qq-msg-color: rgb(253, 253, 253);
 	--qq-bg-color: rgb(1, 1, 1);
 }
+.theme-light,
 html[data-theme="light"] {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);

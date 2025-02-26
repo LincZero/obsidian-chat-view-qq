@@ -209,23 +209,13 @@ div.chat-view-wood .chat-view-header {
   --qq-width-icon: 80px;
   --qq-font-size: 16px;
   /* --front-text-size --code-size or 16px */
-}
-
-.theme-dark {
-  --qq-text-color: #5e5e5e;
-  --qq-msg-bg-color: #232323;
-  --qq-msg-color: #fdfdfd;
-  --qq-bg-color: #010101;
-}
-
-:root,
-.theme-light {
   --qq-text-color: #333;
   --qq-msg-bg-color: #eef3f8;
   --qq-msg-color: black;
   --qq-bg-color: #ffffff;
 }
 
+.theme-dark,
 html[data-theme="dark"] {
   --qq-text-color: #5e5e5e;
   --qq-msg-bg-color: #232323;
@@ -233,6 +223,7 @@ html[data-theme="dark"] {
   --qq-bg-color: #010101;
 }
 
+.theme-light,
 html[data-theme="light"] {
   --qq-text-color: #333;
   --qq-msg-bg-color: #eef3f8;

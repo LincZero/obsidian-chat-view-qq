@@ -30,9 +30,11 @@ async function handleInputChange() {
   if (isDark.value) {
     document.documentElement.classList.remove('theme-light');
     document.documentElement.classList.add('theme-dark');
+    document.documentElement.setAttribute('data-theme', 'dark')
   } else {
     document.documentElement.classList.remove('theme-dark');
     document.documentElement.classList.add('theme-light');
+    document.documentElement.setAttribute('data-theme', 'light')
   }
 
   // 最好需要强制刷新一下MdViewer的内容。这里比较粗糙简易
@@ -41,7 +43,7 @@ async function handleInputChange() {
 
 const fontSize = ref('')
 const iconSize = ref('')
-const isDark = ref(true)
+const isDark = ref(false)
 </script>
 
 <template>
