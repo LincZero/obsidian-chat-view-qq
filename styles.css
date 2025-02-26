@@ -211,7 +211,7 @@ div.chat-view-wood .chat-view-header {
   /* --front-text-size --code-size or 16px */
 }
 
-:root.theme-dark {
+.theme-dark {
   --qq-text-color: #5e5e5e;
   --qq-msg-bg-color: #232323;
   --qq-msg-color: #fdfdfd;
@@ -219,7 +219,7 @@ div.chat-view-wood .chat-view-header {
 }
 
 :root,
-:root.theme-light {
+.theme-light {
   --qq-text-color: #333;
   --qq-msg-bg-color: #eef3f8;
   --qq-msg-color: black;

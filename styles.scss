@@ -211,14 +211,14 @@ div.chat-view-wood .chat-view-header {
 
 	--qq-font-size: 16px; /* --front-text-size --code-size or 16px */
 }
-:root.theme-dark {
+.theme-dark {
 	--qq-text-color: rgb(94, 94, 94);
 	--qq-msg-bg-color: rgb(35, 35, 35);
 	--qq-msg-color: rgb(253, 253, 253);
 	--qq-bg-color: rgb(1, 1, 1);
 }
 :root, // 默认明亮模式
-:root.theme-light {
+.theme-light {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
