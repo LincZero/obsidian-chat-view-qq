@@ -207,6 +207,8 @@ div.chat-view-wood .chat-view-header {
   --qq-max-height: 1100px;
   --qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon));
   --qq-width-icon: 80px;
+  --qq-font-size: 16px;
+  /* --front-text-size --code-size or 16px */
 }
 
 :root.theme-dark {
@@ -224,28 +226,38 @@ div.chat-view-wood .chat-view-header {
   --qq-bg-color: #d3d3d3;
 }
 
+html[data-theme="dark"] {
+  --qq-text-color: #5e5e5e;
+  --qq-msg-bg-color: #232323;
+  --qq-msg-color: #fdfdfd;
+  --qq-bg-color: #010101;
+}
+
+html[data-theme="light"] {
+  --qq-text-color: #333;
+  --qq-msg-bg-color: #eef3f8;
+  --qq-msg-color: black;
+  --qq-bg-color: #d3d3d3;
+}
+
+.pc-chat .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-qq .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-qq .chat-view-qq-message-all {
+  font-size: var(--qq-font-size);
+}
+
+.pc-chat .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="light"] .block-language-chat-wechat .chat-view-qq-message-all, html[data-theme="dark"] .block-language-chat-wechat .chat-view-qq-message-all {
+  font-size: var(--qq-font-size);
+}
+
 /*@font-face {
 	font-family: 'NotoColorEmoji';
 	src: url('./font/NotoColorEmoji.ttf') format('truetype');
 }*/
-/* 环境适配兼容 */
-:root {
-  --qq-font-size: 16px;
-  /* --front-text-size --code-size or 16px */
-}
-
 body,
 html {
   margin: 0px;
   padding: 0px;
   width: 100%;
   height: 100%;
-}
-
-/* pc状态下，字体变小 */
-.pc-chat .block-language-chat-qq .chat-view-qq-message-all,
-.pc-chat .block-language-chat-wechat .chat-view-qq-message-all {
-  font-size: var(--qq-font-size);
 }
 
 div.block-language-chat-qq, div.block-language-chat-wechat {

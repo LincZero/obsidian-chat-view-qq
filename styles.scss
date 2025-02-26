@@ -202,11 +202,14 @@ div.chat-view-wood .chat-view-header {
 
 /* LincZero魔改所新增的样式 */
 
+// 各种环境
 :root {
 	--qq-width: 100%;
 	--qq-max-height: 1100px;
 	--qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon));
 	--qq-width-icon: 80px;
+
+	--qq-font-size: 16px; /* --front-text-size --code-size or 16px */
 }
 :root.theme-dark {
 	--qq-text-color: rgb(94, 94, 94);
@@ -214,22 +217,39 @@ div.chat-view-wood .chat-view-header {
 	--qq-msg-color: rgb(253, 253, 253);
 	--qq-bg-color: rgb(1, 1, 1);
 }
-:root, /* 默认明亮模式 */
+:root, // 默认明亮模式
 :root.theme-light {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
 	--qq-bg-color: #d3d3d3;
 }
+// vuepress环境
+html[data-theme="dark"] {
+	--qq-text-color: rgb(94, 94, 94);
+	--qq-msg-bg-color: rgb(35, 35, 35);
+	--qq-msg-color: rgb(253, 253, 253);
+	--qq-bg-color: rgb(1, 1, 1);
+}
+html[data-theme="light"] {
+	--qq-text-color: #333;
+	--qq-msg-bg-color: rgb(238, 243, 248);
+	--qq-msg-color: black;
+	--qq-bg-color: #d3d3d3;
+}
+// pc/vuepress状态下，字体变小
+.pc-chat, html[data-theme="light"], html[data-theme="dark"] {
+	.block-language-chat-qq .chat-view-qq-message-all {
+		font-size: var(--qq-font-size);
+	}
+	.block-language-chat-wechat .chat-view-qq-message-all {
+		font-size: var(--qq-font-size);
+	}
+}
 /*@font-face {
 	font-family: 'NotoColorEmoji';
 	src: url('./font/NotoColorEmoji.ttf') format('truetype');
 }*/
-
-/* 环境适配兼容 */
-:root {
-	--qq-font-size: 16px; /* --front-text-size --code-size or 16px */
-}
 
 body,
 html {
@@ -237,12 +257,6 @@ html {
 	padding: 0px;
 	width: 100%;
 	height: 100%;
-}
-
-/* pc状态下，字体变小 */
-.pc-chat .block-language-chat-qq .chat-view-qq-message-all,
-.pc-chat .block-language-chat-wechat .chat-view-qq-message-all {
-	font-size: var(--qq-font-size);
 }
 
 div.block-language-chat-qq, div.block-language-chat-wechat {

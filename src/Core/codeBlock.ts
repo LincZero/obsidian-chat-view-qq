@@ -402,7 +402,7 @@ export class Chat_qq extends Chat {
           (Number.isFinite(Number(sytle_width)) ? sytle_width+'px' : sytle_width))
         if (style_max_height) style_all += (';max-height: ' +
           (Number.isFinite(Number(style_max_height)) ? style_max_height+'px' : style_max_height))
-        if (style_all) this.el.setAttr('Style', style_all)
+        if (style_all) this.el.setAttribute('style', style_all)
 
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
@@ -476,7 +476,7 @@ export class Chat_wechat extends Chat {
           (Number.isFinite(Number(sytle_width)) ? sytle_width+'px' : sytle_width))
         if (style_max_height) style_all += (';max-height: ' +
           (Number.isFinite(Number(style_max_height)) ? style_max_height+'px' : style_max_height))
-        if (style_all) this.el.setAttr('Style', style_all)
+        if (style_all) this.el.setAttribute('Style', style_all)
 
         msgItem.isSelf = this.selfConfigs.includes(msgItem.sender)
         
@@ -542,7 +542,7 @@ export class Chat_telegram extends Chat {
           (Number.isFinite(Number(sytle_width)) ? sytle_width+'px' : sytle_width))
         if (style_max_height) style_all += (';max-height: ' +
           (Number.isFinite(Number(style_max_height)) ? style_max_height+'px' : style_max_height))
-        if (style_all) this.el.setAttr('Style', style_all)
+        if (style_all) this.el.setAttribute('Style', style_all)
 
         msgItem.isSelf = msgItem.isSelf || this.selfConfigs.includes(msgItem.sender)
         
