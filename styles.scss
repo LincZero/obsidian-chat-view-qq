@@ -291,18 +291,22 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 .chat-view-qq-icon {
 	display: inline-block;
 	width: var(--qq-width-icon);
+	>img {
+		background-color: #eee; // 默认图标以明亮模式获取 (避免带alpha)
+		width: calc(var(--qq-width-icon) - 25px); // 外边距15, 内边距10
+		height: calc(var(--qq-width-icon) - 25px);
+		border-radius: 50%;
+		margin-top: 20px;
+	}
 }
-.chat-view-align-left .chat-view-qq-icon {float: left;}
-.chat-view-align-right .chat-view-qq-icon {float: right;}
-.chat-view-qq-icon img {
-	background-color: #eee; /* 默认图标以明亮模式获取 (避免带alpha) */
-	width: 55px;
-	height: 55px;
-	border-radius: 50%;
-	margin-top: 20px;
+.chat-view-align-left .chat-view-qq-icon {
+	float: left;
+	>img { margin-left: 15px; float: left; }
 }
-.chat-view-align-left .chat-view-qq-icon img {margin-left: 15px;float: left;}
-.chat-view-align-right .chat-view-qq-icon img {margin-right: 15px;float: right;}
+.chat-view-align-right .chat-view-qq-icon {
+	float: right;
+	>img { margin-right: 15px; float: right; }
+}
 
 .chat-view-bubble-mode-qq .chat-view-qq-title p{
 	font-size: 14px;
@@ -314,12 +318,13 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	border-radius: 0.4em;
 	color: #f6fefd;
 	background-color: #a8b0c5;
-}
-.chat-view-qq-title .chat-view-qq-groupTitle[title$="管理员"]{
-	background-color: rgb(61, 226, 212);
-}
-.chat-view-qq-title .chat-view-qq-groupTitle[title$="群主"]{
-	background-color: rgb(255, 213, 57);
+
+	&[title$="管理员"]{
+		background-color: rgb(61, 226, 212);
+	}
+	&[title$="群主"]{
+		background-color: rgb(255, 213, 57);
+	}
 }
 .chat-view-qq-title .chat-view-qq-sender {
 	overflow-x: hidden;
@@ -389,7 +394,7 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 
 .shape,
 .chat-view-qq-message-all {
-	margin-top: 9px;
+	margin-top: 9px; // TODO 根据头像大小应该不同，结构有问题，应该取头像中线而非顶部为基准!
 }
 
 .chat-view-qq-message-all {

@@ -22,6 +22,9 @@ async function handleInputChange() {
   if (fontSize.value) {
     document.documentElement.style.setProperty('--qq-font-size', fontSize.value)
   }
+  if (iconSize.value) {
+    document.documentElement.style.setProperty('--qq-width-icon', 'calc(' + iconSize.value + ' + 25px)')
+  }
   if (isDark.value) {
     document.documentElement.classList.remove('theme-light');
     document.documentElement.classList.add('theme-dark');
@@ -35,7 +38,8 @@ async function handleInputChange() {
 }
 
 const fontSize = ref('')
-const isDark = ref(false)
+const iconSize = ref('')
+const isDark = ref(true)
 </script>
 
 <template>
@@ -66,15 +70,22 @@ const isDark = ref(false)
     </div>
     <!-- app模式特供版 -->
     <div>
-      <label for="isDark">黑暗模式</label>
-      <input id="isDark" type="checkbox" v-model="isDark" @change="handleInputChange()">
+      <label for="is-dark">黑暗模式</label>
+      <input id="is-dark" type="checkbox" v-model="isDark" @change="handleInputChange()">
     </div>
     <div>
       <label for="lightdark">字体大小</label>
       <input id="lightdark" v-model="fontSize" @change="handleInputChange()" placeholder="16px">
     </div>
     <div>
-      <label>更多渲染风格/动态显示 (敬请期待)</label>
+      <label for="icon-size">头像大小</label>
+      <input id="icon-size" v-model="iconSize" @change="handleInputChange()" placeholder="55px">
+    </div>
+    <div>
+      <label>更多渲染风格/动态显示 (未开发，敬请期待)</label>
+    </div>
+    <div>
+      <label>强制显示时间 (未开发，默认是当天不显示，隔天才显示)</label>
     </div>
   </div>
 </template>

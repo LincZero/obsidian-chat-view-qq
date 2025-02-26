@@ -295,7 +295,20 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   width: var(--qq-width-icon);
 }
 
+.chat-view-qq-icon > img {
+  background-color: #eee;
+  width: calc(var(--qq-width-icon) - 25px);
+  height: calc(var(--qq-width-icon) - 25px);
+  border-radius: 50%;
+  margin-top: 20px;
+}
+
 .chat-view-align-left .chat-view-qq-icon {
+  float: left;
+}
+
+.chat-view-align-left .chat-view-qq-icon > img {
+  margin-left: 15px;
   float: left;
 }
 
@@ -303,21 +316,7 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   float: right;
 }
 
-.chat-view-qq-icon img {
-  background-color: #eee;
-  /* 默认图标以明亮模式获取 (避免带alpha) */
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  margin-top: 20px;
-}
-
-.chat-view-align-left .chat-view-qq-icon img {
-  margin-left: 15px;
-  float: left;
-}
-
-.chat-view-align-right .chat-view-qq-icon img {
+.chat-view-align-right .chat-view-qq-icon > img {
   margin-right: 15px;
   float: right;
 }
