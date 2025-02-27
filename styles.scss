@@ -203,7 +203,7 @@ div.chat-view-wood .chat-view-header {
 
 /* LincZero魔改所新增的样式 */
 
-// 各种环境
+// 默认明亮模式。obsidian版用theme-xxx，vuepress版用data-theme，app版两者都用。不存把:root和light合并，会有bug
 :root {
 	--qq-width: 100%;
 	--qq-max-height: 1100px;
@@ -218,20 +218,19 @@ div.chat-view-wood .chat-view-header {
 	--qq-msg-color: black;
 	--qq-bg-color: #ffffff;
 }
-// obsidian版用theme-xxx，vuepress版用data-theme，app版两者都用。不存把:root放过来，会有bug
-.theme-dark,
-html[data-theme="dark"] {
-	--qq-text-color: rgb(94, 94, 94);
-	--qq-msg-bg-color: rgb(35, 35, 35);
-	--qq-msg-color: rgb(253, 253, 253);
-	--qq-bg-color: rgb(1, 1, 1);
-}
 .theme-light,
 html[data-theme="light"] {
 	--qq-text-color: #333;
 	--qq-msg-bg-color: rgb(238, 243, 248);
 	--qq-msg-color: black;
 	--qq-bg-color: #ffffff;
+}
+.theme-dark,
+html[data-theme="dark"] {
+	--qq-text-color: rgb(94, 94, 94);
+	--qq-msg-bg-color: rgb(35, 35, 35);
+	--qq-msg-color: rgb(253, 253, 253);
+	--qq-bg-color: rgb(1, 1, 1);
 }
 // pc/vuepress状态下，字体变小
 .pc-chat, html[data-theme="light"], html[data-theme="dark"] {
@@ -273,10 +272,12 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	padding-bottom: 10px;
 }
 
-.chat-view-bubble-mode-qq.chat-view-default-vertical-margin {
-	margin-top: 0;
-	clear: both;
-	min-height: var(--qq-msg-height);
+.chat-view-bubble-mode-qq, .chat-view-bubble-mode-wechat {
+	.chat-view-default-vertical-margin {
+		margin-top: 0;
+		clear: both;
+		min-height: var(--qq-msg-height);
+	}
 }
 
 .chat-view-qq-comment {
@@ -304,9 +305,11 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	>img { margin-right: 15px; float: right; }
 }
 
-.chat-view-bubble-mode-qq .chat-view-qq-title p{
-	font-size: 14px;
-	margin: 0 0.2em 0 0.2em;
+.chat-view-bubble-mode-qq, .chat-view-bubble-mode-wechat {
+	.chat-view-qq-title p{
+		font-size: 14px;
+		margin: 0 0.2em 0 0.2em;
+	}
 }
 .chat-view-qq-title .chat-view-qq-groupTitle{
 	font-weight: bold;
@@ -351,9 +354,7 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 
 	word-wrap: break-word;
 	color: var(--qq-text-color);
-	padding-top: 17px;
-	padding-left: 17px;
-	padding-right: 17px;
+	padding: 17px 17px 17px 0;
 }
 
 .chat-view-qq-msg>.pop { width: 100%; }
@@ -377,15 +378,16 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	border-bottom: 14px solid transparent;
 }
 .chat-view-align-left .shape {
-	left: -20px;
+	right: 0;
+	transform: translate(-100%, 0);
 	border-right: 13px solid var(--qq-msg-bg-color);
 	border-top: 0px solid transparent;
 	border-bottom: 14px solid transparent;
 	border-left: 7px solid transparent;
 }
 .chat-view-align-right .shape {
-	/*left: calc(var(--qq-width) - 97px);*/
 	left: 100%;
+	transform: translate(0, 0);
 	border-left: 13px solid var(--qq-msg-bg-color);
 	border-top: 0px solid transparent;
 	border-bottom: 14px solid transparent;
@@ -441,6 +443,71 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 .chat-view-desktop-width{
 	max-width: none !important;
 }
-/* .chat-view-bubble-mode-qq {
-	border: none;
-} */
+
+// 默认明亮模式。obsidian版用theme-xxx，vuepress版用data-theme，app版两者都用。不存把:root和light合并，会有bug
+:root {
+	--wechat-cmsg-txcolor: #111111; // 有的框的
+	--wechat-lmsg-bgcolor: #ffffff;
+	--wechat-rmsg-bgcolor: #95ec69;
+	--wechat-lmsg-txcolor: black;
+	--wechat-rmsg-txcolor: black;
+	--wechat-bgcolor: #f5f5f5;
+}
+.theme-light,
+html[data-theme="light"] {
+	--wechat-cmsg-txcolor: #111111; // 有的框的
+	--wechat-lmsg-bgcolor: #ffffff;
+	--wechat-rmsg-bgcolor: #95ec69;
+	--wechat-lmsg-txcolor: black;
+	--wechat-rmsg-txcolor: black;
+	--wechat-bgcolor: #f5f5f5;
+}
+.theme-dark,
+html[data-theme="dark"] {
+	--wechat-cmsg-txcolor: #828282;
+	--wechat-lmsg-bgcolor: #2c2c2c;
+	--wechat-rmsg-bgcolor: #3db476;
+	--wechat-lmsg-txcolor: #d1d1d1;
+	--wechat-rmsg-txcolor: black;
+	--wechat-bgcolor: #111111;
+}
+div.chat-view-bubble-mode-wechat {
+	background-color: var(--wechat-bgcolor) !important;
+	>.chat-view-bubble {
+		>.chat-view-qq-icon>img {
+			border-radius: 0;
+		}
+		.chat-view-qq-message-all {
+			border-radius: 4px;
+		}
+		.shape-zero>.shape {
+			margin-top: 20px;
+		}
+
+		// 左右差异
+		&.chat-view-align-right {
+			.chat-view-qq-message-all {
+				background-color: var(--wechat-rmsg-bgcolor);
+				color: var(--wechat-rmsg-txcolor);
+			}
+			.shape-zero>.shape { 
+				border-left: 6px solid var(--wechat-rmsg-bgcolor);
+				border-right: 6px solid transparent;
+				border-top: 6px solid transparent;
+				border-bottom: 6px solid transparent;
+			}
+		}
+		&.chat-view-align-left {
+			.chat-view-qq-message-all {
+				background-color: var(--wechat-lmsg-bgcolor);
+				color: var(--wechat-lmsg-txcolor);
+			}
+			.shape-zero>.shape { 
+				border-right: 6px solid var(--wechat-lmsg-bgcolor);
+				border-left: 6px solid transparent;
+				border-top: 6px solid transparent;
+				border-bottom: 6px solid transparent;
+			}
+		}
+	}
+}

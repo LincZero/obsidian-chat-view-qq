@@ -47,7 +47,7 @@ export class MsgItem {
   }
 
   render() {
-    if (this.block_this.style=="qq") this.render_qq()
+    if (this.block_this.style=="qq" || this.block_this.style=="wechat") this.render_qq()
     else this.render_default()
   }
 
@@ -57,7 +57,7 @@ export class MsgItem {
     const modeClass = `chat-view-bubble-mode-${this.block_this.style}`;
   
     // 创建每条信息的根div
-    const el: HTMLElement = this.block_this.el
+    const el: HTMLElement = this.block_this.el; el.classList.add(modeClass)
     const bubble = document.createElement('div'); el.appendChild(bubble); bubble.classList.add("chat-view-bubble", `chat-view-align-${this.isSelf ? "right" : "left"}`, marginClass, colorConfigClass, /*widthClass,*/ modeClass)
 
     // 创建icon项

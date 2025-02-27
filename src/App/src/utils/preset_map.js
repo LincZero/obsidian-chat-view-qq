@@ -62,8 +62,10 @@ gemini:
 
 ## 指定头像
 
+指定头像、self、time、风格等属性
+
 \`\`\`chat
-{self=吴彦祖, time=true}
+{self=吴彦祖, time=true, style=wechat}
 [张志东=10002]
 
 吴彦祖 0:00:00
