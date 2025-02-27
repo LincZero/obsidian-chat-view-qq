@@ -1,10 +1,23 @@
+# README
+
 English | [中文](./README_zh.md)
 
-**English version is machine translated**
+This is the open source project https://github.com/LincZero/obsidian-chat-view-qq online documentation
+
+**（English version is machine translated）**
+
+## More Link (更多链接)
+
+- en
+  - [repo - github](https://github.com/LincZero/obsidian-chat-view-qq) , Welcome to star
+  - [online docs - github.io](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/Obsidian-Chat-View-QQ/)
+  - [online interaction - github.io](https://linczero.github.io/obsidian-chat-view-qq/)
+- zh
+  - [代码仓库 - github](https://github.com/LincZero/obsidian-chat-view-qq) , 欢迎给Star
+  - [在线文档 - github.io](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/Obsidian-Chat-View-QQ/)
+  - [在线交互 - github.io](https://linczero.github.io/obsidian-chat-view-qq/)
 
 ## Descriptions
-
-==This plugin is for the convenience of recording chat records. Do not use it for fake chat records or criminal purposes==
 
 Supported Format：
 - qq
@@ -77,7 +90,7 @@ LincZero:
 
 效果：（V0.3.3 new Style）
 
-![img](assets/665IOT2Z[GG{QFY$0M2A}G.png)
+![img](assets/665IOT2Z.png)
 
 ## Plug-in Features
 

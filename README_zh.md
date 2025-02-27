@@ -1,4 +1,19 @@
+# README_zh
+
 [English](./README.md) | 中文
+
+这是 https://github.com/LincZero/obsidian-chat-view-qq 开源项目的在线文档
+
+## More Link (更多链接)
+
+- en
+  - [repo - github](https://github.com/LincZero/obsidian-chat-view-qq) , Welcome to star
+  - [online docs - github.io](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/Obsidian-Chat-View-QQ/)
+  - [online interaction - github.io](https://linczero.github.io/obsidian-chat-view-qq/)
+- zh
+  - [代码仓库 - github](https://github.com/LincZero/obsidian-chat-view-qq) , 欢迎给Star
+  - [在线文档 - github.io](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/Obsidian-Chat-View-QQ/)
+  - [在线交互 - github.io](https://linczero.github.io/obsidian-chat-view-qq/)
 
 ## 说明
 
@@ -65,7 +80,7 @@ QQ
 
 微信
 
-````
+````md
 ```chat-wechat
 {self=LincZero}
 
@@ -79,7 +94,7 @@ LincZero:
 
 效果：（V0.3.3新增的样式）
 
-![img](assets/665IOT2Z[GG{QFY$0M2A}G.png)
+![img](assets/665IOT2Z.png)
 
 ## 插件特点
 
