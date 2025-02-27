@@ -442,8 +442,8 @@ export class Chat_wechat extends Chat {
 
   // override render method
   render(){
-    this.from = this.from ? this.from : "qq"
-    this.style = this.style ? this.style : "qq"
+    this.from = this.from ? this.from : "wechat"
+    this.style = this.style ? this.style : "wechat"
 
     let continuedCount = 0;
     for (let index = 0; index < this.lines.length; index++) {

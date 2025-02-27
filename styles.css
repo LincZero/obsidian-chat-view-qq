@@ -365,7 +365,7 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   max-width: var(--qq-msg-max-width);
   word-wrap: break-word;
   color: var(--qq-text-color);
-  padding: 17px 17px 17px 0;
+  padding: 17px 17px 0;
 }
 
 .chat-view-qq-msg > .pop {
@@ -500,6 +500,11 @@ div.chat-view-bubble-mode-wechat {
 
 div.chat-view-bubble-mode-wechat > .chat-view-bubble > .chat-view-qq-icon > img {
   border-radius: 0;
+  background-color: #eee;
+}
+
+div.chat-view-bubble-mode-wechat > .chat-view-bubble > .chat-view-qq-msg {
+  padding: 17px 6px 0;
 }
 
 div.chat-view-bubble-mode-wechat > .chat-view-bubble .chat-view-qq-message-all {

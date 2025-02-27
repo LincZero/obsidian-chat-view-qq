@@ -289,7 +289,7 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	display: inline-block;
 	width: var(--qq-width-icon);
 	>img {
-		background-color: #eee; // 默认图标以明亮模式获取 (避免带alpha)
+		background-color: #eee; // or var(--qq-bg-color); 主要是默认图标以明亮模式获取 (避免带alpha)，等什么时候能分别获取两种主题的图标时，再用对应背景
 		width: calc(var(--qq-width-icon) - 25px); // 外边距15, 内边距10
 		height: calc(var(--qq-width-icon) - 25px);
 		border-radius: 50%;
@@ -354,7 +354,7 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 
 	word-wrap: break-word;
 	color: var(--qq-text-color);
-	padding: 17px 17px 17px 0;
+	padding: 17px 17px 0;
 }
 
 .chat-view-qq-msg>.pop { width: 100%; }
@@ -444,6 +444,7 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	max-width: none !important;
 }
 
+// 微信风格部分
 // 默认明亮模式。obsidian版用theme-xxx，vuepress版用data-theme，app版两者都用。不存把:root和light合并，会有bug
 :root {
 	--wechat-cmsg-txcolor: #111111; // 有的框的
@@ -476,6 +477,10 @@ div.chat-view-bubble-mode-wechat {
 	>.chat-view-bubble {
 		>.chat-view-qq-icon>img {
 			border-radius: 0;
+			background-color: #eee; // or var(--wechat-bgcolor);
+		}
+		>.chat-view-qq-msg {
+			padding: 17px 6px 0;
 		}
 		.chat-view-qq-message-all {
 			border-radius: 4px;
