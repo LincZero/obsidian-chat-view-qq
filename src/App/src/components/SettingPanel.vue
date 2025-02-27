@@ -24,8 +24,8 @@ async function handleInputChange() {
     else document.documentElement.style.setProperty('--qq-font-size', fontSize.value)
   }
   if (iconSize.value) {
-    if (/^\d+$/.test(iconSize.value)) document.documentElement.style.setProperty('--qq-width-icon', 'calc(' + iconSize.value + 'px + 25px)')
-    else document.documentElement.style.setProperty('--qq-width-icon', 'calc(' + iconSize.value + ' + 25px)')
+    if (/^\d+$/.test(iconSize.value)) document.documentElement.style.setProperty('--qq-width-icon', iconSize.value + 'px')
+    else document.documentElement.style.setProperty('--qq-width-icon', iconSize.value)
   }
   if (isDark.value) {
     document.documentElement.classList.remove('theme-light');

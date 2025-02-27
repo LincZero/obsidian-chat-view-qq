@@ -207,8 +207,8 @@ div.chat-view-wood .chat-view-header {
 :root {
 	--qq-width: 100%;
 	--qq-max-height: 1100px;
-	--qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon));
-	--qq-width-icon: 80px;
+	--qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon) - 25px - 25px);
+	--qq-width-icon: 55px;
 
 	--qq-font-size: 16px; /* --front-text-size --code-size or 16px */
 
@@ -287,11 +287,11 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 
 .chat-view-qq-icon {
 	display: inline-block;
-	width: var(--qq-width-icon);
+	width: calc(var(--qq-width-icon) + 25px); // 外边距15, 内边距10
 	>img {
 		background-color: #eee; // or var(--qq-bg-color); 主要是默认图标以明亮模式获取 (避免带alpha)，等什么时候能分别获取两种主题的图标时，再用对应背景
-		width: calc(var(--qq-width-icon) - 25px); // 外边距15, 内边距10
-		height: calc(var(--qq-width-icon) - 25px);
+		width: var(--qq-width-icon);
+		height: var(--qq-width-icon);
 		border-radius: 50%;
 		margin-top: 20px;
 	}
@@ -305,29 +305,31 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	>img { margin-right: 15px; float: right; }
 }
 
-.chat-view-bubble-mode-qq, .chat-view-bubble-mode-wechat {
-	.chat-view-qq-title p{
+.chat-view-qq-title {
+	p {
 		font-size: 14px;
 		margin: 0 0.2em 0 0.2em;
 	}
-}
-.chat-view-qq-title .chat-view-qq-groupTitle{
-	font-weight: bold;
-	padding: 0 0.3em 0 0.3em;
-	border-radius: 0.4em;
-	color: #f6fefd;
-	background-color: #a8b0c5;
-
-	&[title$="管理员"]{
-		background-color: rgb(61, 226, 212);
+	.chat-view-qq-groupTitle{
+		font-weight: bold;
+		padding: 0 0.3em 0 0.3em;
+		border-radius: 0.4em;
+		color: #f6fefd;
+		background-color: #a8b0c5;
+	
+		&[title$="管理员"]{
+			background-color: rgb(61, 226, 212);
+		}
+		&[title$="群主"]{
+			background-color: rgb(255, 213, 57);
+		}
 	}
-	&[title$="群主"]{
-		background-color: rgb(255, 213, 57);
+	.chat-view-qq-sender {
+		font-size: 14px;
+		margin: 0 0.2em 0 0.2em;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
 	}
-}
-.chat-view-qq-title .chat-view-qq-sender {
-	overflow-x: hidden;
-	text-overflow: ellipsis;
 }
 .chat-view-align-left .chat-view-qq-groupTitle,
 .chat-view-align-left .chat-view-qq-sender,

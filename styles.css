@@ -206,8 +206,8 @@ div.chat-view-wood .chat-view-header {
 :root {
   --qq-width: 100%;
   --qq-max-height: 1100px;
-  --qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon));
-  --qq-width-icon: 80px;
+  --qq-msg-max-width: calc(var(--qq-width) - var(--qq-width-icon) - var(--qq-width-icon) - 25px - 25px);
+  --qq-width-icon: 55px;
   --qq-font-size: 16px;
   /* --front-text-size --code-size or 16px */
   --qq-text-color: #333;
@@ -284,13 +284,13 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
 
 .chat-view-qq-icon {
   display: inline-block;
-  width: var(--qq-width-icon);
+  width: calc(var(--qq-width-icon) + 25px);
 }
 
 .chat-view-qq-icon > img {
   background-color: #eee;
-  width: calc(var(--qq-width-icon) - 25px);
-  height: calc(var(--qq-width-icon) - 25px);
+  width: var(--qq-width-icon);
+  height: var(--qq-width-icon);
   border-radius: 50%;
   margin-top: 20px;
 }
@@ -313,7 +313,7 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   float: right;
 }
 
-.chat-view-bubble-mode-qq .chat-view-qq-title p, .chat-view-bubble-mode-wechat .chat-view-qq-title p {
+.chat-view-qq-title p {
   font-size: 14px;
   margin: 0 0.2em 0 0.2em;
 }
@@ -335,6 +335,8 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
 }
 
 .chat-view-qq-title .chat-view-qq-sender {
+  font-size: 14px;
+  margin: 0 0.2em 0 0.2em;
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
