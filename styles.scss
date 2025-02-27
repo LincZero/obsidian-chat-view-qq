@@ -284,16 +284,15 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	color: var(--qq-text-color);
 }
 
-
 .chat-view-qq-icon {
 	display: inline-block;
 	width: calc(var(--qq-width-icon) + 25px); // 外边距15, 内边距10
+	padding-top: 20px;
 	>img {
 		background-color: #eee; // or var(--qq-bg-color); 主要是默认图标以明亮模式获取 (避免带alpha)，等什么时候能分别获取两种主题的图标时，再用对应背景
 		width: var(--qq-width-icon);
 		height: var(--qq-width-icon);
 		border-radius: 50%;
-		margin-top: 20px;
 	}
 }
 .chat-view-align-left .chat-view-qq-icon {
@@ -306,9 +305,16 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 }
 
 .chat-view-qq-title {
+	margin: 0;
+	height: calc(var(--qq-width-icon) / 2);
+
+	padding: 0;
+	font-size: Min(calc(var(--qq-width-icon) / 2 - 4px), calc(var(--qq-font-size) - 1px));
+	line-height: Min(calc(var(--qq-width-icon) / 2), calc(var(--qq-font-size) - 1px));
+
 	p {
-		font-size: 14px;
-		margin: 0 0.2em 0 0.2em;
+		height: 100%;
+		margin: 0 0.2em;
 	}
 	.chat-view-qq-groupTitle{
 		font-weight: bold;
@@ -325,27 +331,18 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 		}
 	}
 	.chat-view-qq-sender {
-		font-size: 14px;
-		margin: 0 0.2em 0 0.2em;
+		margin: 0 0.2em;
 		overflow-x: hidden;
 		text-overflow: ellipsis;
 	}
-}
-.chat-view-align-left .chat-view-qq-groupTitle,
-.chat-view-align-left .chat-view-qq-sender,
-.chat-view-align-right .chat-view-qq-dateTime {
-	float: left;
-}
-.chat-view-align-right .chat-view-qq-groupTitle,
-.chat-view-align-right .chat-view-qq-sender,
-.chat-view-align-left .chat-view-qq-dateTime {
-	float: right;
-}
-.chat-view-qq-dateTime {
-	position: absolute;
-	top: 19px;
-	left: 50%;
-	transform: translate(-50%, 0);
+	.chat-view-qq-dateTime {
+		height: calc(var(--qq-width-icon) / 2);
+		position: absolute;
+		top: 2px;
+		left: 50%;
+		transform: translate(-50%, 0);
+		opacity: 0.7;
+	}
 }
 
 .chat-view-qq-msg {
@@ -356,10 +353,10 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 
 	word-wrap: break-word;
 	color: var(--qq-text-color);
-	padding: 17px 17px 0;
+	padding: 20px 15px 0;
 }
 
-.chat-view-qq-msg>.pop { width: 100%; }
+.chat-view-qq-msg>.pop { width: 100%; margin-top: 1px; }
 .chat-view-align-left {
 	.chat-view-qq-msg, .pop { float: left; }
 }
@@ -377,28 +374,37 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	width: 0;
 	height: 0;
 	border-top: 0px solid transparent;
-	border-bottom: 14px solid transparent;
+	border-bottom: var(--qq-font-size) solid transparent;
 }
+// 左右差异
 .chat-view-align-left .shape {
 	right: 0;
 	transform: translate(-100%, 0);
-	border-right: 13px solid var(--qq-msg-bg-color);
-	border-top: 0px solid transparent;
-	border-bottom: 14px solid transparent;
-	border-left: 7px solid transparent;
+	border-right: 0 solid transparent;
+	border-left: 13px solid transparent;
+	border-top: 13px solid var(--qq-msg-bg-color); // 与上对齐
+	border-bottom: 13px solid transparent;
 }
 .chat-view-align-right .shape {
 	left: 100%;
 	transform: translate(0, 0);
-	border-left: 13px solid var(--qq-msg-bg-color);
-	border-top: 0px solid transparent;
-	border-bottom: 14px solid transparent;
-	border-right: 7px solid transparent;
+	border-left: 0 solid transparent;
+	border-right: 13px solid transparent;
+	border-top: 13px solid var(--qq-msg-bg-color); // 与上对齐
+	border-bottom: 13px solid transparent;
+}
+.chat-view-align-left .chat-view-qq-groupTitle,
+.chat-view-align-left .chat-view-qq-sender {
+	float: left;
+}
+.chat-view-align-right .chat-view-qq-groupTitle,
+.chat-view-align-right .chat-view-qq-sender {
+	float: right;
 }
 
 .shape,
 .chat-view-qq-message-all {
-	margin-top: 9px; // TODO 根据头像大小应该不同，结构有问题，应该取头像中线而非顶部为基准!
+	margin-top: 0;
 }
 
 .chat-view-qq-message-all {
@@ -411,7 +417,7 @@ div.cv-note, div.block-language-chat-qq, div.block-language-chat-wechat {
 	word-wrap: break-word;
 	color: var(--qq-msg-color);
 	font-size: 27px;
-	padding: 8px 15px 8px 15px;
+	padding: 0.6rem 0.7rem;
 	background-color: var(--qq-msg-bg-color);
 }
 .chat-view-align-left .chat-view-qq-message-all {
@@ -488,7 +494,7 @@ div.chat-view-bubble-mode-wechat {
 			border-radius: 4px;
 		}
 		.shape-zero>.shape {
-			margin-top: 20px;
+			margin-top: 13px;
 		}
 
 		// 左右差异

@@ -285,6 +285,7 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
 .chat-view-qq-icon {
   display: inline-block;
   width: calc(var(--qq-width-icon) + 25px);
+  padding-top: 20px;
 }
 
 .chat-view-qq-icon > img {
@@ -292,7 +293,6 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   width: var(--qq-width-icon);
   height: var(--qq-width-icon);
   border-radius: 50%;
-  margin-top: 20px;
 }
 
 .chat-view-align-left .chat-view-qq-icon {
@@ -313,9 +313,17 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   float: right;
 }
 
+.chat-view-qq-title {
+  margin: 0;
+  height: calc(var(--qq-width-icon) / 2);
+  padding: 0;
+  font-size: Min(calc(var(--qq-width-icon) / 2 - 4px), calc(var(--qq-font-size) - 1px));
+  line-height: Min(calc(var(--qq-width-icon) / 2), calc(var(--qq-font-size) - 1px));
+}
+
 .chat-view-qq-title p {
-  font-size: 14px;
-  margin: 0 0.2em 0 0.2em;
+  height: 100%;
+  margin: 0 0.2em;
 }
 
 .chat-view-qq-title .chat-view-qq-groupTitle {
@@ -335,29 +343,18 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
 }
 
 .chat-view-qq-title .chat-view-qq-sender {
-  font-size: 14px;
-  margin: 0 0.2em 0 0.2em;
+  margin: 0 0.2em;
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
 
-.chat-view-align-left .chat-view-qq-groupTitle,
-.chat-view-align-left .chat-view-qq-sender,
-.chat-view-align-right .chat-view-qq-dateTime {
-  float: left;
-}
-
-.chat-view-align-right .chat-view-qq-groupTitle,
-.chat-view-align-right .chat-view-qq-sender,
-.chat-view-align-left .chat-view-qq-dateTime {
-  float: right;
-}
-
-.chat-view-qq-dateTime {
+.chat-view-qq-title .chat-view-qq-dateTime {
+  height: calc(var(--qq-width-icon) / 2);
   position: absolute;
-  top: 19px;
+  top: 2px;
   left: 50%;
   transform: translate(-50%, 0);
+  opacity: 0.7;
 }
 
 .chat-view-qq-msg {
@@ -367,11 +364,12 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   max-width: var(--qq-msg-max-width);
   word-wrap: break-word;
   color: var(--qq-text-color);
-  padding: 17px 17px 0;
+  padding: 20px 15px 0;
 }
 
 .chat-view-qq-msg > .pop {
   width: 100%;
+  margin-top: 1px;
 }
 
 .chat-view-align-left .chat-view-qq-msg, .chat-view-align-left .pop {
@@ -393,30 +391,40 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   width: 0;
   height: 0;
   border-top: 0px solid transparent;
-  border-bottom: 14px solid transparent;
+  border-bottom: var(--qq-font-size) solid transparent;
 }
 
 .chat-view-align-left .shape {
   right: 0;
   transform: translate(-100%, 0);
-  border-right: 13px solid var(--qq-msg-bg-color);
-  border-top: 0px solid transparent;
-  border-bottom: 14px solid transparent;
-  border-left: 7px solid transparent;
+  border-right: 0 solid transparent;
+  border-left: 13px solid transparent;
+  border-top: 13px solid var(--qq-msg-bg-color);
+  border-bottom: 13px solid transparent;
 }
 
 .chat-view-align-right .shape {
   left: 100%;
   transform: translate(0, 0);
-  border-left: 13px solid var(--qq-msg-bg-color);
-  border-top: 0px solid transparent;
-  border-bottom: 14px solid transparent;
-  border-right: 7px solid transparent;
+  border-left: 0 solid transparent;
+  border-right: 13px solid transparent;
+  border-top: 13px solid var(--qq-msg-bg-color);
+  border-bottom: 13px solid transparent;
+}
+
+.chat-view-align-left .chat-view-qq-groupTitle,
+.chat-view-align-left .chat-view-qq-sender {
+  float: left;
+}
+
+.chat-view-align-right .chat-view-qq-groupTitle,
+.chat-view-align-right .chat-view-qq-sender {
+  float: right;
 }
 
 .shape,
 .chat-view-qq-message-all {
-  margin-top: 9px;
+  margin-top: 0;
 }
 
 .chat-view-qq-message-all {
@@ -429,7 +437,7 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   word-wrap: break-word;
   color: var(--qq-msg-color);
   font-size: 27px;
-  padding: 8px 15px 8px 15px;
+  padding: 0.6rem 0.7rem;
   background-color: var(--qq-msg-bg-color);
 }
 
@@ -514,7 +522,7 @@ div.chat-view-bubble-mode-wechat > .chat-view-bubble .chat-view-qq-message-all {
 }
 
 div.chat-view-bubble-mode-wechat > .chat-view-bubble .shape-zero > .shape {
-  margin-top: 20px;
+  margin-top: 13px;
 }
 
 div.chat-view-bubble-mode-wechat > .chat-view-bubble.chat-view-align-right .chat-view-qq-message-all {

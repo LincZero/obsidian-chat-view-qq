@@ -41,8 +41,8 @@ async function handleInputChange() {
   props.mdData.string = props.mdData.string + ' '
 }
 
-const fontSize = ref('')
-const iconSize = ref('')
+const fontSize = ref('16px')
+const iconSize = ref('55px')
 const isDark = ref(false)
 </script>
 
@@ -83,11 +83,11 @@ const isDark = ref(false)
     </div>
     <div>
       <label for="lightdark">字体大小</label>
-      <input id="lightdark" v-model="fontSize" @change="handleInputChange()" placeholder="16px">
+      <input id="lightdark" v-model="fontSize" @change="handleInputChange()">
     </div>
     <div>
       <label for="icon-size">头像大小</label>
-      <input id="icon-size" v-model="iconSize" @change="handleInputChange()" placeholder="55px, 可设为0隐藏头像">
+      <input id="icon-size" v-model="iconSize" @change="handleInputChange()" placeholder="可设为0隐藏头像">
     </div>
     <div>
       <label>更多渲染风格/动态显示 (未开发，敬请期待)</label>
