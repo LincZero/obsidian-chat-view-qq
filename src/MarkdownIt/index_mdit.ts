@@ -77,6 +77,7 @@ export default function mdit_cv(md: MarkdownIt, options?: Partial<Options>): voi
     chatQQandName: '马化腾=10001, 李宗桦=10101',
     width: '100%',
     maxHeight: '1100',
+    isSHowTime: false,
     isRenderMd: true,
     isPcStyle: true,
   }

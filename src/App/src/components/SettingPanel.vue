@@ -65,6 +65,10 @@ const isDark = ref(false)
       <input id="name-qq" v-model="render_setting.main_setting.chatQQandName" @change="handleInputChange()">
     </div>
     <div>
+      <label for="is-show-time">是否显示时间</label>
+      <input id="is-show-time" type="checkbox" v-model="render_setting.main_setting.isShowTime" @change="handleInputChange()">
+    </div>
+    <div>
       <label for="is-render-md">是否将内容以md形式渲染</label>
       <input id="is-render-md" type="checkbox" v-model="render_setting.main_setting.isRenderMd" @change="handleInputChange()">
     </div>

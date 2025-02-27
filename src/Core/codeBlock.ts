@@ -102,6 +102,7 @@ export class Chat {
         if (k.length > 0) this.iconConfigs.set(k, v);
       }
     }
+    this.isShowTime = settings.isShowTime
 
     // 局部配置
     for (const line of this.lines) {

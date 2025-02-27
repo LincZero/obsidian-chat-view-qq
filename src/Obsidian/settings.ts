@@ -7,6 +7,7 @@ export interface ChatPluginSettings {
 	chatQQandName: string,
 	width: string,
 	maxHeight: string,
+	isShowTime: boolean, // false的好处是渲染更真实、更简洁，true的好处是信息更多
 	isRenderMd: boolean,
 	isPcStyle: boolean,
 }
@@ -17,6 +18,7 @@ export const DEFAULT_SETTINGS: ChatPluginSettings = {
 	chatQQandName: '',
 	width: '100%',
 	maxHeight: '1100',
+	isShowTime: false,
 	isRenderMd: true,
 	isPcStyle: true,
 }
@@ -83,6 +85,17 @@ export class ChatSettingTab extends PluginSettingTab {
 			.onChange(async (value) => {
 				console.log('Secret: ' + value);
 				this.plugin.settings.chatQQandName = value;
+				await this.plugin.saveSettings();
+			}));
+
+		new Setting(containerEl)
+		.setName('强制渲染对话时间')
+		.setDesc('全局生效，目前仅部分格式生效')
+		.addToggle(text => text
+			.setValue(this.plugin.settings.isShowTime)
+			.onChange(async (value) => {
+				console.log('Secret: ' + value);
+				this.plugin.settings.isShowTime = value;
 				await this.plugin.saveSettings();
 			}));
 
