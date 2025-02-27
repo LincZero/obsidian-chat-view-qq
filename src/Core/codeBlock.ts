@@ -148,7 +148,7 @@ export class Chat {
     }
     let iconConfigsItem = this.iconConfigs.get(iconName)
     let iconSrcConfigsItem = ""
-    // 有指定过头像 (在总设置中) 或缓存过 (第二次调用重复名)
+    // 有绑定过头像 (要么在设置中设置过，要么在自动分配过后缓存过，即第二次调用重复名)
     if (iconConfigsItem) {
       // QQ头像
       if (/^\d+$/.test(iconConfigsItem)) {
@@ -174,7 +174,7 @@ export class Chat {
         iconSrcConfigsItem = iconConfigsItem
       }
     }
-    // 无指定头像，自动分配默认头像
+    // 还未绑定过头像，自动分配头像
     else {
       // favicon头像 - 仅hostname
       if (iconName in this.webIcons) {
@@ -192,7 +192,16 @@ export class Chat {
       else if (/^\d+$/.test(iconName)) {
         iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${iconName}&spec=40`
       }
-      // 随机头像
+      // 名称带qq号 (某些情况复制出来会是这样的，名字的后面会用括号括起来QQ号)
+      else if (/^.+\((\d+)\)$/.test(iconName)) {
+        const match = iconName.match(/^.+\((\d+)\)$/)
+        if (match[1]) iconSrcConfigsItem = `http://q2.qlogo.cn/headimg_dl?dst_uin=${match[1]}&spec=40`
+        else {
+          console.error('不可能到达, 名称带qq号时, 正则异常')
+          iconSrcConfigsItem = iconName
+        }
+      }
+      // 随机默认头像
       else if (this.countDefaultIcon < this.numDefaultIcon) {
         iconSrcConfigsItem = this.icons[this.countDefaultIcon++]
       }
