@@ -71,22 +71,23 @@ export class MsgItem {
     }
     // 创建消息项
     const div_msg = document.createElement('div'); bubble.appendChild(div_msg); div_msg.classList.add("chat-view-qq-msg")
+    // 发送时间
+    if (this.block_this.isShowTime && this.dateTime.length > 0) {
+      const p = document.createElement('p'); div_msg.appendChild(p); p.classList.add("chat-view-qq-dateTime");
+        p.textContent = this.dateTime
+    }
     // 发送附属信息
     {
       const div_title = document.createElement('div'); div_msg.appendChild(div_title); div_title.classList.add("chat-view-qq-title")
+      const div_title_sub = document.createElement('div'); div_title.appendChild(div_title_sub); div_title_sub.classList.add("chat-view-qq-titlesub")
       // 发送者群头衔
       if (this.groupTitle.length > 0) {
-        const p = document.createElement('p'); div_title.appendChild(p); p.classList.add("chat-view-qq-groupTitle");
+        const p = document.createElement('p'); div_title_sub.appendChild(p); p.classList.add("chat-view-qq-groupTitle");
         p.textContent = this.groupTitle; p.setAttribute("title", this.groupTitle)
       }
       // 发送者群昵称
       if (this.sender.length > 0) {
-        const p = document.createElement('p'); div_title.appendChild(p); p.classList.add("chat-view-qq-sender"); p.textContent = this.sender
-      }
-      // 发送时间
-      if (this.block_this.isShowTime && this.dateTime.length > 0) {
-        const p = document.createElement('p'); div_title.appendChild(p); p.classList.add("chat-view-qq-dateTime");
-          p.textContent = this.dateTime
+        const p = document.createElement('p'); div_title_sub.appendChild(p); p.classList.add("chat-view-qq-sender"); p.textContent = this.sender
       }
     }
     // 发送信息内容
