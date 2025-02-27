@@ -49,6 +49,7 @@ sub.chat-view-subtext {
 
 div.chat-view-bubble {
   /* width: fit-content; */
+  position: relative;
   min-width: 30%;
   width: 100%;
 }
@@ -350,24 +351,27 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   float: right;
 }
 
-.chat-view-qq-msg {
-  max-width: var(--qq-msg-max-width);
-}
-
-.chat-view-qq-msg > .pop,
-.chat-view-qq-msg > .pop > div.chat-view-qq-message-all {
-  width: 100%;
+.chat-view-qq-dateTime {
+  position: absolute;
+  top: 19px;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .chat-view-qq-msg {
   box-sizing: border-box;
   display: inline-block;
   margin-bottom: 10px;
+  max-width: var(--qq-msg-max-width);
   word-wrap: break-word;
   color: var(--qq-text-color);
   padding-top: 17px;
   padding-left: 17px;
   padding-right: 17px;
+}
+
+.chat-view-qq-msg > .pop {
+  width: 100%;
 }
 
 .chat-view-align-left .chat-view-qq-msg, .chat-view-align-left .pop {
@@ -419,6 +423,8 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
   display: inline-block;
   /*inline-block*/
   margin-bottom: 5px;
+  position: relative;
+  width: auto;
   word-wrap: break-word;
   color: var(--qq-msg-color);
   font-size: 27px;
@@ -431,7 +437,6 @@ div.cv-note .chat-view-qq-message-all p:last-child, div.block-language-chat-qq .
 }
 
 .chat-view-align-right .chat-view-qq-message-all {
-  left: 50px;
   border-radius: 10px 0px 10px 10px;
 }
 
