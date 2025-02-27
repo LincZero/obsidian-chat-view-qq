@@ -1,6 +1,6 @@
 {
   "name": "chat-view-app",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Chat View enables you to create elegant Chat UIs in your Obsidian markdown files. It also supports the many format.",
   "scripts": {
     "dev": "vite",
