@@ -10,7 +10,7 @@ const props = defineProps<{
 import MarkdownIt from "markdown-it";
 const md = new MarkdownIt({
   html: true, // 启用 HTML 标签解析
-  breaks: true // 将换行符转换为 <br> 标签
+  breaks: true // 将换行符转换为 <br> 标签 (md单换行时不合并为同一行)
 })
 md.use(mdit_cv) // 使用插件
 function fn_renderMarkdown(markdown: string, el: HTMLElement, ctx?: any): void {

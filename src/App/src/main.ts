@@ -7,7 +7,7 @@ import { render_setting } from "../../Core/render"
 // 定义默认渲染行为
 const md = new MarkdownIt({
 	html: true, // 启用 HTML 标签解析
-	breaks: true // 将换行符转换为 <br> 标签
+	breaks: true // 将换行符转换为 <br> 标签 (md单换行时不合并为同一行)
 })
 render_setting.fn_renderMarkdown = (markdown: string, el: HTMLElement): void => {
 	el.classList.add("markdown-rendered")
