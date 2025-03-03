@@ -14,7 +14,7 @@ export interface ChatPluginSettings {
 
 // 设置内容的默认值，这是一个类似枚举的东西
 export const DEFAULT_SETTINGS: ChatPluginSettings = {
-	chatSelfName: '我, me, user',
+	chatSelfName: '我, me, Q, user',
 	chatQQandName: '',
 	width: '100%',
 	maxHeight: '1100',

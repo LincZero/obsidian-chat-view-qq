@@ -73,7 +73,7 @@ export default function mdit_cv(md: MarkdownIt, options?: Partial<Options>): voi
 
   // 插件配置
   render_setting.main_setting = { // DEFAULT_SETTINGS
-    chatSelfName: '我, me, user',
+    chatSelfName: '我, me, Q, user',
     chatQQandName: '马化腾=10001, 李宗桦=10101',
     width: '100%',
     maxHeight: '1100',
