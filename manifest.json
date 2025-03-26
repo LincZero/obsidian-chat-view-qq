@@ -6,6 +6,10 @@
 	"minAppVersion": "0.15.0",
 	"description": "魔改于Chat View，可以直接复制QQ等平台聊天记录中的信息，并自动渲染聊天界面",
 	"author": "LincZero",
-	"isDesktopOnly": false,
-	"repo": "https://github.com/LincZero/obsidian-chat-view-qq"
+	"repo": "https://github.com/LincZero/obsidian-chat-view-qq",
+	"fundingUrl": {
+		"Support Page": "https://github.com/LincZero#thank-you-very-much-for-your-support",
+		"中国大陆备用链接": "https://linczero-github-io.pages.dev/assets/pay_all2-xciK7i0b.png"
+	},
+	"isDesktopOnly": false
 }
