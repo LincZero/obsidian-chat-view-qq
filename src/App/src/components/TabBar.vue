@@ -20,7 +20,7 @@
       @mouseover="clickedMenu=clickedMenu===''?'':'serialLink'">
       其他在线
       <div class="menus-2" v-show="clickedMenu==='serialLink'">
-        <div class="menu-2"><a href="https://any-block.github.io/obsidian-any-block/">AnyBlock</a></div>
+        <div class="menu-2"><a href="https://any-block.github.io/any-block/">AnyBlock</a></div>
         <div class="menu-2"><a href="https://linczero.github.io/obsidian-node-flow/">NodeFlow</a></div>
         <div class="menu-2"><a href="https://linczero.github.io/obsidian-chat-view-qq/">ChatView</a></div>
         <div></div>
